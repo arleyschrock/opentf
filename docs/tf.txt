@@ -1,0 +1,316 @@
+tf(1)
+=====
+
+NAME
+----
+tf - Team Foundation Client
+
+
+SYNOPSIS
+--------
+'tf' [/server:<server name or ip address>] [/login:<login credentials>]
+		<command> [<command arguments>]
+
+DESCRIPTION
+-----------
+
+'tf' is a source control client for Microsoft Team Foundation Server.
+
+OPTIONS
+-------
+*/login:username [,password]*::
+	Provide authentication credentials. If you don't specify a
+  password you will be prompted for one. If you have
+  gnome-keyring support enabled, TF will store the login
+  credentials on your default keyring if configured to do so 
+	(see "Credentials.Save" configuration option below). The login username
+  can be a domain account, in which case use the syntax "domain\\username".
+
+*/server:<server name or ip address>*::
+	Specify the Team Foundation Server. If you are within a mapped
+  working folder, you don't need to specify the /server option,
+  as this information is stored in the VersionControl.config
+  cache file.
+
+COMMANDS
+--------
+*add <filenames>*::
+	Pend an add on a file or files to the repository. To commit, you 
+  must issue a checkin command. 
+
+*changeset <changeset id>*::
+	Show changeset details: committer, date, comment, and files changed.
+	The changeset id is just an integer - no "C" prefix is required as in 
+	the diff command below.
+
+*checkin [ <filenames or path> /recursive /comment:<comment> ]*::
+	Checkin pending changes in workspace. With no arguments, this command
+  will checkin all files in your workspace, not just all files underneath
+  your current working directory. Due to a limitation in Mono.GetOptions,
+  the /comment parameter cannot include spaces. This will be fixed soon!
+
+*checkout <filenames>*::
+  Checkout a file for editing. Command alias: edit.
+
+*configure [ <key> | <key> <value> ]*::
+	With no arguments, displays current configuration. With 1 argument,
+	deletes the configuration setting <key>. With 2 arguments,
+	sets the value of <key> to <value>. See Configuration section below 
+  for more details on valid settings.
+
+*delete <filenames> [ /recursive ]*::  
+	Pend a delete against a file or files from the repository. To commit, you 
+  must issue a checkin command.
+
+*diff <filename or path or changeset id> [ /old | /modified ]*::
+  Show pending changes as a diff. With /old, shows changes from current 
+  workspace to latest on the server as a diff. With /modified, shows 
+	changes to writable workspace files as a diff - another way to preview
+	changes before using the *online* command. With a changeset id, like
+  C12278, the command will show you a diff of the files changed in that
+  changeset.
+
+*dir <server path>*::
+  List files in specified server path. A way to explore the folders on the server
+  without setting up a workspace and downloading the files.
+
+*explore*::
+  Graphically explore a TF repository. Changeset view, directory view, and file view
+  options. Control-C will copy currently selected path to the clipboard.
+
+*get [ <path> ]*::
+  Update local repository copy with latest versions from the server. 
+	Think "cvs/svn update". Note: Files are initially set to read-only, until
+  checked out with the *checkout* command.
+
+*help [ <cmd> | /list ]*::
+  Show builtin help. Optionally, specify a tf command for which to 
+  show detailed help. The /list option is primarily a helper for shell 
+  completion code.
+
+*history <filename | path > [ /format:<format> /recursive /stopafter:X ]*::
+	Display changelog history for specified file. If you are looking for a
+	git-log/svn log type function use this and add /recursive. Use /stopafter
+  to limit the number of entries returned. Valid format specifiers include 
+	"brief" (the default), "detailed", and "byowner". The "detailed" format displays
+	all files changed in a changeset and the "byowner" format summarizes the history
+  by owner, showing how many changes each user committed.
+
+*label <labelname> <itemspec> [ /recursive ]*::
+  Add a label or tag to an item.
+
+*labels [ <labelname> /owner:<ownername> /format:detailed ]*:: 
+	Displays labels or tags. Can optionally filter by <labelname> and <ownername>.
+
+*ls-files <path> [ /deleted | /modified | /old | /unknown ]*::
+	Shows known, deleted, modified, old, or unknown files under the given path.
+	With no options, ls-files shows known files. /old option by default shows
+  only files in your workspace which are out of date, not new files on the
+  server you've not yet fetched. To show those files as well, use "/old /all".
+  This behavior may change in future releases, based on user feedback.
+
+*online <path> [ /added | /modified | /deleted | /preview ]*::
+  Finds all writable files and marks them as pending changes on the server.
+	It also finds all unknown files and marks them as pending adds, missing
+  files are marked as pending deletes. A great command to use if you apply
+	a patch to a clean tfs-managed tree and want to pend the changes to the 
+	server for checkin. The /added, /modified, /deleted flags can be used
+	to show	just additions, just modifications, or just deletions respectively.
+	These flags may be combined. With no flags, all changes are shown.
+
+*perm <filename>*::
+	Show server permissions on a file. Command alias: permission.
+
+*properties <filenames> [ /recursive ]*::
+	Show detailed properties for each filename including server locks, encoding,
+  last modified date, changeset id, and whether the file has a newer version
+  on the server.
+
+*rename <oldname> <newname>*::
+	Rename a file or files in the repository.
+
+*shelvesets [ <name> /owner ]*::
+  Show shelvesets on the server. Use /owner:"*" and no name argument to view all 
+  shelvesets.
+
+*show [ build | cache | ident | stats | tools ]*:: 
+	Show information about build configuration, cache settings, identity info,
+	usage statistics, or registered server tools.
+
+*status [ <filenames> /recursive ]*::
+  Show status of all pending changes in local workspace. Optional paths/filenames
+	may be added to narrow the resulting output.
+
+*treeclean*::
+  Delete all files not under version control. Use /preview to see what 
+	would be deleted.
+
+*undo [ <filenames> /recursive ]*::
+  Undo pending changes. With no filenames, undoes all pending changes.
+
+*unlabel <labelname> <itemspec>*::
+  Remove a label or tag from an item.
+
+*workspace [ /new | /delete ]*::
+  Manage workspaces.
+
+*workspaces [ /format:detailed <workspace-name> ]*::
+	List workspaces in server repository. Use /format:detailed for additional
+  information. Specify a workspace name to filter results.
+
+*workfold [ <server path> <local path> | /unmap <local path> ]*::
+  Manage working folders. With no arguments, print current working folder 
+  mappings. With a server path and local path, creates a new working folder
+  mapping.
+
+*version*::
+  Displays the version of the program.
+
+*view <filenames | server paths>*::
+	Displays the latest version of the specified file or files.
+
+EXAMPLES
+--------
+
+*List all workspaces on the server 10.2.10.2, using a username of "domain\\username" and a password of "password".*::
+  tf workspaces /server:10.2.10.2 /login:domain\\username,password /owner:"+++*+++" /computer:"+++*+++"
+
+*Create a workspace with the name "workspaceName" with an owner name of ownerName.*::
+  tf workspace /new "workspaceName;ownerName"
+
+*Setup a working folder for the project "ProjectName" in directory ~/src/project.*::
+  tf workfold "$/ProjectName" /home/username/src/project
+
+*Fetch/Get all files in folder in project "ProjectName" to local machine.*::
+  tf get /recursive /home/username/src/project
+
+*Delete the workspace "workspaceName" created above.*::
+ tf workspace /delete workspaceName
+
+*Add all unknown files to the repository.*::
+ tf ls-files /others %% add
+
+MULTIPLE COMMANDS
+-----------------
+You can execute multiple commands in sequence in a single run of TF, 
+by separating the commands with '%'. Here's how you might checkin a 
+patch with a single run of TF:
+
+
+------------
+$  patch -p1 < ~/new-feature.diff
+$  tf online % checkin
+------------
+
+If you'd like to pipe the output from the ls-files or diff (brief
+mode only) subcommands to the next subcommand in the chain use
+'%%' instead. This can be particularly useful with ls-files.
+
+CONFIGURATION
+-------------
+The TF client stores configuration settings in ~/.tf/TfClient.config.
+
+*Checkin.Validate*::
+	The TF client will display a summary of pending
+  changes and ask for confirmaton below committing changes to the server
+  when set to "true". The default is "false". It's non-trivial to rollback
+  a committed change, so this option is highly recommended.
+
+*Checkout.Latest*::
+  The TF client will always checkout the latest version rather than
+  the workspace version if this setting is set to "true". Note: this option
+	only effects the checkout command, not the "online" command.
+
+*Credentials.Save*:: 
+	The TF client will store login credentials if this
+  setting is set to "true". The default is "false".
+
+*File.Excludes*::
+	A comma separated list of files to ignore. Currently, only the "online"
+	command honors this setting. The wildcard characters * and ? are supported.
+	Example setting: "*.dll,*.pdb".
+
+*File.ReadWrite*::
+  The TF client defaults to setting all non-checked out files to readonly. Set
+  this setting to "true" to make them read-write.
+
+*Get.Recursive*::
+	The TF client will automatically do recursive gets when set
+	to "true". IMHO, this is far more useful than the default	behavior.
+
+*History.Detailed*::
+	The TF client defaults to brief output of history which does not include 
+	file level information. Set this setting to "true" to get file level history.
+
+*History.DefaultToCwd*::
+	The TF client will default to the current working directory if not options
+	are given when running the subcommand "history". The default behavior of the
+	standard client is to require a path for all history queries. This option
+  provides an optional and more sensible default.
+
+*History.Recursive*::
+	The TF client will automatically do recursive history queries when set
+	to "true". IMHO, this is far more useful than the default	behavior.
+
+*History.StopAfter*::
+  The TF client defaults to showing the last 255 checkins in history output.
+  Set this option to an integer to change the default.
+
+*Online.Recursive*::
+	The TF client will automatically do a recursive online command when set
+	to "true". IMHO, this is far more useful than the default	behavior for
+	clean trees. Not as helpful for trees littered with build output files.
+
+*Server.Default*::
+  If the TF client cannot determine the server to connect to, first from 
+	the "/server:" option, and second the workspace cache, then it will
+  use the Server.Default setting if non-null.
+
+WORKSPACE CACHE
+---------------
+The TF client keeps a cache of workspaces and folder mappings in 
+~/.tf/Cache/VersionControl.config. Here's a sample file:
+
+The contents of the cache can be seen with the *tf cache* command.
+
+------------
+<VersionControlServer>
+  <Servers>
+    <ServerInfo uri="http://10.2.1.2:8080/">
+      <WorkspaceInfo name="neo" ownerName="DOMAIN\USER" computer="MYBOX" comment="" LastSavedCheckinTimeStamp="4/26/2007 11:55:50 PM">
+        <MappedPaths>
+          <MappedPath path="/home/jreed/Source/xyz-project" />
+          <MappedPath path="/home/jreed/Source/abc-project" />
+        </MappedPaths>
+      </WorkspaceInfo>
+    </ServerInfo>
+  </Servers>
+</VersionControlServer>
+------------
+
+
+IMPLEMENTATION NOTES
+--------------------
+TFS doesn't have built in support for tracking file attributes, for
+example, whether the file is executable or not. The TF client included 
+in this package makes use of libmagic to determine whether a file 
+should be marked executable or not.
+
+
+MORE INFORMATION
+----------------
+http://groups.google.com/group/tf4mono
+http://msdn2.microsoft.com/en-us/library/bb130146(VS.80).aspx
+http://msdn2.microsoft.com/en-us/teamsystem/default.aspx
+http://msdn2.microsoft.com/en-us/cc31bk2e(VS.80).aspx
+
+
+AUTHOR
+------
+Written by Joel Reed <joelwreed@gmail.com>
+
+
+DOCUMENTATION
+--------------
+Documentation by Joel Reed <joelwreed@gmail.com>
+

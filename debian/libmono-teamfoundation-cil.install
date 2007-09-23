@@ -1,0 +1,23 @@
+debian/tmp/usr/lib/mono/2.0/Microsoft.TeamFoundation.VersionControl.Common.dll
+debian/tmp/usr/lib/mono/2.0/Microsoft.TeamFoundation.VersionControl.Client.dll
+debian/tmp/usr/lib/mono/2.0/Microsoft.TeamFoundation.Common.dll
+debian/tmp/usr/lib/mono/2.0/Microsoft.TeamFoundation.Client.dll
+debian/tmp/usr/lib/mono/2.0/Microsoft.TeamFoundation.dll
+debian/tmp/usr/lib/mono/gac/Microsoft.TeamFoundation.VersionControl.Client
+debian/tmp/usr/lib/mono/gac/Microsoft.TeamFoundation.VersionControl.Client/1.0.0.0__b03f5f7f11d50a3a
+debian/tmp/usr/lib/mono/gac/Microsoft.TeamFoundation.VersionControl.Client/1.0.0.0__b03f5f7f11d50a3a/Microsoft.TeamFoundation.VersionControl.Client.dll
+debian/tmp/usr/lib/mono/gac/Microsoft.TeamFoundation.VersionControl.Client/1.0.0.0__b03f5f7f11d50a3a/Microsoft.TeamFoundation.VersionControl.Client.dll.mdb
+debian/tmp/usr/lib/mono/gac/Microsoft.TeamFoundation.Client/1.0.0.0__b03f5f7f11d50a3a
+debian/tmp/usr/lib/mono/gac/Microsoft.TeamFoundation.Client/1.0.0.0__b03f5f7f11d50a3a/Microsoft.TeamFoundation.Client.dll
+debian/tmp/usr/lib/mono/gac/Microsoft.TeamFoundation.Client/1.0.0.0__b03f5f7f11d50a3a/Microsoft.TeamFoundation.Client.dll.mdb
+debian/tmp/usr/lib/mono/gac/Microsoft.TeamFoundation/1.0.0.0__b03f5f7f11d50a3a
+debian/tmp/usr/lib/mono/gac/Microsoft.TeamFoundation/1.0.0.0__b03f5f7f11d50a3a/Microsoft.TeamFoundation.dll.mdb
+debian/tmp/usr/lib/mono/gac/Microsoft.TeamFoundation/1.0.0.0__b03f5f7f11d50a3a/Microsoft.TeamFoundation.dll
+debian/tmp/usr/lib/mono/gac/Microsoft.TeamFoundation.VersionControl.Common
+debian/tmp/usr/lib/mono/gac/Microsoft.TeamFoundation.VersionControl.Common/1.0.0.0__b03f5f7f11d50a3a
+debian/tmp/usr/lib/mono/gac/Microsoft.TeamFoundation.VersionControl.Common/1.0.0.0__b03f5f7f11d50a3a/Microsoft.TeamFoundation.VersionControl.Common.dll
+debian/tmp/usr/lib/mono/gac/Microsoft.TeamFoundation.VersionControl.Common/1.0.0.0__b03f5f7f11d50a3a/Microsoft.TeamFoundation.VersionControl.Common.dll.mdb
+debian/tmp/usr/lib/mono/gac/Microsoft.TeamFoundation.Common/1.0.0.0__b03f5f7f11d50a3a
+debian/tmp/usr/lib/mono/gac/Microsoft.TeamFoundation.Common/1.0.0.0__b03f5f7f11d50a3a/Microsoft.TeamFoundation.Common.dll
+debian/tmp/usr/lib/mono/gac/Microsoft.TeamFoundation.Common/1.0.0.0__b03f5f7f11d50a3a/Microsoft.TeamFoundation.Common.dll.mdb
+debian/tmp/usr/lib/pkgconfig/tfs.pc usr/lib/pkgconfig/

@@ -1,0 +1,18 @@
+Source: mono-teamfoundation
+Section: devel
+Priority: optional
+Maintainer: Joel W. Reed <joelwreed@gmail.com>
+Build-Depends: debhelper (>= 5.0.37.2), cdbs, mono-gmcs | c-sharp-2.0-compiler, libmono-dev (>= 1.0), cli-common-dev (>= 0.4.4), mono-gac (>= 1.0), autotools-dev, libmono-system-runtime2.0-cil, libmagic-dev, asciidoc, xmlto
+Standards-Version: 3.7.2
+
+Package: mono-teamfoundation-client
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${cli:Depends}, libmono-teamfoundation-cil, libmagic1
+Description: A command line client for Team Foundation Servers.
+
+Package: libmono-teamfoundation-cil 
+Architecture: any
+Section: devel
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Assemblies for accessing Team Foundation Servers.
+

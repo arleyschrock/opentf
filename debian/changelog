@@ -1,0 +1,48 @@
+mono-teamfoundation (0.5.2) feisty; urgency=low
+
+  * package 0.5.2 release
+
+ -- Joel W. Reed <joelwreed@gmail.com>  Fri, 7 Sept 2007 13:05:01 -0400
+
+mono-teamfoundation (0.5.1) feisty; urgency=low
+
+  * package 0.5.1 release
+
+ -- Joel W. Reed <joelwreed@gmail.com>  Tues, 2 Aug 2007 9:39:05 -0400
+
+mono-teamfoundation (0.5.0.1) feisty; urgency=low
+
+  * package 0.5.0.1 release
+
+ -- Joel W. Reed <joelwreed@gmail.com>  Tues, 31 Jul 2007 15:09:13 -0400
+
+mono-teamfoundation (0.5.0) feisty; urgency=low
+
+  * package 0.5.0 release
+
+ -- Joel W. Reed <joelwreed@gmail.com>  Fri, 19 Jul 2007 18:09:13 -0400
+
+mono-teamfoundation (0.4.7) feisty; urgency=low
+
+  * package 0.4.7 release
+
+ -- Joel W. Reed <joelwreed@gmail.com>  Fri, 29 Jun 2007 18:10:11 -0400
+
+mono-teamfoundation (0.4.6) feisty; urgency=low
+
+  * package 0.4.6 release
+
+ -- Joel W. Reed <joelwreed@gmail.com>  Fri, 8 Jun 2007 18:20:01 -0400
+
+mono-teamfoundation (0.4.4) feisty; urgency=low
+
+  * package 0.4.4 release
+
+ -- Joel W. Reed <joelwreed@gmail.com>  Wed, 25 Apr 2007 14:40:01 -0400
+
+mono-teamfoundation (0.4.2) feisty; urgency=low
+
+  * first cut of debian package
+
+ -- Joel W. Reed <joelwreed@gmail.com>  Wed, 25 Apr 2007 14:40:01 -0400
+

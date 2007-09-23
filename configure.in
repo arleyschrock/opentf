@@ -1,0 +1,124 @@
+AC_INIT(tf4mono, [0.5.2])
+
+PKG_PROG_PKG_CONFIG
+
+AC_ARG_ENABLE(gtk, 
+	[  --disable-gtk                disable gtk gui support],
+	HAVE_GTK=no,
+  PKG_CHECK_EXISTS(gtk-sharp-2.0, HAVE_GTK=yes, HAVE_GTK=no)
+)
+
+# disable experimental stuff for now
+PKG_CHECK_EXISTS(monodevelop, HAVE_MD=no, HAVE_MD=no)
+
+HAVE_DOC_TOOLS=no
+AC_CHECK_PROG(ASCIIDOC, [asciidoc], yes)
+AC_CHECK_PROG(XMLTO, [xmlto], yes)
+
+if test "x$ASCIIDOC" = "xyes"; then 
+  if test "x$XMLTO" = "xyes"; then 
+  	 HAVE_DOC_TOOLS=yes
+  fi
+fi
+
+AC_ARG_ENABLE(highlight, 
+	[  --enable-highlight           enable syntax highlighting support],
+  PKG_CHECK_EXISTS(gtksourceview-sharp-2.0, HAVE_GTK_SOURCEVIEW=yes, HAVE_GTK_SOURCEVIEW=no)
+  PKG_CHECK_EXISTS(gnome-vfs-sharp-2.0, HAVE_GNOME_VFS=yes, HAVE_GNOME_VFS=no)
+)
+
+AC_ARG_ENABLE(keyring, 
+	[  --disable-keyring       disable gnome keyring support],
+	HAVE_GNOME_KEYRING=no,
+	PKG_CHECK_EXISTS(gnome-keyring-sharp, HAVE_GNOME_KEYRING=yes, HAVE_GNOME_KEYRING=no)
+)
+
+AC_ARG_WITH(mslibs, 
+	[  --with-mslibs=<dir>     location of Microsoft's Team Foundation Assemblies],
+	HAVE_MSLIBS=$withval,
+	HAVE_MSLIBS=no
+)
+
+MONO_VERSION=`pkg-config --modversion mono`
+HAVE_ATLEAST_GTK_210=`pkg-config --atleast-version=2.10 gtk-sharp-2.0 && echo 1`
+MD_LIBPATH=`pkg-config monodevelop --variable libdir`
+
+HAVE_MAGIC=maybe
+
+AC_ARG_ENABLE(magic, 
+	[  --disable-magic         disable libmagic file attributes],
+	HAVE_MAGIC=no,
+)
+
+if test "x$HAVE_MAGIC" = "xmaybe"; then 
+  AC_CHECK_LIB(magic, magic_open, HAVE_MAGIC=yes, HAVE_MAGIC=no) 
+fi
+
+if test "x$prefix" = "xNONE"; then 
+	 prefix=/usr/local
+fi
+
+# assume on windows for now
+if test "x$MONO_VERSION" = "x"; then 
+	 MONO_VERSION=csc-2.0
+fi
+
+HAVE_SYNTAX_HIGHLIGHTING=no
+if test "x$HAVE_GNOME_VFS" = "xyes" && test "x$HAVE_GTK_SOURCEVIEW" = "xyes"; then
+  HAVE_SYNTAX_HIGHLIGHTING=yes
+fi
+
+echo "prefix=$prefix" > build/config.make
+echo "exec_prefix=\${prefix}" >> build/config.make
+echo "mono_libdir=\${exec_prefix}/lib" >> build/config.make
+echo "RUNTIME=mono" >> build/config.make
+echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> build/config.make
+echo "MONO_VERSION=$MONO_VERSION" >> build/config.make
+echo "MONODEVELOP_LIBPATH=$MD_LIBPATH" >> build/config.make
+echo "MCS_FLAGS=-debug+" >> build/config.make
+echo "HAVE_GTK=$HAVE_GTK" >> build/config.make
+echo "HAVE_SYNTAX_HIGHLIGHTING=$HAVE_SYNTAX_HIGHLIGHTING" >> build/config.make
+echo "HAVE_ATLEAST_GTK_210=$HAVE_ATLEAST_GTK_210" >> build/config.make
+echo "HAVE_MAGIC=$HAVE_MAGIC" >> build/config.make
+echo "HAVE_MONODEVELOP=$HAVE_MD" >> build/config.make
+echo "HAVE_GNOME_KEYRING=$HAVE_GNOME_KEYRING" >> build/config.make
+echo "HAVE_DOC_TOOLS=$HAVE_DOC_TOOLS" >> build/config.make
+echo "HAVE_MSLIBS=$HAVE_MSLIBS" >> build/config.make
+
+AC_CONFIG_FILES([
+  tools/tf/tf.sh
+  tools/wit/wit.sh
+	tfs.spec
+])
+
+AC_OUTPUT
+
+echo
+echo "Configuration Summary"
+echo "----------------------------------"
+echo 
+echo "     File Type Support: " $HAVE_MAGIC
+echo "   Man Page Generation: " $HAVE_DOC_TOOLS
+echo " Gnome Keyring Support: " $HAVE_GNOME_KEYRING
+echo "           Gui Support: " $HAVE_GTK
+echo "   Syntax Highlighting: " $HAVE_SYNTAX_HIGHLIGHTING
+echo 
+
+if test "${enable_highlight+set}" = set; then
+  if test "x$HAVE_SYNTAX_HIGHLIGHTING" = "xno"; then
+	  echo Note: install libgnome-vfs2.0-cil and libgtksourceview2.0-cil
+	  echo       for syntax highlighting support in the "explore" command
+  fi
+fi
+
+if test "x$HAVE_MAGIC" = "xno"; then
+  echo Note: Team Foundation does not natively track file attributes.
+	echo       Install libmagic on debian-based systems, or file-devel on suse-based
+	echo       for automagic file attribute support.
+  echo
+fi
+
+if test "x$HAVE_DOC_TOOLS" = "xno"; then
+  echo Note: install asciidoc and xmlto for man page generation.
+	echo
+fi
