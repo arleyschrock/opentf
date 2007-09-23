@@ -1,0 +1,44 @@
+#summary Differences between the tf4mono TF client, and the standard client.
+#labels Featured
+
+A quick overview of the areas where the tf4mono TF client may be more useful and where it is currently less useful than the standard MS TF client.
+
+= Shortcomings =
+ # Help documentation not as extensive.
+ # Not as many GUI popup dialogs.
+ # No current support for branch merges.
+ # No current support for graphical conflict resolution.
+ # Missing *branch*, *lock*, *merge*, *merges*, *resolve*, *shelve*, *unshelve*, and *[http://msdn2.microsoft.com/en-us/library/y7505w2x(VS.80).aspx undelete]* commands.
+ # Implemented commands may not support all options available in standard TF client.
+
+= Improvements (YMMV) =
+
+== General ==
+ # tf explore command for built in viewer GUI supporting multiple repository views, syntax highlighting (on unix platforms only), etc.
+ # Get Latest on Checkout option (will be in Orcas release of TF)
+ # Multiple commands can be chained together in a single TF execution separated by the "%" character. For example, *tf online % checkin /comment:"applied patch 501"*. Commands can feed their output to the next command in the chain with %%, for example *tf ls-files /others %% add* to add all unknown files.
+ # Supports file attributes on unix.
+ # Command argument ordering much more forgiving than standard client.
+ # tf undo with no args will undo all pending changes
+ # builtin general help and per-command help, accessible via *tf help <cmd>*
+
+== Diffs ==
+ # Unified diffs are actually appliable with gnu patch.
+ # Does tree wide diffs
+ # Can show what files you've changed locally but haven't checked out with *tf diff /modified*.
+ # Can show what files are out of date with latest server version with *tf diff /old*.
+ # Can show pending changes as a diff with *tf diff*.
+
+== Configuration ==
+ # *Supports read-write working folders*.
+ # Supports credential caching via XML files or the Gnome Keyring.
+ # Supports numerous persisted configuration options, including _Checkin.Validate, File.Excludes, Get.Recursive, History.DefaultToCwd, History.Recursive, Online.Recursive_
+ # Can display local workspace cache configuration with *tf cache*.
+
+== Powertool Commands ==
+ # Integrated tfpt *treeclean* command.
+ # Integrated tfpt *online* command. Online command supports _/added, /modified, and /deleted_ options. Standard client only supports "/deleted". Also supports passing a list of files to speed up operation (rather than scanning the entire working folder). Useful in scenarios when you've applied a patch. Than do tf online `lsdiff <name of patch>`;
+
+== File Listing ==
+
+The *ls-files* command shows known, deleted, modified, old, or unknown files under the given path via the options _ /deleted, /modified, /old, /unknown_ .

@@ -1,0 +1,17 @@
+#summary Configuration required to run the unit tests
+
+Most of the unit tests require a working TeamFoundation server. Currently, the unit
+tests use the following environment variables to configure which server, user account, 
+password, project, etc. to use for testing purposes.
+
+export TFS_URL=<url to server, eg. http://192.168.0.1:8080/>;
+
+export TFS_USERNAME=<your-username>; 
+
+export TFS_DOMAIN=<your-domain>; 
+
+export TFS_PASSWORD=<your-password>; 
+
+export TFS_PROJECT=<a top-level project name, eg. MyProject>;
+
+then you can do a "make run-tests"
