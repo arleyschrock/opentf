@@ -1,0 +1,3 @@
+debian/tmp/usr/bin/tf usr/bin/
+debian/tmp/usr/man/man1/tf.1 usr/man/man1/
+debian/tmp/usr/lib/teamfoundation/tf.exe usr/lib/teamfoundation/

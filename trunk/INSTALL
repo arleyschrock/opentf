@@ -1,0 +1,25 @@
+To build:
+
+	./configure [--prefix=/yourprefix]
+
+	make
+
+To install:
+
+	make install
+
+Gnome Keyring Support
+-----------------------------------------------------------------
+The command line client, tf, has optional support for storing 
+login credentials in the Gnome Keyring. 
+
+SUSE seems to have a patched Gnome Keyring that installs the assembly
+into the GAC, most other distros have not yet picked up this
+change. If you're running such a distro, you need to execute the
+following command:
+
+  cp /usr/lib/Gnome.Keyring/Gnome.Keyring.dll $PREFIX/lib/teamfoundation/
+
+where $PREFIX is the prefix you supplied to the configure script above.
+
+

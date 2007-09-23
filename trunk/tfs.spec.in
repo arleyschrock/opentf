@@ -1,0 +1,62 @@
+%define name tf4mono
+%define release @PACKAGE_VERSION@
+
+Name: %name
+Version: %release
+Release: 0
+Summary: A command line client and associated assemblies for Team Foundation.
+
+Group: Development/Libraries/Other
+License: BSD
+URL:http://code.google.com/p/tf4mono/
+Vendor:         tf4mono project
+Source:%name-@PACKAGE_VERSION@.tar.gz
+BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
+
+Requires: mono-core >= 1.2.4
+Requires: gtk-sharp2 >= 2.10
+Requires: gnome-vfs-sharp2
+Requires: gtksourceview-sharp2
+ExclusiveArch:%{ix86}
+
+BuildRequires:pkgconfig
+BuildRequires:mono-devel
+BuildRequires:file-devel
+BuildRequires:asciidoc
+BuildRequires:xmlto
+BuildRequires:gtk-sharp2
+BuildRequires:gnome-vfs-sharp2
+BuildRequires:gtksourceview-sharp2
+Prereq:/sbin/ldconfig
+
+%description
+An implementation of the Team Foundation libraries and related client programs for the Mono .Net platform. Team Foundation is a 'collection of collaborative technologies that support a team effort to deliver a product' from Microsoft that includes bug tracking, source control, and other capabilities.
+
+%prep
+%setup
+
+%build
+%configure \
+  --prefix=%{_prefix} --enable-highlight \
+make
+
+%install  
+rm -rf $RPM_BUILD_ROOT
+%makeinstall
+
+%clean
+rm -fr $RPM_BUILD_ROOT
+
+%files
+%defattr(-, root, root, -)
+%doc INSTALL NEWS README
+%{_libdir}/mono/gac/Microsoft.TeamFoundation*
+%{_libdir}/mono/2.0/Microsoft.TeamFoundation*
+%{_libdir}/teamfoundation/*
+%{_libdir}/pkgconfig/tfs.pc
+%{_mandir}/man1/*
+%{_bindir}/*
+
+%changelog
+* Wed Sep 19 2007 Joel W. Reed <joelwreed at gmail>
+- Initial spec file

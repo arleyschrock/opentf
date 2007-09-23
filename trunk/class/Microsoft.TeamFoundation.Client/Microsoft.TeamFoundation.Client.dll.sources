@@ -1,0 +1,9 @@
+Assembly/AssemblyInfo.cs
+../../build/common/Consts.cs
+../../build/common/Locale.cs
+../../build/common/MonoTODOAttribute.cs
+CommonStructureService.cs
+GroupSecurityService.cs
+Registration.cs
+TeamFoundationServer.cs
+TeamFoundationServerFactory.cs

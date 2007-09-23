@@ -1,0 +1,5 @@
+2006-12-28  joel reed  <joelwreed@comcast.com>
+
+	* initial implementation of the following commands: get, dir, labels, permissions,
+	workspaces, view
+

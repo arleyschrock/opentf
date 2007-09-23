@@ -1,0 +1,7 @@
+Command.cs 
+CommandCheckout.cs
+CommandUpdate.cs
+TeamFoundationRepository.cs
+TeamFoundationVersionControl.cs
+TeamFoundationRevision.cs
+TeamFoundationPad.cs

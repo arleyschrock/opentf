@@ -1,0 +1,5 @@
+
+Name: TFS Libraries
+Description: Team Foundation Libraries for Mono.
+Version: @VERSION@
+Libs: -r:@olivedir@/Microsoft.TeamFoundation.Client.dll -r:@olivedir@/Microsoft.TeamFoundation.Common.dll -r:@olivedir@/Microsoft.TeamFoundation.dll -r:Microsoft.TeamFoundation.VersionControl.Client.dll

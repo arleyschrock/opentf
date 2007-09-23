@@ -1,0 +1,27 @@
+#!/usr/bin/make -f
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/autotools.mk
+include /usr/share/cdbs/1/rules/utils.mk
+
+common-binary-post-install-indep:: list-missing
+
+export MONO_SHARED_DIR=$(CURDIR)
+
+common-configure-arch::
+	./configure --prefix=/usr --disable-keyring
+
+common-binary-predeb-arch common-binary-predeb-indep::
+	dh_shlibdeps
+	dh_makeclilibs -V
+	dh_installcligac
+	dh_clideps -d
+
+install/libmono-teamfoundation-cil::
+	find debian -type f -name "*.dll" -exec chmod -x {} \;
+
+install/mono-teamfoundation-client::
+	find debian -type f -name "*.exe" -exec chmod +x {} \;
+
+clean::
+	rm -rf $(MONO_SHARED_DIR)/.wapi

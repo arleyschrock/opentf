@@ -1,0 +1,193 @@
+Team Foundation is a "collection of collaborative technologies that 
+support a team effort to deliver a product." It includes bug tracking, 
+source control, and other features (*).
+
+For example, Microsoft's CodePlex site (http://codeplex.com/) 
+uses a Team Foundation Server for the source control backend.
+
+For instructions on how to build and install this software, 
+see the file INSTALL.
+
+
+Namespaces under Development
+-----------------------------------------------------------------
+
+  Microsoft.TeamFoundation
+  Microsoft.TeamFoundation.Common
+  Microsoft.TeamFoundation.Client
+  Microsoft.TeamFoundation.VersionControl.Client 
+  Microsoft.TeamFoundation.VersionControl.Common
+
+
+The TF tool
+-----------------------------------------------------------------
+
+An in progress implementation of the Team Foundation client, tf.exe,
+can be found in tools/tf/. If found, it will make use of libmagic 
+to compute file permissions, as TF servers do not track/store
+permissions.
+
+Documentation on the tool can be found on msdn at:
+http://msdn2.microsoft.com/en-us/cc31bk2e(VS.80).aspx
+
+Supported Informational Commands:
+  dir, get, labels, status, view, workfold, workspace, workspaces,
+	history, properties, ls-files, permissions
+
+You can now track a repository using the 
+following commands:
+
+  tf /server:<server-ip> /login:<domain>\\<username>,<password> workspace /new "<workspace name>;<username>";
+  tf /server:<server-ip> /login:<domain>\\<username>,<password> workfold "$/<project name>" /usr/local/src/somedir
+
+Then as often as you like run:
+  tf /server:<server-ip> /login:<domain>\\<username>,<password> /recursive get /usr/local/src/somedir /workspace:someworkspace
+
+Supported Utility Commands:
+  add, checkin, edit/checkout, delete, get, undo, rename
+
+  These utility commands will modify the state of the server, but checkin
+  has a bug which prevents the changes being completed. undo can be used to
+  revert add/delete/edit type changes on the server.
+
+
+Running the Unit Tests
+-----------------------------------------------------------------
+
+Most of the unit tests require a working TeamFoundation server. Currently, the unit
+tests use the following environment variables to configure which server, user account, 
+password, project, etc. to use for testing purposes.
+
+export TFS_URL=<url to server, eg. http://192.168.0.1:8080/>;
+export TFS_USERNAME=<your-username>; 
+export TFS_DOMAIN=<your-domain>; 
+export TFS_PASSWORD=<your-password>; 
+export TFS_PROJECT=<a top-level project name, eg. MyProject>;
+
+
+TFS Web Services
+-----------------------------------------------------------------
+Here's the list of available TFS web services, as noted by
+a post at http://converttostring.com/archive/2007/03/01/359.aspx
+
+/Services/v1.0/AuthorizationService.asmx
+/Services/v1.0/CommonStructureService.asmx
+/Services/v1.0/EventService.asmx
+/Services/v1.0/GroupSecurityService.asmx
+/Services/v1.0/ProjectMaintenance.asmx
+/Services/v1.0/ProcessTemplate.asmx
+/Services/v1.0/Registration.asmx
+/Services/v1.0/ServerStatus.asmx
+
+/Warehouse/v1.0/WarehouseController.asmx
+/Warehouse/v1.0/WarehouseController.asmx
+
+/Build/v1.0/BuildStore.asmx
+/Build/v1.0/BuildController.asmx
+/Build/v1.0/Integration.asmx
+/Build/v1.0/Integration.asmx
+/Build/v1.0/Integration.asmx
+/Build/v1.0/PublishTestResultsBuildService.asmx
+
+/WorkItemTracking/v1.0/ClientService.asmx
+/WorkItemTracking/v1.0/ConfigurationSettingsService.asmx
+/WorkItemTracking/v1.0/Integration.asmx
+/WorkItemTracking/v1.0/Integration.asmx
+/WorkItemTracking/v1.0/Integration.asmx
+/WorkItemTracking/v1.0/Integration.asmx
+
+/VersionControl/v1.0/repository.asmx
+/VersionControl/v1.0/administration.asmx
+/VersionControl/v1.0/integration.asmx
+/VersionControl/v1.0/item.asmx
+/VersionControl/v1.0/upload.asmx
+
+/Build/v1.0/PublishTestResultsBuildService.asmx
+/Build/v1.0/PublishTestResultsBuildService.asmx
+
+
+CodePlex Example Usage
+===================================================================
+For registered developers, CodePlex is a publicly accessible example
+of a Team Foundation server used to host open source projects. Here's
+some examples of how to use the TF tool to access CodePlex hosted 
+source code.
+
+In the commands below,
+
+  UID = your codeplex user name
+  PWD = your codeplex password
+  MACHINENAME = your machine name (or any other random name)
+
+Note:	"snd" is the domain name I got with my signon. Not sure
+if this is the same for everyone or not.
+
+First create a workspace:
+
+  tf /server:https://tfs01.codeplex.com /login:snd\\UID,PWD
+  workspace /new "MACHINENAME;UID"
+
+Then map "Turtle" project to a local folder:
+
+  tf /server:https://tfs01.codeplex.com /login:snd\\UID,PWD
+  workfold "$/Turtle" ~/Source/turtle
+
+Then pull the files:
+
+  tf /server:https://tfs01.codeplex.com /login:snd\\UID,PWD get
+  ~/Source/turtle /recursive
+
+Now, to edit the "License.txt" file:
+
+  cd ~/Source/turtle
+  tf edit License.txt
+
+This makes the file writable. To see what you have checked out:
+
+  tf status
+
+To check License.txt back in:
+
+	tf checkin /comment:"My comment" License.txt
+
+This makes the file read-only again. You don't have to specify
+License.txt. If you don't specify a filename or filenames, it checks
+in everything you have checked out.
+
+Then you could review the history, review a changeset, then look
+at the diff of the changeset. Note: the examples below assume
+Credentials.Save is on.
+
+  cd ~/Source/turtle
+  tf history /recursive .
+  tf changeset 340
+  tf diff C340
+
+
+Code Samples
+-----------------------------------------------------------------
+Buck Hodges has written numerous examples of using the TFS API.
+You can find a list of these samples here:
+
+http://blogs.msdn.com/buckh/archive/2006/08/12/tfs_api_links.aspx
+
+The following examples have been compiled and tested against
+TF for Mono:
+
+http://blogs.msdn.com/buckh/archive/2005/10/26/485458.aspx
+http://blogs.msdn.com/buckh/archive/2006/04/06/project_diff.aspx (with 2 changes)
+
+
+Links of Interest
+-----------------------------------------------------------------
+
+http://msdn2.microsoft.com/en-us/library/bb130146(VS.80).aspx
+http://msdn2.microsoft.com/en-us/teamsystem/default.aspx
+http://msdn2.microsoft.com/en-us/cc31bk2e(VS.80).aspx
+
+
+Mailing List / Discussion Group
+-----------------------------------------------------------------
+http://groups.google.com/group/tf4mono
+
+Members may post messages to: tf4mono@googlegroups.com

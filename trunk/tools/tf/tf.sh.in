@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /usr/bin/mono @prefix@/lib/teamfoundation/tf.exe "$@"
