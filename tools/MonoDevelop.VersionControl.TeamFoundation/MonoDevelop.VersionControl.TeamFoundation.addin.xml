@@ -3,7 +3,7 @@
 			 name				 = "MonoDevelop Team Foundation Addin"
 			 author			 = "Joel Reed"
 			 copyright	 = "GPL"
-			 url				 = "http://code.google.com/p/tf4mono"
+			 url				 = "http://code.google.com/p/opentf"
 			 description = "A MonoDevelop addin for using the Team Foundation version control system"
 			 category		 = "IDE extensions"
 			 version		 = "0.13.0">

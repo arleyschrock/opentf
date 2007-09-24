@@ -3,16 +3,16 @@
 
 !include "MUI.nsh"
 
-!define OURNAME "Tf4Mono v0.5.1"
+!define OURNAME "OpenTF v0.5.1"
 
 ; The name of the installer
 Name "${OURNAME}"
 
 ; The file to write
-OutFile "tf4mono.exe"
+OutFile "opentf.exe"
 
 ; The default installation directory
-InstallDir $PROGRAMFILES\Tf4Mono
+InstallDir $PROGRAMFILES\Opentf
 
 ;--------------------------------
 
@@ -47,8 +47,8 @@ Section "" ;No components page, name is not important
 
   WriteUninstaller "$INSTDIR\Uninstall.exe"  
 
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Tf4Mono" "DisplayName" "Tf4Mono (remove only)"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Tf4Mono" "UninstallString" "$INSTDIR\Uninstall.exe"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Opentf" "DisplayName" "Opentf (remove only)"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Opentf" "UninstallString" "$INSTDIR\Uninstall.exe"
 
 SectionEnd ; end the section
 
@@ -64,8 +64,8 @@ Section "Uninstall"
   Delete "$INSTDIR\Mono.GetOptions.dll"
   RMDir "$INSTDIR"
 
- DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Tf4Mono"
- DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Tf4Mono"
+ DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Opentf"
+ DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Opentf"
 
 SectionEnd
 
