@@ -1,5 +1,5 @@
 Version 0.5.1 of open source Team Foundation for Mono is now available at
-http://code.google.com/p/tf4mono/
+http://code.google.com/p/opentf/
 
 This is a development update with win32 installation packages, a GTK-based gui mode 
 for exploring TFS repositories, command enhancements, improved builtin help with
@@ -8,8 +8,8 @@ usage guidelines, and many bugfixes.
 If you're not familiar with Microsoft's Team Foundation / Team System product,
 checkout the section "What is Team Foundation / Team System?" below.
 
-Example invocations of the tf4mono client can be found here:
-  http://tf4mono.googlecode.com/svn/trunk/docs/examples/
+Example invocations of the opentf client can be found here:
+  http://opentf.googlecode.com/svn/trunk/docs/examples/
 
 
 Enhancements include:
@@ -18,7 +18,7 @@ Enhancements include:
 syntax highlighting, sortable columns, multiple views, and copy-and-paste for code review
 feedback. This is a work in progress!
 
-# Win32 packages of tf4mono, built with NSIS. A base version without GTK dependencies 
+# Win32 packages of opentf, built with NSIS. A base version without GTK dependencies 
 and no explore command and a full version WITH GTK dependencies and the "explore" command
 are available.
 
@@ -116,7 +116,7 @@ tf diff C340
 Source and Packages
 ===================================================================
 Debian packages, Win32 packages, and source tarball available here:
-   http://code.google.com/p/tf4mono/downloads/list
+   http://code.google.com/p/opentf/downloads/list
 
 Additionally, a git clone of the source tree can be made with:
 
@@ -126,14 +126,14 @@ This is where most development happens.
 
 SVN users can check out the semi-regularly updated project source code at:
 
-    svn checkout http://tf4mono.googlecode.com/svn/trunk/ tf4mono
+    svn checkout http://opentf.googlecode.com/svn/trunk/ opentf
 
 
 Project Site
 ===================================================================
-There is a Google Code Project Site for tf4mono, the URL is:
-http://code.google.com/p/tf4mono/
+There is a Google Code Project Site for opentf, the URL is:
+http://code.google.com/p/opentf/
 
-There is a Google Discussion Group for tf4mono as well. The URL is:
-http://groups.google.com/group/tf4mono
+There is a Google Discussion Group for opentf as well. The URL is:
+http://groups.google.com/group/opentf
 

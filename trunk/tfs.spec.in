@@ -1,4 +1,4 @@
-%define name tf4mono
+%define name opentf
 %define release @PACKAGE_VERSION@
 
 Name: %name
@@ -8,8 +8,8 @@ Summary: A command line client and associated assemblies for Team Foundation.
 
 Group: Development/Libraries/Other
 License: BSD
-URL:http://code.google.com/p/tf4mono/
-Vendor:         tf4mono project
+URL:http://code.google.com/p/opentf/
+Vendor:         opentf project
 Source:%name-@PACKAGE_VERSION@.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 

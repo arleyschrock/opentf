@@ -1,5 +1,5 @@
 #!/bin/sh
 SERVER=$1
 LOGIN=$2
-echo tf /server:$SERVER /login:$LOGIN delete /tmp/tf4mono/test*.txt
-tf /server:$SERVER /login:$LOGIN delete /tmp/tf4mono/test*.txt
+echo tf /server:$SERVER /login:$LOGIN delete /tmp/opentf/test*.txt
+tf /server:$SERVER /login:$LOGIN delete /tmp/opentf/test*.txt

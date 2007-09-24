@@ -111,7 +111,7 @@
 	# Add Online.Recursive setting. Make default non-recursive to match
 	standard MS client.
 	# Add tf ls-files /writable option (mainly for windows users)
-	# BUGFIX: Fixed multiple issues related to running tf4mono on windows.
+	# BUGFIX: Fixed multiple issues related to running opentf on windows.
 	these include deleting read-only files and deleting files still open,
 	which succeed on *nix platforms, but not on windows.
 	# BUGFIX: Online command on windows. Replace server item path separator 

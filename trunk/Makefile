@@ -57,7 +57,7 @@ test-installed-compiler:
 	$(MAKE) TEST_SUBDIRS="tests errors" PROFILE=net_2_0 TEST_RUNTIME=mono MCS=gmcs run-test
 
 dist:
-	git-archive --format=tar --prefix=tf4mono-$(PACKAGE_VERSION)/ master . |gzip > ../tf4mono-$(PACKAGE_VERSION).tgz
+	git-archive --format=tar --prefix=opentf-$(PACKAGE_VERSION)/ master . |gzip > ../opentf-$(PACKAGE_VERSION).tgz
 	cp docs/tf.html ../tf-$(PACKAGE_VERSION).html
 
 dist.deb:
@@ -75,17 +75,17 @@ dist.win:
 	./configure --disable-magic --disable-keyring --disable-gtk
 	make clean all
 	makensis tfs.nsi
-	cp tf4mono.exe ../tf4mono-base-$(PACKAGE_VERSION).exe
+	cp opentf.exe ../opentf-base-$(PACKAGE_VERSION).exe
 	./configure --disable-magic --disable-keyring --enable-highlight
 	(cd tools/tf &&	make clean all)
 	makensis tfs.nsi
-	cp tf4mono.exe ../tf4mono-full-$(PACKAGE_VERSION).exe
+	cp opentf.exe ../opentf-full-$(PACKAGE_VERSION).exe
 
 distclean: clean
 
 clean:
 	rm -rf debian/tmp debian/mono-teamfoundation-client debian/libmono-teamfoundation-cil \
-	tf4mono.exe tfs.spec
+	opentf.exe tfs.spec tools/tf/tf.sh tools/wit/wit.sh
 
 sample:
 	gmcs sample.cs -r:Microsoft.TeamFoundation.dll -r:Microsoft.TeamFoundation.Client.dll -r:Microsoft.TeamFoundation.VersionControl.Client.dll -r:Microsoft.TeamFoundation.VersionControl.Common.dll -r:Microsoft.TeamFoundation.Common.dll

@@ -1,4 +1,4 @@
-AC_INIT(tf4mono, [0.5.2])
+AC_INIT(opentf, [0.5.2])
 
 PKG_PROG_PKG_CONFIG
 
@@ -9,7 +9,7 @@ AC_ARG_ENABLE(gtk,
 )
 
 # disable experimental stuff for now
-PKG_CHECK_EXISTS(monodevelop, HAVE_MD=no, HAVE_MD=no)
+#PKG_CHECK_EXISTS(monodevelop, HAVE_MD=no, HAVE_MD=no)
 
 HAVE_DOC_TOOLS=no
 AC_CHECK_PROG(ASCIIDOC, [asciidoc], yes)

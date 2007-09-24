@@ -299,7 +299,7 @@ should be marked executable or not.
 
 MORE INFORMATION
 ----------------
-http://groups.google.com/group/tf4mono
+http://groups.google.com/group/opentf
 http://msdn2.microsoft.com/en-us/library/bb130146(VS.80).aspx
 http://msdn2.microsoft.com/en-us/teamsystem/default.aspx
 http://msdn2.microsoft.com/en-us/cc31bk2e(VS.80).aspx
