@@ -39,6 +39,52 @@ A quick overview of the areas where the tf4mono TF client may be more useful and
  # Integrated tfpt *treeclean* command.
  # Integrated tfpt *online* command. Online command supports _/added, /modified, and /deleted_ options. Standard client only supports "/deleted". Also supports passing a list of files to speed up operation (rather than scanning the entire working folder). Useful in scenarios when you've applied a patch. Than do tf online `lsdiff <name of patch>`;
 
+== Show Command ==
+
+Usage: tf show [ build | cache | ident | stats | tools ]
+
+Examples:
+{{{
+> tf show stats
+
+Files:           3279591
+Folders:         214276
+Groups:          4822
+Pending Changes: 182284
+Shelvesets:      116
+Users:           185
+Workspaces:      119
+
+>tf show tools
+
+VersionControl
+-----------------------------------------------------------------------------------------
+
+ArtifactTypes: 
+
+  Changeset
+  Label
+  LatestItemVersion
+  VersionedItem
+
+Databases: 
+
+  TeamFoundation Logging DB: TfsActivityLogging on tfs-db01
+  VersionControl DB: TfsVersionControl on tfs-db01
+
+ServiceInterfaces: 
+
+  Download: /VersionControl/v1.0/item.asmx
+  IBISEnablement: /VersionControl/v1.0/integration.asmx
+  IProjectMaintenance: /VersionControl/v1.0/integration.asmx
+  ISCCAdmin: /VersionControl/v1.0/administration.asmx
+  ISCCProvider: /VersionControl/v1.0/repository.asmx
+  LinkingProviderService: /VersionControl/v1.0/integration.asmx
+  Upload: /VersionControl/v1.0/upload.asmx
+}}}
+
+_tf show tools output truncated!_
+
 == File Listing ==
 
 The *ls-files* command shows known, deleted, modified, old, or unknown files under the given path via the options _ /deleted, /modified, /old, /unknown_ .
