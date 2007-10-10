@@ -6,7 +6,7 @@ Opentf with VS2005 or VS2008, or install cygwin and follow the
 instructions below for building opentf on *Nix.
 
 If you build with VS2005 or VS2008, the resulting opentf.exe TF client
-will end up in tools/opentf/bin/Debug/.
+will end up in tools/opentf/bin/.
 
 = Building Opentf on *Nix =
 
