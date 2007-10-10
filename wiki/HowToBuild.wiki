@@ -15,12 +15,12 @@ First, configure opentf:
   ./configure [--prefix=/yourprefix]
 
 Valid options include:
-
+{{{
     --disable-gtk           disable gtk gui support
     --enable-highlight      enable syntax highlighting support
     --disable-keyring       disable gnome keyring support                                 
     --disable-magic         disable libmagic file attributes
-
+}}}
 To build:
 
   make
