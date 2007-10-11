@@ -21,6 +21,7 @@ A quick overview of the areas where the tf4mono TF client may be more useful and
  # Command argument ordering much more forgiving than standard client.
  # *tf undo* with no args will undo all pending changes
  # *tf explore* command for built in viewer GUI supporting multiple repository views, syntax highlighting, etc. (on unix platforms only in 0.5.2)
+ # Can display local workspace cache configuration with *tf show cache* (often very helpful when debugging TFS issues)
 
 == Diffs ==
  # Unified diffs are actually appliable with gnu patch.
@@ -32,10 +33,8 @@ A quick overview of the areas where the tf4mono TF client may be more useful and
 == Configuration ==
  # *Supports read-write working folders*.
  # Supports credential caching via XML files or the Gnome Keyring.
- # Supports numerous persisted configuration options, including _Checkin.Validate, File.Excludes, Get.Recursive, History.DefaultToCwd, History.Recursive, Online.Recursive_
- # Can display local workspace cache configuration with *tf cache*.
 
-For example, here's my config:
+Numerous persisted configuration options are offered. Here's my config:
 {{{
 (/usr/local/src/opentf) tf config
 Client Configuration:
@@ -59,10 +58,22 @@ Client Configuration:
 
 == Show Command ==
 
-Usage: tf show [ build | cache | ident | stats | tools ]
+The *show* command can be used to explore many behind the scenes aspects of TFS.
+A few example are shown below.
 
-Examples:
 {{{
+> tf help show
+
+Show information about build configuration, cache settings, identity 
+info, usage statistics, or registered tools.
+
+Usage: show [ build | cache | ident | stats | tools ]
+
+Options:
+  /login:ARG        	Login name (also /Y:ARG)
+  /server:ARG       	Server name. (also /S:ARG)
+  /workspace:ARG    	Workspace name (also /W:ARG)
+
 > tf show stats
 
 Files:           3279591
