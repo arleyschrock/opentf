@@ -3,16 +3,16 @@
 
 !include "MUI.nsh"
 
-!define OURNAME "OpenTF v0.5.1"
+!define OURNAME "OpenTF v0.5.2"
 
 ; The name of the installer
 Name "${OURNAME}"
 
 ; The file to write
-OutFile "opentf.exe"
+OutFile "opentf-0.5.2.exe"
 
 ; The default installation directory
-InstallDir $PROGRAMFILES\Opentf
+InstallDir $PROGRAMFILES\OpenTF
 
 ;--------------------------------
 
@@ -35,20 +35,18 @@ Section "" ;No components page, name is not important
   SetOutPath $INSTDIR
   
   ; Put file there
+	File class\lib\net_2_0\Mono.GetOptions.dll
   File class\lib\net_2_0\Microsoft.TeamFoundation.Client.dll
   File class\lib\net_2_0\Microsoft.TeamFoundation.Common.dll
   File class\lib\net_2_0\Microsoft.TeamFoundation.dll
   File class\lib\net_2_0\Microsoft.TeamFoundation.VersionControl.Client.dll
   File class\lib\net_2_0\Microsoft.TeamFoundation.VersionControl.Common.dll
-  File tools\tf\tf.exe
-
-	; not sure of a good way to do this yet...
-	File C:\Mono-1.2.4\lib\mono\2.0\Mono.GetOptions.dll
+  File tools\opentf\bin\opentf.exe
 
   WriteUninstaller "$INSTDIR\Uninstall.exe"  
 
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Opentf" "DisplayName" "Opentf (remove only)"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Opentf" "UninstallString" "$INSTDIR\Uninstall.exe"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenTF" "DisplayName" "OpenTF (remove only)"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenTF" "UninstallString" "$INSTDIR\Uninstall.exe"
 
 SectionEnd ; end the section
 
@@ -59,13 +57,13 @@ Section "Uninstall"
   Delete "$INSTDIR\Microsoft.TeamFoundation.dll"
   Delete "$INSTDIR\Microsoft.TeamFoundation.VersionControl.Client.dll"
   Delete "$INSTDIR\Microsoft.TeamFoundation.VersionControl.Common.dll"
-  Delete "$INSTDIR\tf.exe"
+  Delete "$INSTDIR\opentf.exe"
   Delete "$INSTDIR\Uninstall.exe"
   Delete "$INSTDIR\Mono.GetOptions.dll"
   RMDir "$INSTDIR"
 
- DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Opentf"
- DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Opentf"
+ DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\OpenTF"
+ DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\OpenTF"
 
 SectionEnd
 

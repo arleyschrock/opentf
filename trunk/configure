@@ -1205,8 +1205,8 @@ if test -n "$ac_init_help"; then
 Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
-  --disable-gtk                disable gtk gui support
-  --enable-highlight           enable syntax highlighting support
+  --disable-gtk           disable gtk gui support
+  --enable-highlight      enable syntax highlighting support
   --disable-keyring       disable gnome keyring support
   --disable-magic         disable libmagic file attributes
 
@@ -2967,7 +2967,7 @@ echo "HAVE_GNOME_KEYRING=$HAVE_GNOME_KEYRING" >> build/config.make
 echo "HAVE_DOC_TOOLS=$HAVE_DOC_TOOLS" >> build/config.make
 echo "HAVE_MSLIBS=$HAVE_MSLIBS" >> build/config.make
 
-ac_config_files="$ac_config_files tools/tf/tf.sh tools/wit/wit.sh tfs.spec"
+ac_config_files="$ac_config_files tools/opentf/tf.sh tools/wit/wit.sh tfs.spec"
 
 
 cat >confcache <<\_ACEOF
@@ -3537,7 +3537,7 @@ cat >>$CONFIG_STATUS <<\_ACEOF
 for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
-    "tools/tf/tf.sh") CONFIG_FILES="$CONFIG_FILES tools/tf/tf.sh" ;;
+    "tools/opentf/tf.sh") CONFIG_FILES="$CONFIG_FILES tools/opentf/tf.sh" ;;
     "tools/wit/wit.sh") CONFIG_FILES="$CONFIG_FILES tools/wit/wit.sh" ;;
     "tfs.spec") CONFIG_FILES="$CONFIG_FILES tfs.spec" ;;
 

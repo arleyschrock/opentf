@@ -24,6 +24,7 @@ BuildRequires:mono-devel
 BuildRequires:file-devel
 BuildRequires:asciidoc
 BuildRequires:xmlto
+BuildRequires:libxslt
 BuildRequires:gtk-sharp2
 BuildRequires:gnome-vfs-sharp2
 BuildRequires:gtksourceview-sharp2
@@ -52,7 +53,7 @@ rm -fr $RPM_BUILD_ROOT
 %doc INSTALL NEWS README
 %{_libdir}/mono/gac/Microsoft.TeamFoundation*
 %{_libdir}/mono/2.0/Microsoft.TeamFoundation*
-%{_libdir}/teamfoundation/*
+%{_libdir}/opentf/*
 %{_libdir}/pkgconfig/tfs.pc
 %{_mandir}/man1/*
 %{_bindir}/*

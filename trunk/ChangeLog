@@ -1,19 +1,33 @@
 2007-09-07  Joel Reed  <joelwreed@comcast.com>
 
 	* v0.5.2 release notes
+	# NEW: add VS2005 project files and solution for building opentf 
+	on Windows
+	# NEW: add spec file for building RPMs on OpenSuse
+	# NEW: add "lock" command
 	# NEW: add "show stats" command to show server statistics
 	# NEW: add "show tools" command to show registered tools
 	# NEW: add "show build" command to show build configuration
-	# NEW" add "show ident" command to show server account information
+	# NEW: add "show ident" command to show server account information
 	# NEW: rename "tf cache" to "tf show cache"
 	# NEW: implement "tf changeset /latest" and test case
 	# NEW: implement "tf history /user:FOO" for filtering history queries by user
 	# NEW: implement "tf history /version:<vspec>" - but not ranges!
-	# NEW: add "tf history /byowner" and test case
+	# NEW: add "tf history /format:byowner" and test case
 	# NEW: add "tf version" command to print program version number
 	# NEW: add "Server.Default" setting 
-	# API: add ArtifactType, ChangeType, Database, OutboundLinkType, RegistrationEntry
-	and ServiceInterface classes to Microsoft.TeamFoundation.dll
+	# NEW: teach File.Excludes to support directory specifications as well as
+	file glob patterns
+	# NEW: teach tf shelveset the "name;owner" syntax for specifying a shelveset
+	
+	# API: add ICredentialsProvider, ArtifactType, ChangeType, Database, 
+	IGroupSecurityService, IRegistration, Identity, IdentityType, 
+	QueryMembership, OutboundLinkType, RegistrationEntry, SearchFactor 
+	and ServiceInterface classes
+	
+	# API: start work on Microsoft.TeamFoundation.WorkItemTracking.Client assembly
+	# BUGFIX: rework exit codes throughout for more consistency
+	# BUGFIX: tf shelveset /owner:<owner> should filter results by owner
 	# BUGFIX: add column headers to history /format:brief output
 	# BUGFIX: tf get /force shouldn't set preview mode!
 	# BUGFIX: properly label renames in tf status output

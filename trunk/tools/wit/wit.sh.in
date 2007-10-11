@@ -1,2 +1,2 @@
 #!/bin/sh
-exec /usr/bin/mono @prefix@/lib/teamfoundation/wit.exe "$@"
+exec /usr/bin/mono @prefix@/lib/opentf/wit.exe "$@"

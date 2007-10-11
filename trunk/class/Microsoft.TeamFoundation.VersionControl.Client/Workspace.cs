@@ -504,6 +504,40 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 			return 1;
 		}
 
+		public int SetLock(string path, LockLevel lockLevel)
+		{
+			return SetLock(path, lockLevel, RecursionType.None);
+		}
+
+		public int SetLock(string path, LockLevel lockLevel, RecursionType recursion)
+		{
+			string[] paths = new string[1];
+			paths[0] = path;
+			return SetLock(paths, lockLevel, recursion);
+		}
+
+		public int SetLock(string[] paths, LockLevel lockLevel)
+		{
+			return SetLock(paths, lockLevel, RecursionType.None);
+		}
+
+		public int SetLock(string[] paths, LockLevel lockLevel, RecursionType recursion)
+		{
+			List<ChangeRequest> changes = new List<ChangeRequest>();
+
+			foreach (string path in paths)
+				{
+					ItemType itemType = ItemType.File;
+					if (Directory.Exists(path)) itemType = ItemType.Folder;
+					changes.Add(new ChangeRequest(path, RequestType.Lock, itemType, recursion, lockLevel));
+				}
+
+			if (changes.Count == 0) return 0;
+
+			GetOperation[] operations = Repository.PendChanges(this, changes.ToArray());
+			return operations.Length;
+		}
+
 		internal static Workspace FromXml(Repository repository, XmlReader reader)
 		{
 			string elementName = reader.Name;

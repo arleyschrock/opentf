@@ -17,7 +17,7 @@ Namespaces under Development
   Microsoft.TeamFoundation.Client
   Microsoft.TeamFoundation.VersionControl.Client 
   Microsoft.TeamFoundation.VersionControl.Common
-
+  Microsoft.TeamFoundation.WorkItemTracking.Client
 
 The TF tool
 -----------------------------------------------------------------
@@ -30,11 +30,14 @@ permissions.
 Documentation on the tool can be found on msdn at:
 http://msdn2.microsoft.com/en-us/cc31bk2e(VS.80).aspx
 
-Supported Informational Commands:
-  dir, get, labels, status, view, workfold, workspace, workspaces,
-	history, properties, ls-files, permissions
+Supported Commands:
+  add, branches, changeset, checkin, checkout, commit, config, delete,
+	diff, dir, edit, explore, get, help, history, label, labels, lock,
+	ls-files, move, online, permission, properties, rename, shelvesets, 
+	show, status, treeclean, undo, unlabel, version, view, workfold,
+  workspace, and workspaces
 
-You can now track a repository using the 
+You can track a repository using the 
 following commands:
 
   tf /server:<server-ip> /login:<domain>\\<username>,<password> workspace /new "<workspace name>;<username>";
@@ -42,13 +45,6 @@ following commands:
 
 Then as often as you like run:
   tf /server:<server-ip> /login:<domain>\\<username>,<password> /recursive get /usr/local/src/somedir /workspace:someworkspace
-
-Supported Utility Commands:
-  add, checkin, edit/checkout, delete, get, undo, rename
-
-  These utility commands will modify the state of the server, but checkin
-  has a bug which prevents the changes being completed. undo can be used to
-  revert add/delete/edit type changes on the server.
 
 
 Running the Unit Tests

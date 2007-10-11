@@ -84,8 +84,8 @@ dist.win:
 distclean: clean
 
 clean:
-	rm -rf debian/tmp debian/mono-teamfoundation-client debian/libmono-teamfoundation-cil \
-	opentf.exe tfs.spec tools/tf/tf.sh tools/wit/wit.sh
+	rm -rf debian/tmp debian/opentf-client debian/libopentf-cil \
+	opentf.exe tfs.spec
 
 sample:
 	gmcs sample.cs -r:Microsoft.TeamFoundation.dll -r:Microsoft.TeamFoundation.Client.dll -r:Microsoft.TeamFoundation.VersionControl.Client.dll -r:Microsoft.TeamFoundation.VersionControl.Common.dll -r:Microsoft.TeamFoundation.Common.dll

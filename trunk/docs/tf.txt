@@ -102,6 +102,9 @@ COMMANDS
 *labels [ <labelname> /owner:<ownername> /format:detailed ]*:: 
 	Displays labels or tags. Can optionally filter by <labelname> and <ownername>.
 
+*lock /lock:[None | Checkin | Checkout] <itemspec> [ /recursive ]*::
+	Locks a file in the repository. Use /lock:none to remove the lock.
+
 *ls-files <path> [ /deleted | /modified | /old | /unknown ]*::
 	Shows known, deleted, modified, old, or unknown files under the given path.
 	With no options, ls-files shows known files. /old option by default shows
@@ -129,7 +132,7 @@ COMMANDS
 *rename <oldname> <newname>*::
 	Rename a file or files in the repository.
 
-*shelvesets [ <name> /owner ]*::
+*shelvesets [ <name> | <name;owner> ] [ /owner:<owner> ]*::
   Show shelvesets on the server. Use /owner:"*" and no name argument to view all 
   shelvesets.
 

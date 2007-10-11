@@ -19,7 +19,7 @@ LOCAL_MCS_FLAGS += -pkg:gnome-keyring-sharp
 endif
 
 PROGRAM = wit.exe
-PROGRAM_INSTALL_DIR=$(prefix)/lib/teamfoundation/
+PROGRAM_INSTALL_DIR=$(prefix)/lib/opentf/
 
 install: 
 	$(MKINSTALLDIRS) $(DESTDIR)$(prefix)/bin/

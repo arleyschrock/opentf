@@ -90,6 +90,15 @@ namespace Microsoft.TeamFoundation.Client
 			Uri uri = new Uri(tfsUrl);
       Assert.AreEqual(uri.Host, tfs.Name);
 		}
+
+		[Test]
+		public void Authentication1()
+		{
+			// need TFS_ envvars for this test
+			if (String.IsNullOrEmpty(tfsUrl)) return;
+			TeamFoundationServer tfs = new TeamFoundationServer(tfsUrl, credentials);
+			Assert.IsFalse(tfs.HasAuthenticated);
+		}
   }
 }
 

@@ -17,10 +17,10 @@ common-binary-predeb-arch common-binary-predeb-indep::
 	dh_installcligac
 	dh_clideps -d
 
-install/libmono-teamfoundation-cil::
+install/libopentf-cil::
 	find debian -type f -name "*.dll" -exec chmod -x {} \;
 
-install/mono-teamfoundation-client::
+install/opentf::
 	find debian -type f -name "*.exe" -exec chmod +x {} \;
 
 clean::

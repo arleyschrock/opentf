@@ -38,6 +38,7 @@ namespace Microsoft.TeamFoundation.Client
 		private string name;
 		private Uri uri;
 		private ICredentials credentials;
+		private bool hasAuthenticated = false;
 
 		public TeamFoundationServer(string url)
 		{
@@ -53,6 +54,14 @@ namespace Microsoft.TeamFoundation.Client
 			credentials = creds;
 		}
 
+		public TeamFoundationServer(string url, ICredentialsProvider creds)
+		{
+			this.uri = new Uri(url);
+			this.name = this.uri.Host;
+
+			credentials = creds.GetCredentials(Uri, null);
+		}
+
 		public object GetService(Type serviceType)
 		{
 			if (serviceType == typeof(ICommonStructureService))
@@ -63,6 +72,18 @@ namespace Microsoft.TeamFoundation.Client
 				return new GroupSecurityService(Uri, Credentials);
 			else
 				return Activator.CreateInstance(serviceType, new object[]{ Uri, Credentials});
+		}
+
+		public void EnsureAuthenticated()
+		{
+			if (!hasAuthenticated) Authenticate();
+		}
+
+		public void Authenticate()
+		{
+			Authenticator authenticator = new Authenticator(uri);
+			authenticator.CheckAuthentication();
+			hasAuthenticated = true;
 		}
 		
 		public void Dispose()
@@ -79,6 +100,11 @@ namespace Microsoft.TeamFoundation.Client
 		
 		public Uri Uri {
 			get { return uri; }
+		}
+
+		public bool HasAuthenticated
+		{
+			get { return hasAuthenticated; }
 		}
 
 		public static string ClientCacheDirectory {
