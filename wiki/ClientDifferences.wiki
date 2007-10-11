@@ -129,7 +129,7 @@ JSELKO: 24
 LMAHA   : 22
 GVAMA: 20
 JREED   : 17
-JCOY  : 8
+JCOY  : 17
 AWIMON  : 8
 tatcuk : 8
 XSTEWO: 5
