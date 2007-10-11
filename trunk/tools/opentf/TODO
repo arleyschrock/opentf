@@ -1,0 +1,7 @@
+# TFS will let you create the following situation
+
+folder1/
+Folder1/foobar.txt
+
+Since Windows has a case insensitive filesystem no problem. But on *nix,
+we fail to create Folder1/foobar.txt.

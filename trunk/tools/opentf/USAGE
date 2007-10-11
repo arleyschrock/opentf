@@ -1,0 +1,15 @@
+= Supported Commands = 
+
+	dir
+	view
+  workspaces
+	permissions
+  labels
+
+= Supported Version Specs =
+
+  date
+  changeset
+	labels
+  latest
+
