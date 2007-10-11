@@ -114,6 +114,31 @@ ServiceInterfaces:
 
 _tf show tools output truncated!_
 
+== History Command ==
+
+The history command supports the standard brief and detailed formats, as well as a "byowner" format that summarizes the changeset history by owner. For example,
+{{{
+(/usr/local/src/opentf) tf history "$/" /format:byowner /stopafter:300 
+This could take some time... processing up to 300 changesets
+
+STISTER: 67
+STHAOO: 46
+RHORET  : 42
+RZEALTH: 24
+JSELKO: 24
+LMAHA   : 22
+GVAMA: 20
+JREED   : 17
+JCOY  : 8
+AWIMON  : 8
+tatcuk : 8
+XSTEWO: 5
+
+Time Span: 10/2/2007 to 10/10/2007
+Total   : 300
+}}}
+
+
 == File Listing ==
 
 The *ls-files* command shows known, deleted, modified, old, or unknown files under the given path via the options _ /deleted, /modified, /old, /unknown_ .
