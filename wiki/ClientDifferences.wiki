@@ -11,7 +11,7 @@ A quick overview of the areas where the tf4mono TF client may be more useful and
  # Missing *branch*, *lock*, *merge*, *merges*, *resolve*, *shelve*, *unshelve*, and *[http://msdn2.microsoft.com/en-us/library/y7505w2x(VS.80).aspx undelete]* commands.
  # Implemented commands may not support all options available in standard TF client.
 
-= Improvements (YMMV) =
+= Improvements =
 
 == General ==
  # Get Latest on Checkout option (will be in Orcas release of TF)
