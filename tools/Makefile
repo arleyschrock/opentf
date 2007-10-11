@@ -1,6 +1,6 @@
 thisdir = tools
 SUBDIRS = \
-	tf \
+	opentf \
 	wit
 
 ifeq ($(HAVE_MONODEVELOP),yes)

@@ -35,3 +35,7 @@ uninstall-local:
 DISTFILES= asciidoc.conf callouts.xsl Makefile tf.txt
 
 dist-local: dist-default
+
+test-local:
+
+run-test-local:

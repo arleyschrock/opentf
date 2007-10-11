@@ -25,11 +25,12 @@ uninstall-local:
 clean-local:
 	rm -rf tfs.pc
 
-test-local:
-
 DISTFILES= \
 	tfs.pc.in \
 	Makefile \
 	ChangeLog
 
 dist-local: dist-default
+
+test-local:
+run-test-local:

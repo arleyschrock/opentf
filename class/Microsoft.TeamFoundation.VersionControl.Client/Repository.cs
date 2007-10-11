@@ -60,8 +60,6 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 				this.itemUrl = String.Format("{0}/{1}", url, RepositoryConstants.DownloadUrlSuffix);
 				this.uploadUrl = String.Format("{0}/{1}", url, RepositoryConstants.UploadUrlSuffix);
 				this.Credentials = credentials;
-
-				CheckAuthentication();
 			}
 
 		public void UploadFile(string workspaceName, string ownerName, PendingChange change)
@@ -152,13 +150,6 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 
 			response.Close();
 			return msg;
-		}
-
-		public void CheckAuthentication() 
-		{
-			Message msg = new Message(GetWebRequest (new Uri(Url)), "CheckAuthentication");
-			HttpWebResponse response = Invoke(msg);
-			response.Close();
 		}
 
 		public int CheckIn(Workspace workspace, string[] serverItems, string comment,
@@ -811,8 +802,8 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 		public Shelveset[] QueryShelvesets (string shelvesetName, string shelvesetOwner)
 		{
 			Message msg = new Message(GetWebRequest (new Uri(Url)), "QueryShelvesets");
-			msg.Body.WriteElementString("shelvesetName", shelvesetName);
-			msg.Body.WriteElementString("shelvesetOwner", shelvesetOwner);
+			if (!String.IsNullOrEmpty(shelvesetName)) msg.Body.WriteElementString("shelvesetName", shelvesetName);
+			msg.Body.WriteElementString("ownerName", shelvesetOwner);
 
 			List<Shelveset> shelvesets = new List<Shelveset>();
 			using (HttpWebResponse response = Invoke(msg))

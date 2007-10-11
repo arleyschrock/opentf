@@ -52,6 +52,15 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 			this.itemType = itemType;
 		}
 
+		public ChangeRequest(string path, RequestType requestType, ItemType itemType,
+												 RecursionType recursion, LockLevel lockLevel)
+		{
+			this.item = new ItemSpec(path, recursion);
+			this.requestType = requestType;
+			this.itemType = itemType;
+			this.lockLevel = lockLevel;
+		}
+
 		public ChangeRequest(string path, string target, RequestType requestType, ItemType itemType)
 		{
 			this.item = new ItemSpec(path, RecursionType.None);
@@ -116,7 +125,7 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 			writer.WriteStartElement("ChangeRequest");
 			writer.WriteAttributeString("req", RequestType.ToString());
 
-			if (LockLevel != LockLevel.None)
+			if (RequestType == RequestType.Lock || LockLevel != LockLevel.None)
 				writer.WriteAttributeString("lock", LockLevel.ToString());
 
 			if (RequestType == RequestType.Add)

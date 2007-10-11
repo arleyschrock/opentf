@@ -1,6 +1,29 @@
-To build:
+Building Opentf on Win32
+-----------------------------------------------------------------
+
+Currently, you can either use the opentf.sln soluion file and build 
+Opentf with VS2005 or VS2008, or install cygwin and follow the 
+instructions below for building opentf on *nix.
+
+If you build with VS2005 or VS2008, the resulting opentf.exe TF client
+will end up in tools/opentf/bin/.
+
+
+Building Opentf on *Nix
+-----------------------------------------------------------------
+
+First, configure opentf:
 
 	./configure [--prefix=/yourprefix]
+
+Valid options include:
+
+    --disable-gtk           disable gtk gui support
+    --enable-highlight      enable syntax highlighting support
+    --disable-keyring       disable gnome keyring support
+    --disable-magic         disable libmagic file attributes
+
+To build:
 
 	make
 
@@ -8,7 +31,8 @@ To install:
 
 	make install
 
-Gnome Keyring Support
+
+Gnome Keyring Support on *Nix
 -----------------------------------------------------------------
 The command line client, tf, has optional support for storing 
 login credentials in the Gnome Keyring. 
@@ -18,8 +42,6 @@ into the GAC, most other distros have not yet picked up this
 change. If you're running such a distro, you need to execute the
 following command:
 
-  cp /usr/lib/Gnome.Keyring/Gnome.Keyring.dll $PREFIX/lib/teamfoundation/
+  cp /usr/lib/Gnome.Keyring/Gnome.Keyring.dll $PREFIX/lib/opentf/
 
 where $PREFIX is the prefix you supplied to the configure script above.
-
-

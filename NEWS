@@ -1,12 +1,15 @@
-Version 0.5.1 of open source Team Foundation for Mono is now available at
-http://code.google.com/p/opentf/
+Version 0.5.4 of open source Team Foundation for Mono is now available at
+http://code.google.com/p/opentf/. The project has been renamed from tf4mono 
+to OpenTF.
 
-This is a development update with win32 installation packages, a GTK-based gui mode 
-for exploring TFS repositories, command enhancements, improved builtin help with
-usage guidelines, and many bugfixes.
+This is a development update with VS2005 project files, a spec file for RPM
+packaging, new commands (lock, version, show [ build | cache | ident | stats | tools ]),
+numerous API and usability enhancements, and many bugfixes.
 
-If you're not familiar with Microsoft's Team Foundation / Team System product,
-checkout the section "What is Team Foundation / Team System?" below.
+A detailed changelog can be found below.
+
+To learn more about many of the unique features found in OpenTF see: 
+  http://code.google.com/p/opentf/wiki/ClientDifferences
 
 Example invocations of the opentf client can be found here:
   http://opentf.googlecode.com/svn/trunk/docs/examples/
@@ -14,54 +17,52 @@ Example invocations of the opentf client can be found here:
 
 Enhancements include:
 ===================================================================
-# Add "explore" command for visually browsing a repository. Features include
-syntax highlighting, sortable columns, multiple views, and copy-and-paste for code review
-feedback. This is a work in progress!
 
-# Win32 packages of opentf, built with NSIS. A base version without GTK dependencies 
-and no explore command and a full version WITH GTK dependencies and the "explore" command
-are available.
+# add VS2005 project files and solution for building opentf on Windows
+# add spec file for building RPMs on OpenSuse
+# add "lock" command
+# add "show stats" command to show server statistics
+# add "show tools" command to show registered tools
+# add "show build" command to show build configuration
+# add "show ident" command to show server account information
+# rename "tf cache" to "tf show cache"
+# implement "tf changeset /latest" and test case
+# implement "tf history /user:FOO" for filtering history queries by user
+# implement "tf history /version:<vspec>" - but not ranges!
+# add "tf history /format:byowner" and test case
+# add "tf version" command to print program version number
+# add "Server.Default" setting 
+# teach File.Excludes to support directory specifications as well as
+file glob patterns
+# teach tf shelveset the "name;owner" syntax for specifying a shelveset
 
-# Add gtk login dialog for missing auth credentials
 
-# Undo with no args will undo all local changes, previously the command
-required at least one filename or path
+API Enhancements
+==================================================================
 
-# All commands now support reading arguments from stdin
+# The following classes were added (partial implementations)
 
-# Command chaining now supports output piping using %%. Implemented for ls-files 
-and diff /q commands only! For example, you can say "tf ls-files /others %% add"
-to add all unknown files to the repository. 
+  ICredentialsProvider, ArtifactType, ChangeType, Database, 
+  IGroupSecurityService, IRegistration, Identity, IdentityType, 
+  QueryMembership, OutboundLinkType, RegistrationEntry, SearchFactor 
+  and ServiceInterface classes
 
-# Support wildcards in checkout paths
-
-# Teach tf workspaces command to filter by workspace name if requested
-
-# Add syntax guidance to tf help <cmd> invocations
-
-# 8 more test cases for tf client program covering add, renaming, 
-and deleting of directories, and renaming files
-
-# Report on UndonePendingChange events (which can happen if file upload
-	fails on checkin for example)
+# Implement VersionControlServer.GetLatestChangesetId
+# Implement TeamFoundationServer.CheckAuthentication
+# Started work on Microsoft.TeamFoundation.WorkItemTracking.Client assembly
 
 
 Bugfixes include:
 ===================================================================
-# BUGFIX: tf rename <olddir> <newdir> should work now
-# BUGFIX: teach diff /modified to check file hashes before reporting a modified file
-# BUGFIX: when told to delete a directory, delete files within them too
-# BUGFIX: implement CheckAuthentication call - this makes adding large numbers
-	of files more reliable as it prevents NTML authentication timeout related failures
-# BUGFIX: on windows, must do case insensitive path comparisons 
-	when looking for cached workspace info
-# BUGFIX: tf online <list-of-files> didn't pickup deletes to pend
-# BUGFIX: GetLocalWorkspaceInfo(string path) should trim workspaceinfo directory
-	separators before looking for a match
-# BUGFIX: TryGetServerItemForLocalItem and TryGetLocalItemForServerItem
-	should find longest match
-# BUGFIX: teach tf workfold /unmap to accept relative paths
-# BUGFIX: always sort items in an ItemSet (sorts tf dir output for example)
+
+# BUGFIX: rework exit codes throughout for more consistency
+# BUGFIX: tf shelveset /owner:<owner> should filter results by owner
+# BUGFIX: add column headers to history /format:brief output
+# BUGFIX: tf get /force shouldn't set preview mode!
+# BUGFIX: properly label renames in tf status output
+# BUGFIX: make sure all files in a directory are read-write before
+attempting to delete a directory containing these files
+# BUGFIX: handle QueryHistory requests with maxCount > 256
 
 
 What is Team Foundation / Team System?
@@ -90,32 +91,34 @@ In the commands below,
 
 First create a workspace:
 
-tf /server:https://tfs01.codeplex.com /login:snd\\UID,PWD 
-workspace /new "MACHINENAME;UID"
+  tf /server:https://tfs01.codeplex.com /login:snd\\UID,PWD 
+  workspace /new "MACHINENAME;UID"
 
-Then map "Turtle" project to a local folder:
+Then map the "Turtle" project to a local folder:
 
-tf /server:https://tfs01.codeplex.com /login:snd\\UID,PWD 
-workfold "$/Turtle" ~/Source/turtle
+  tf /server:https://tfs01.codeplex.com /login:snd\\UID,PWD 
+  workfold "$/Turtle" ~/Source/turtle
 
 Then pull the files:
 
-tf /server:https://tfs01.codeplex.com /login:snd\\UID,PWD get 
-~/Source/turtle /recursive
+  tf /server:https://tfs01.codeplex.com /login:snd\\UID,PWD get 
+  ~/Source/turtle /recursive
 
 Then you could review the history, review a changeset, then look
 at the diff of the changeset. Note: the examples below assume
 the tf client "Credentials.Save" option was enabled.
 
-cd ~/Source/turtle
-tf history /recursive .
-tf changeset 340
-tf diff C340
+  cd ~/Source/turtle
+  tf history /recursive .
+  tf changeset 340
+  tf diff C340
+
+More examples can be found in the docs/examples/ folder.
 
 
 Source and Packages
 ===================================================================
-Debian packages, Win32 packages, and source tarball available here:
+Deb packages, Win32 packages, RPM packages, and source tarball available here:
    http://code.google.com/p/opentf/downloads/list
 
 Additionally, a git clone of the source tree can be made with:

@@ -2,7 +2,7 @@ Source: opentf
 Section: devel
 Priority: optional
 Maintainer: Joel W. Reed <joelwreed@gmail.com>
-Build-Depends: debhelper (>= 5.0.37.2), cdbs, mono-gmcs | c-sharp-2.0-compiler, libmono-dev (>= 1.0), cli-common-dev (>= 0.4.4), mono-gac (>= 1.0), autotools-dev, libmono-system-runtime2.0-cil, libmagic-dev, asciidoc, xmlto
+Build-Depends: debhelper (>= 5.0.37.2), cdbs, mono-gmcs | c-sharp-2.0-compiler, libmono-dev (>= 1.0), cli-common-dev (>= 0.4.4), mono-gac (>= 1.0), autotools-dev, libmono-system-runtime2.0-cil, libmagic-dev, asciidoc, xmlto, xsltproc
 Standards-Version: 3.7.2
 
 Package: opentf-client

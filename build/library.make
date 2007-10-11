@@ -41,7 +41,8 @@ makefrag = $(depsdir)/$(PROFILE)_$(LIBRARY).makefrag
 the_lib = $(topdir)/class/lib/$(PROFILE)/$(LIBRARY_NAME)
 the_pdb = $(the_lib:.dll=.pdb)
 the_mdb = $(the_lib).mdb
-library_CLEAN_FILES += $(makefrag) $(the_lib) $(the_pdb) $(the_mdb)
+the_csproj = $(LIBRARY_NAME:.dll=.csproj)
+library_CLEAN_FILES += $(makefrag) $(the_lib) $(the_pdb) $(the_mdb) $(sourcefile)
 
 ifdef LIBRARY_NEEDS_POSTPROCESSING
 build_lib = fixup/$(PROFILE)/$(LIBRARY_NAME)
@@ -51,9 +52,7 @@ build_lib = $(the_lib)
 endif
 
 ifndef NO_TEST
-test_nunit_lib = nunit.framework.dll nunit.core.dll nunit.util.dll
-test_nunit_dep = $(test_nunit_lib:%=$(topdir)/class/lib/$(PROFILE)/%)
-test_nunit_ref = $(test_nunit_dep:%=-r:%)
+test_nunit_ref = -pkg:nunit
 library_CLEAN_FILES += TestResult*.xml
 
 ifndef test_against
@@ -116,6 +115,9 @@ GACDIR = $(mono_libdir)
 GACROOT = $(DESTDIR)$(mono_libdir)
 endif
 
+$(sourcefile): $(the_csproj)
+	xsltproc -o $@ $(topdir)/build/sources.xsl $< 
+
 all-local: $(the_lib)
 
 install-local: all-local
@@ -167,15 +169,6 @@ clean-local:
 test-local run-test-local run-test-ondotnet-local:
 	@:
 
-ifndef NO_TEST
-$(test_nunit_dep): $(topdir)/build/deps/nunit-$(PROFILE).stamp
-	@if test -f $@; then :; else rm -f $<; $(MAKE) $<; fi
-$(topdir)/build/deps/nunit-$(PROFILE).stamp:
-	cd ${topdir}/nunit20 && $(MAKE)
-	echo "stamp" >$@
-library_CLEAN_FILES += $(topdir)/build/deps/nunit-$(PROFILE).stamp
-endif
-
 test_assemblies :=
 
 ifdef HAVE_CS_TESTS
@@ -194,7 +187,7 @@ run-test-ondotnet-local: run-test-ondotnet-lib
 ## FIXME: i18n problem in the 'sed' command below
 run-test-lib: test-local
 	ok=:; \
-	$(TEST_RUNTIME) $(TEST_HARNESS) $(TEST_HARNESS_FLAGS) $(LOCAL_TEST_HARNESS_FLAGS) /output:TestResult-$(PROFILE).log /exclude:NotWorking,ValueAdd,CAS,InetAccess /xml:TestResult-$(PROFILE).xml $(test_assemblies) || ok=false; \
+	$(TEST_HARNESS) $(TEST_HARNESS_FLAGS) $(LOCAL_TEST_HARNESS_FLAGS) /output:TestResult-$(PROFILE).log /exclude:NotWorking,ValueAdd,CAS,InetAccess /xml:TestResult-$(PROFILE).xml $(test_assemblies) || ok=false; \
 	sed '1,/^Tests run: /d' TestResult-$(PROFILE).log; \
 	$$ok
 
@@ -271,7 +264,8 @@ ifdef LIBRARY_USE_INTERMEDIATE_FILE
 	mv $(LIBRARY_NAME) $@
 	test ! -f $(LIBRARY_NAME).mdb || mv $(LIBRARY_NAME).mdb $@.mdb
 else
-	$(LIBRARY_COMPILE) $(LIBRARY_FLAGS) $(LIB_MCS_FLAGS) -target:library -out:$@ $(BUILT_SOURCES_cmdline) @$(response)
+#	$(XBUILD) "/property:DelaySign=true;KeyOriginatorFile=../msfinal.pub;OutputPath=$(topdir)/class/lib/$(PROFILE)/" $(LIBRARY:.dll=.csproj) 
+	$(LIBRARY_COMPILE) -delaysign+ -keyfile:../msfinal.pub $(LIBRARY_FLAGS) $(LIB_MCS_FLAGS) -target:library -out:$@ $(BUILT_SOURCES_cmdline) @$(response)
 	$(SN) $(SNFLAGS) $@ $(LIBRARY_SNK)
 endif
 
@@ -292,7 +286,7 @@ endif
 
 ifdef HAVE_CS_TESTS
 
-$(test_lib): $(test_dep) $(test_response) $(test_nunit_dep)
+$(test_lib): $(test_dep) $(test_response) 
 	$(TEST_COMPILE) -target:library -out:$@ $(test_flags) @$(test_response)
 
 $(test_response): $(test_sourcefile)
@@ -309,7 +303,7 @@ endif
 
 ifdef HAVE_VB_TESTS
 
-$(btest_lib): $(test_dep) $(btest_response) $(test_nunit_dep)
+$(btest_lib): $(test_dep) $(btest_response) 
 	$(BTEST_COMPILE) -target:library -out:$@ $(btest_flags) @$(btest_response)
 
 $(btest_response): $(btest_sourcefile)

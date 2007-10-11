@@ -34,13 +34,13 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 {
 	public enum LockLevel {
 				
-		None,
+		None = 0,
 				
-		Checkin,
+		Checkin = 1,
 				
-		CheckOut,
+		CheckOut = 2,
 				
-		Unchanged,
+		Unchanged = 3,
 	}
 }
 
