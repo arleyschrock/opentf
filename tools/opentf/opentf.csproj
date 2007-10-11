@@ -1,0 +1,116 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{93ED36D6-0FDC-40AC-BAC0-EB75CF761ECF}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>opentf</RootNamespace>
+    <AssemblyName>opentf</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Mono.GetOptions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\class\lib\net_2_0\Mono.GetOptions.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Web.Services" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Driver.cs" />
+    <Compile Include="DriverOptions.cs" />
+    <Compile Include="Command.cs" />
+    <Compile Include="CommandOptions.cs" />
+    <Compile Include="CommandAttribute.cs" />
+    <Compile Include="CommandRegistry.cs" />
+    <Compile Include="DiffItemNull.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="AddCommand.cs" />
+    <Compile Include="BranchesCommand.cs" />
+    <Compile Include="ChangesetCommand.cs" />
+    <Compile Include="CheckinCommand.cs" />
+    <Compile Include="CheckoutCommand.cs" />
+    <Compile Include="ConfigureCommand.cs" />
+    <Compile Include="DeleteCommand.cs" />
+    <Compile Include="DiffCommand.cs" />
+    <Compile Include="DirCommand.cs" />
+    <Compile Include="ExitCode.cs" />
+    <Compile Include="GetCommand.cs" />
+    <Compile Include="HelpCommand.cs" />
+    <Compile Include="HistoryCommand.cs" />
+    <Compile Include="LabelCommand.cs" />
+    <Compile Include="LabelsCommand.cs" />
+    <Compile Include="LockCommand.cs" />
+    <Compile Include="LsFilesCommand.cs" />
+    <Compile Include="OnlineCommand.cs" />
+    <Compile Include="PermissionCommand.cs" />
+    <Compile Include="PropertiesCommand.cs" />
+    <Compile Include="ShelvesetsCommand.cs" />
+    <Compile Include="ShowCommand.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="RenameCommand.cs" />
+    <Compile Include="StatusCommand.cs" />
+    <Compile Include="TreeCleanCommand.cs" />
+    <Compile Include="UndoCommand.cs" />
+    <Compile Include="UnlabelCommand.cs" />
+    <Compile Include="WorkfoldCommand.cs" />
+    <Compile Include="WorkspaceCommand.cs" />
+    <Compile Include="WorkspacesCommand.cs" />
+    <Compile Include="ViewCommand.cs" />
+    <Compile Include="VersionCommand.cs" />
+    <Compile Include="NoKeyring.cs" />
+    <Compile Include="NoGui.cs" />
+    <Compile Include="NoFileType.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\class\Microsoft.TeamFoundation.Common\Microsoft.TeamFoundation.Common.csproj">
+      <Project>{E0953653-D640-4338-BDAE-91DA9C3583F8}</Project>
+      <Name>Microsoft.TeamFoundation.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\class\Microsoft.TeamFoundation.Client\Microsoft.TeamFoundation.Client.csproj">
+      <Project>{B0953653-D640-4338-BDAE-91DA9C3583F8}</Project>
+      <Name>Microsoft.TeamFoundation.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\class\Microsoft.TeamFoundation\Microsoft.TeamFoundation.csproj">
+      <Project>{B0953653-D640-4338-BDAE-91DA9C3583F8}</Project>
+      <Name>Microsoft.TeamFoundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\class\Microsoft.TeamFoundation.VersionControl.Common\Microsoft.TeamFoundation.VersionControl.Common.csproj">
+      <Project>{A0953653-D640-4338-BDAE-91DA9C3583F8}</Project>
+      <Name>Microsoft.TeamFoundation.VersionControl.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\class\Microsoft.TeamFoundation.VersionControl.Client\Microsoft.TeamFoundation.VersionControl.Client.csproj">
+      <Project>{F0953653-D640-4338-BDAE-91DA9C3583F8}</Project>
+      <Name>Microsoft.TeamFoundation.VersionControl.Client</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
