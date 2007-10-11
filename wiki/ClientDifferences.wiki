@@ -14,13 +14,13 @@ A quick overview of the areas where the tf4mono TF client may be more useful and
 = Improvements (YMMV) =
 
 == General ==
- # tf explore command for built in viewer GUI supporting multiple repository views, syntax highlighting (on unix platforms only), etc.
  # Get Latest on Checkout option (will be in Orcas release of TF)
  # Multiple commands can be chained together in a single TF execution separated by the "%" character. For example, *tf online % checkin /comment:"applied patch 501"*. Commands can feed their output to the next command in the chain with %%, for example *tf ls-files /others %% add* to add all unknown files.
+ # Builtin general help and per-command help, accessible via *tf help <cmd>*
  # Supports file attributes on unix.
  # Command argument ordering much more forgiving than standard client.
- # tf undo with no args will undo all pending changes
- # builtin general help and per-command help, accessible via *tf help <cmd>*
+ # *tf undo* with no args will undo all pending changes
+ # *tf explore* command for built in viewer GUI supporting multiple repository views, syntax highlighting, etc. (on unix platforms only in 0.5.2)
 
 == Diffs ==
  # Unified diffs are actually appliable with gnu patch.
@@ -34,6 +34,24 @@ A quick overview of the areas where the tf4mono TF client may be more useful and
  # Supports credential caching via XML files or the Gnome Keyring.
  # Supports numerous persisted configuration options, including _Checkin.Validate, File.Excludes, Get.Recursive, History.DefaultToCwd, History.Recursive, Online.Recursive_
  # Can display local workspace cache configuration with *tf cache*.
+
+For example, here's my config:
+{{{
+(/usr/local/src/opentf) tf config
+Client Configuration:
+  Checkin.Validate:	true
+  Checkout.Latest:	true
+  Credentials.Save:	true
+  File.Excludes:	*.dll,*.pdb,core,.git/
+  File.ReadWrite:	true
+  Get.Recursive:	true
+  History.DefaultToCwd:	true
+  History.Detailed:	true
+  History.Recursive:	true
+  History.StopAfter:	10
+  Online.Recursive:	true
+  Server.Default:	10.100.1.88
+}}}
 
 == Powertool Commands ==
  # Integrated tfpt *treeclean* command.
