@@ -33,6 +33,7 @@ using System.IO;
 using System.Net;
 using System.Xml;
 using System.Web.Services;
+using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.VersionControl.Common;
 
 namespace Microsoft.TeamFoundation.VersionControl.Client
@@ -41,6 +42,7 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 	{
 		private Repository repository;
 		private string authenticatedUser;
+		private TeamFoundationServer teamFoundationServer;
 		internal Uri uri;
 
 		public event ExceptionEventHandler NonFatalError;
@@ -52,9 +54,11 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 
 		//internal event FileTransferEventHandler Uploading;
 
-		public VersionControlServer(Uri uri, ICredentials credentials) 
+		public VersionControlServer(TeamFoundationServer teamFoundationServer) 
 		{
-			this.uri = uri;
+			ICredentials credentials = teamFoundationServer.Credentials;
+			this.teamFoundationServer = teamFoundationServer;
+			this.uri = teamFoundationServer.Uri;
 			this.repository = new Repository(this, uri, credentials);
 
 			if (credentials != null)
@@ -98,7 +102,7 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 		}
 
 		public BranchHistoryTreeItem[][] GetBranchHistory (ItemSpec[] itemSpecs,
-																							VersionSpec version)
+																											 VersionSpec version)
 		{
 			if (itemSpecs.Length == 0) return null;
 
@@ -313,8 +317,8 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 			return changes.ToArray();
 		}
 
-    public Workspace GetWorkspace(WorkspaceInfo workspaceInfo)
-    {
+		public Workspace GetWorkspace(WorkspaceInfo workspaceInfo)
+		{
 			if (workspaceInfo == null)
 				throw new ArgumentNullException("workspaceInfo");
 
@@ -406,6 +410,11 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 			get { return new Guid(); }
 		}
 
+		public TeamFoundationServer TeamFoundationServer
+		{
+			get { return teamFoundationServer; }
+		}
+
 		internal Repository Repository 
 		{
 			get { return repository; }
@@ -415,6 +424,7 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 		{
 			get { return uri; }
 		}
+
 	}
 
 }

@@ -123,7 +123,7 @@
       <Project>{A0953653-D640-4338-BDAE-91DA9C3583F8}</Project>
       <Name>Microsoft.TeamFoundation.VersionControl.Common</Name>
     </ProjectReference>
-	</ItemGroup>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio AllowExistingFolder="true" />

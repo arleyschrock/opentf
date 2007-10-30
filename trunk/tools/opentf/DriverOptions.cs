@@ -40,6 +40,9 @@ class DriverOptions : Options {
 	[Option("Server name.", "S", "server")]
 		public string Server;
 
+	[Option("Suppress prompts", "", "noprompt")]
+		public bool NoPrompt = false;
+
 	[KillOption]
 	public override WhatToDoNext DoAbout() { return WhatToDoNext.GoAhead;	}
 }

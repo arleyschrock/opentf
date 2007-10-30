@@ -38,10 +38,10 @@ namespace Microsoft.TeamFoundation.Client
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
 	internal class GroupSecurityService : System.Web.Services.Protocols.SoapHttpClientProtocol, IGroupSecurityService
 	{
-		public GroupSecurityService(Uri url, ICredentials credentials) 
+		public GroupSecurityService(TeamFoundationServer teamFoundationServer) 
 			{
-				this.Url = String.Format("{0}/{1}", url, "Services/v1.0/GroupSecurityService.asmx");
-				this.Credentials = credentials;
+				this.Url = String.Format("{0}/{1}", teamFoundationServer.Uri, "Services/v1.0/GroupSecurityService.asmx");
+				this.Credentials = teamFoundationServer.Credentials;
 			}
 
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/TeamFoundation/2005/06/Services/GroupSecurity/03/ReadIdentity", RequestNamespace="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/GroupSecurity/03", ResponseNamespace="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/GroupSecurity/03", ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped, Use=System.Web.Services.Description.SoapBindingUse.Literal)]

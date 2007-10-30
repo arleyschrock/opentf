@@ -37,9 +37,10 @@ namespace Microsoft.TeamFoundation.Client
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
 	internal class Authenticator : System.Web.Services.Protocols.SoapHttpClientProtocol 
 	{
-		public Authenticator(Uri uri) 
+		public Authenticator(Uri uri, ICredentials credentials) 
 			{
 				this.Url = String.Format("{0}/{1}", uri.ToString(), "Services/v1.0/ServerStatus.asmx");
+				this.Credentials = credentials;
 			}
 		
 		[System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/TeamFoundation/2005/06/Services/ServerStatus/03/CheckAuthentication", RequestNamespace="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/ServerStatus/03", ResponseNamespace="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/ServerStatus/03", ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped, Use=System.Web.Services.Description.SoapBindingUse.Literal)]

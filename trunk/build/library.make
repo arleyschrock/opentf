@@ -264,7 +264,7 @@ ifdef LIBRARY_USE_INTERMEDIATE_FILE
 	mv $(LIBRARY_NAME) $@
 	test ! -f $(LIBRARY_NAME).mdb || mv $(LIBRARY_NAME).mdb $@.mdb
 else
-#	$(XBUILD) "/property:DelaySign=true;KeyOriginatorFile=../msfinal.pub;OutputPath=$(topdir)/class/lib/$(PROFILE)/" $(LIBRARY:.dll=.csproj) 
+#	$(XBUILD) "/property:DelaySign=true;KeyOriginatorFile=../msfinal.pub;OutputPath=$(topdir)/class/lib/$(PROFILE)/" $(the_csproj) 
 	$(LIBRARY_COMPILE) -delaysign+ -keyfile:../msfinal.pub $(LIBRARY_FLAGS) $(LIB_MCS_FLAGS) -target:library -out:$@ $(BUILT_SOURCES_cmdline) @$(response)
 	$(SN) $(SNFLAGS) $@ $(LIBRARY_SNK)
 endif

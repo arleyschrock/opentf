@@ -111,6 +111,41 @@ class ShowCommand : Command
 		Console.WriteLine("Workspaces:      " + info.WorkspaceCount);
 	}
 
+	public class ProjectInfoComparer: IComparer<ProjectInfo>
+	{
+    public int Compare(ProjectInfo x, ProjectInfo y)
+    {
+			return x.Name.CompareTo(y.Name);
+    }
+	}
+
+	public void ShowProjects()
+	{
+		ICommonStructureService css = Driver.TeamFoundationServer.GetService(typeof(ICommonStructureService)) as ICommonStructureService;
+		ProjectInfo[] projects = css.ListProjects();
+		Array.Sort(projects, new ProjectInfoComparer());
+
+		int GUID_SIZE = 36;
+		int maxName = WindowWidth - GUID_SIZE - 2;
+		string line = String.Format("{0} {1}", 
+																"Guid".PadRight(GUID_SIZE), 
+																"Name".PadRight(maxName));
+		Console.WriteLine(line);
+				
+		line = String.Format("{0} {1}", 
+												 "-".PadRight(GUID_SIZE, '-'),
+												 "-".PadRight(maxName, '-'));
+
+		Console.WriteLine(line);
+
+		foreach (ProjectInfo pinfo in (projects))
+			{
+				int indx = Math.Max(pinfo.Uri.LastIndexOf('/') + 1, 0);
+				string guid = pinfo.Uri.Substring(indx);
+				Console.WriteLine(guid + " " + pinfo.Name);
+			}
+	}
+
 	public void ShowTools()
 	{
 		RegistrationEntry[] registrationEntries = ((IRegistration) Driver.TeamFoundationServer.GetService(typeof(IRegistration))).GetRegistrationEntries("");
@@ -240,6 +275,9 @@ class ShowCommand : Command
 				break;
 			case "ident":
 				ShowIdentity();
+				break;
+			case "projects":
+				ShowProjects();
 				break;
 			case "stats":
 				ShowStats();

@@ -171,6 +171,13 @@ class LsFilesCommand : Command
 		if (Arguments.Length > 0)
 				path = Path.GetFullPath(Arguments[0]);
 
+		if (File.Exists(path))
+			{
+				// would need to fixup dir.GetDirectories calls if we wanted to support filenames
+				Console.WriteLine("Error: This command only takes paths as arguments, not file names.");
+				Environment.Exit((int)ExitCode.Failure);
+			}
+
  		char[] charsToTrim = { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar};
 		string itemPath = path.TrimEnd(charsToTrim);
 
@@ -205,15 +212,20 @@ class LsFilesCommand : Command
 			{
 				if (item.ServerItem.Length == serverPath.Length) continue;
 				string serverItem = item.ServerItem.Remove(0, serverPath.Length+1);
-				string fname = Path.Combine(itemPath, serverItem);
 
+				// server item paths are separated with '/', but on windows the file list below has '\' separated paths
+				if (Path.DirectorySeparatorChar != '/')
+					serverItem = serverItem.Replace('/', Path.DirectorySeparatorChar);
+
+				string fname = Path.Combine(itemPath, serverItem);
 				string hash = "";
+
 				if (item.ItemType == ItemType.File && item.HashValue != null)
 					hash = Convert.ToBase64String(item.HashValue);
 
 				itemList.Add(fname, hash);
 			}
-		
+
 		if (OptionOthers) ShowOtherFiles(itemPath, itemList);
 		else if (OptionDeleted) ShowDeletedFiles(itemPath, itemList);
 		else if (OptionModified) ShowModifiedFiles(itemPath, itemList);

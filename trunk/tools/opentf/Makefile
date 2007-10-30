@@ -2,7 +2,7 @@ thisdir = tools/opentf
 SUBDIRS = 
 include ../../build/rules.make
 
-LOCAL_MCS_FLAGS = -r:Microsoft.TeamFoundation.dll -r:Microsoft.TeamFoundation.Common.dll -r:Microsoft.TeamFoundation.Client.dll -r:Microsoft.TeamFoundation.VersionControl.Client.dll -r:Microsoft.TeamFoundation.VersionControl.Common.dll -r:Mono.GetOptions.dll -r:Mono.Posix.dll -r:System.Web.Services.dll
+LOCAL_MCS_FLAGS = -r:Mono.Posix.dll
 EXPLORE_SOURCES = ExploreCommand.cs ExploreView.cs RepositoryView.cs ChangesetView.cs FileView.cs DirectoryView.cs ChangesetDetailView.cs ChangesetDiffView.cs
 
 ifeq ($(HAVE_GTK),yes)

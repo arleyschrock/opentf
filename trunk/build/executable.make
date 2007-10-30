@@ -4,6 +4,8 @@
 
 base_prog = $(shell basename $(PROGRAM))
 sourcefile = $(base_prog).sources
+refsfile = $(base_prog).references
+
 base_prog_config := $(wildcard $(base_prog).config)
 ifdef base_prog_config
 PROGRAM_config := $(PROGRAM).config
@@ -21,7 +23,15 @@ endif
 makefrag = $(depsdir)/$(PROFILE)_$(base_prog).makefrag
 pdb = $(patsubst %.exe,%.pdb,$(PROGRAM))
 mdb = $(patsubst %.exe,%.mdb,$(PROGRAM))
-executable_CLEAN_FILES += $(makefrag) $(pdb) $(mdb)
+csproj = $(patsubst %.exe,%.csproj,$(PROGRAM))
+
+executable_CLEAN_FILES += $(makefrag) $(pdb) $(mdb) $(sourcefile) $(refsfile)
+
+$(sourcefile): $(csproj)
+	xsltproc -o $@ $(topdir)/build/sources.xsl $< 
+
+$(refsfile): $(csproj)
+	xsltproc -o $@ $(topdir)/build/references.xsl $< 
 
 all-local: $(PROGRAM) $(PROGRAM_config)
 
@@ -60,9 +70,9 @@ run-test-local:
 run-test-ondotnet-local:
 	@:
 
-DISTFILES = $(sourcefile) $(base_prog_config) $(EXTRA_DISTFILES)
+DISTFILES = $(base_prog_config) $(EXTRA_DISTFILES)
 
-dist-local: dist-default
+dist-local: dist-default $(sourcefile)
 	for f in `cat $(sourcefile)` ; do \
 	  case $$f in \
 	  ../*) : ;; \
@@ -77,8 +87,8 @@ ifndef PROGRAM_COMPILE
 PROGRAM_COMPILE = $(CSCOMPILE)
 endif
 
-$(PROGRAM): $(BUILT_SOURCES) $(EXTRA_SOURCES) $(response)
-	$(PROGRAM_COMPILE) -target:exe -out:$(base_prog) $(BUILT_SOURCES) $(EXTRA_SOURCES) @$(response)
+$(PROGRAM): $(BUILT_SOURCES) $(EXTRA_SOURCES) $(response) $(refsfile)
+	$(PROGRAM_COMPILE) -target:exe -out:$(base_prog) $(BUILT_SOURCES) $(EXTRA_SOURCES) @$(refsfile) @$(response)
 ifneq ($(base_prog),$(PROGRAM))
 	mv $(base_prog) $(PROGRAM)
 	test ! -f $(base_prog).mdb || mv $(base_prog).mdb $(PROGRAM).mdb
@@ -92,7 +102,7 @@ $(PROGRAM_config): $(base_prog_config)
 endif
 endif
 
-$(makefrag): $(sourcefile)
+$(makefrag): $(sourcefile) 
 	@echo Creating $@ ...
 	@sed 's,^,$(PROGRAM): ,' $< > $@
 

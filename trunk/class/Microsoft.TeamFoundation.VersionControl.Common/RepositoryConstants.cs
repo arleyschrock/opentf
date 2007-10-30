@@ -32,6 +32,7 @@ namespace Microsoft.TeamFoundation.VersionControl.Common
 {
 	public class RepositoryConstants
 	{
+		public const string AuthenticatedUser =".";
 		public const string Upload="Upload";
 		public const string Download="Download";
 		public const int EncodingBinary=-1;

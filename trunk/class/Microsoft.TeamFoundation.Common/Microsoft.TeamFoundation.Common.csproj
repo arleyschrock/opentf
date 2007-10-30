@@ -27,8 +27,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Artifact.cs" />
+    <Compile Include="ArtifactId.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="InvalidPathException.cs" />
+    <Compile Include="ILinking.cs" />
+    <Compile Include="LinkFilter.cs" />
+    <Compile Include="LinkingUtilities.cs" />
+    <Compile Include="ServiceInterfaces.cs" />
     <Compile Include="TeamFoundationServerException.cs" />
   </ItemGroup>
   <ItemGroup>

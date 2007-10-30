@@ -23,6 +23,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Web.Services" />
     <Reference Include="Microsoft.TeamFoundation.Common" />
@@ -32,12 +33,20 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="ClientService.cs" />
     <Compile Include="InternalMessage.cs" />
+    <Compile Include="Project.cs" />
+    <Compile Include="ProjectCollection.cs" />
     <Compile Include="WorkItem.cs" />
     <Compile Include="WorkItemStore.cs" />
     <Compile Include="WorkItemType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.TeamFoundation.WorkItemTracking.Common\Microsoft.TeamFoundation.WorkItemTracking.Common.csproj">
+      <Project>{D0953653-D631-4338-BDAE-91DA9C3583F8}</Project>
+      <Name>Microsoft.TeamFoundation.WorkItemTracking.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

@@ -41,7 +41,7 @@ using Microsoft.TeamFoundation.VersionControl.Client;
 using Microsoft.TeamFoundation.Server;
 
 [assembly: AssemblyTitle ("tf.exe")]
-[assembly: AssemblyVersion ("0.5.2")]
+[assembly: AssemblyVersion ("0.5.3")]
 [assembly: AssemblyDescription ("Team Foundation Source Control Tool")]
 [assembly: AssemblyCopyright ("(c) Joel W. Reed")]
 
@@ -132,7 +132,8 @@ public partial class Driver : ICertificatePolicy
 		string login = TfsKeyring.GetCredentials(ServerUrl);
 		if (!String.IsNullOrEmpty(login)) return login;
 
-		// finally prompt
+		// finally prompt if permitted
+		if (Options.NoPrompt) return String.Empty;
 		return PromptForLogin(ServerUrl);
 	}
 
@@ -151,20 +152,33 @@ public partial class Driver : ICertificatePolicy
 			}
 		else userinfo = login;
 
+		// try to find domain portion if given
 		int slash = userinfo.IndexOf('\\');
-		if (-1 == slash) username = userinfo;
-		else
+		if (-1 != slash)
 			{
 				domain = userinfo.Substring(0, slash);
-				username = userinfo.Substring(slash+1);
+				username = userinfo.Substring(slash+1);	
+				return;
 			}
+
+		int atsign = userinfo.IndexOf('@');
+		if (-1 != atsign)
+			{
+				username = userinfo.Substring(0, atsign);	
+				domain = userinfo.Substring(atsign+1);
+				return;
+			}
+
+		// no domain name
+		username = userinfo;
 	}
 
 	public NetworkCredential GetNetworkCredentials()
 	{
 		GetUserCredentials();
 		
-		if (!(String.IsNullOrEmpty(username)) && String.IsNullOrEmpty(password))
+		if (!(String.IsNullOrEmpty(username)) && String.IsNullOrEmpty(password)
+				&& !Options.NoPrompt)
 			{
 				Console.Write("Password: ");
 				password = Console.ReadLine();
@@ -325,6 +339,7 @@ public partial class Driver : ICertificatePolicy
 		try
 			{
 				driver.ProcessAllCommands();
+				Environment.Exit((int)ExitCode.Success);
 			}
 		catch (TeamFoundationServerException e)
 			{

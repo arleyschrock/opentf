@@ -4,7 +4,7 @@ SUBDIRS =
 
 LIBRARY = Microsoft.TeamFoundation.WorkItemTracking.Client.dll
 
-LIB_MCS_FLAGS = /r:$(corlib) /r:System.dll /r:System.Xml.dll /r:System.Web.Services.dll /r:Microsoft.TeamFoundation.Common.dll /r:Microsoft.TeamFoundation.Client.dll
+LIB_MCS_FLAGS = /r:$(corlib) /r:System.dll /r:System.Data.dll /r:System.Xml.dll /r:System.Web.Services.dll /r:Microsoft.TeamFoundation.Common.dll /r:Microsoft.TeamFoundation.Client.dll /r:Microsoft.TeamFoundation.WorkItemTracking.Common.dll
 TEST_MCS_FLAGS =  $(LIB_MCS_FLAGS)
 
 include ../../build/library.make

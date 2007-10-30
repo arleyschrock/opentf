@@ -39,15 +39,29 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 	internal class DiffItemUtil
 	{
 		public string[] Lines = new string[0];
-		public string Name;
+		public string name;
 		public int Length;
+
+		public string Name
+		{
+			get {
+				return name;
+			}
+		}
 
 		public DiffItemUtil(char prefix, string name, string fileContents)
 		{
 			Length = fileContents.Length;
-			Name = PrefixedHeaderPath(prefix, name);
 
-			if (Length == 0) return;
+			string path = PrefixedHeaderPath(prefix, name);
+			if (Length == 0)
+				{
+					this.name = "/dev/null";
+					return;
+				}
+
+			// gnu patch doesn't want to see backslashes in filenames
+			this.name = path.Replace('\\', '/');
 
 			// if file ends with /n the split below generates one extra row we dont want
 			int len = fileContents.Length;

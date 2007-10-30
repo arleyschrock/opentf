@@ -18,9 +18,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Microsoft.TeamFoundation.VersionControl.Common.dll")]
 [assembly: AssemblyDescription("Microsoft.TeamFoundation.VersionControl.Common.dll")]
 [assembly: AssemblyConfiguration("Development version")]
-[assembly: AssemblyCompany("MONO development team")]
-[assembly: AssemblyProduct("MONO CLI")]
-[assembly: AssemblyCopyright("(c) 2006 Various Authors")]
+[assembly: AssemblyCopyright("(c) 2007 Joel W. Reed")]
 [assembly: AssemblyTrademark("")]
 #if TARGET_JVM
 [assembly: CLSCompliant(false)]

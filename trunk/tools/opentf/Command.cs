@@ -89,6 +89,9 @@ abstract class Command : CommandOptions
 			}
 
 		if (String.IsNullOrEmpty(name))
+				name = Settings.Current.Get("Workspace.Default");
+
+		if (String.IsNullOrEmpty(name))
 			{
 				Console.WriteLine("Unable to determine the workspace");
 				Console.WriteLine("	 hint: try adding /workspace:<name>");

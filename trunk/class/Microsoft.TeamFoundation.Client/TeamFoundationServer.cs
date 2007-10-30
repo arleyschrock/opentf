@@ -64,14 +64,18 @@ namespace Microsoft.TeamFoundation.Client
 
 		public object GetService(Type serviceType)
 		{
+			EnsureAuthenticated();
+
 			if (serviceType == typeof(ICommonStructureService))
-				return new CommonStructureService(Uri, Credentials);
+				return new CommonStructureService(this);
+			else if (serviceType == typeof(ILinking))
+				return new Linking(this);
 			else if (serviceType == typeof(IRegistration))
-				return new Registration(Uri, Credentials);
+				return new Registration(this);
 			else if (serviceType == typeof(IGroupSecurityService))
-				return new GroupSecurityService(Uri, Credentials);
+				return new GroupSecurityService(this);
 			else
-				return Activator.CreateInstance(serviceType, new object[]{ Uri, Credentials});
+				return Activator.CreateInstance(serviceType, new object[]{ this });
 		}
 
 		public void EnsureAuthenticated()
@@ -81,7 +85,7 @@ namespace Microsoft.TeamFoundation.Client
 
 		public void Authenticate()
 		{
-			Authenticator authenticator = new Authenticator(uri);
+			Authenticator authenticator = new Authenticator(uri, credentials);
 			authenticator.CheckAuthentication();
 			hasAuthenticated = true;
 		}

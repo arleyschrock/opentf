@@ -74,93 +74,6 @@ abstract class Command : CommandOptions
 		this.arguments = RemainingArguments;
 	}
 
-	public Workspace GetWorkspaceFromServer()
-	{
-		string name = OptionWorkspace;
-
-		// if option passed use it
-		if (String.IsNullOrEmpty(name))
-			{
-				// guess based on current working directory
-				WorkspaceInfo info = Workstation.Current.GetLocalWorkspaceInfo(Environment.CurrentDirectory);
-				if (info != null) name = info.Name;
-			}
-
-		if (String.IsNullOrEmpty(name))
-			{
-				Console.WriteLine("Unable to determine the workspace");
-				Console.WriteLine("	 hint: try adding /workspace:<name>");
-				Environment.Exit(1);
-			}
-
-		return VersionControlServer.GetWorkspace(name, Driver.Username);
-	}
-
-	public WorkspaceInfo GetWorkspaceInfoFromCache()
-	{
-		string path = Environment.CurrentDirectory;
-		if (Arguments.Length > 0)
-			{
-				path = Path.GetFullPath(Arguments[0]);
-			}
-
-		WorkspaceInfo info = Workstation.Current.GetLocalWorkspaceInfo(path);
-		if (info != null) return info;
-
-		if (String.IsNullOrEmpty(OptionWorkspace))
-			{
-				Console.WriteLine("Unable to determine the workspace.");
-				Console.WriteLine("  Path: " + path);
-				return null;
-			}
-
-		string ownerName = String.Format("{0}\\{1}", Driver.Domain, Driver.Username).ToUpper();
-		info = Workstation.Current.GetLocalWorkspaceInfo(Driver.VersionControlServer, 
-																										 OptionWorkspace, ownerName);
-
-		if (info == null)
-			{
-				Console.WriteLine("Unable to determine the workspace.");
-				Console.WriteLine("  Workspace Option: " + OptionWorkspace);
-			}
-
-		return info;
-	}
-
-	public Workspace GetWorkspaceFromCache()
-	{
-		WorkspaceInfo info = GetWorkspaceInfoFromCache();
-
-		if (info == null)
-			{
-				Console.WriteLine();
-				Console.WriteLine("Hints:");
-				Console.WriteLine("  Try adding /workspace:<name>");
-				Console.WriteLine("  Review command options prefixed with '/'. Invalid options are mistaken for paths.");
-				Environment.Exit(1);
-			}
-
-		return VersionControlServer.GetWorkspace(info);
-	}
-
-	public VersionSpec VersionFromString(string version)
-	{
-		if (!String.IsNullOrEmpty(version)) 
-			return VersionSpec.ParseSingleSpec(version, Driver.Username);
-		else
-			return VersionSpec.Latest;
-	}
-
-	static public string ChangeTypeToString(ChangeType change)
-	{
-		string ctype = "edit";
-
-		if ((change & ChangeType.Add) == ChangeType.Add) ctype = "add";
-		else if ((change & ChangeType.Delete) == ChangeType.Delete) ctype = "delete";
-
-		return ctype;
-	}
-
 	public int WindowWidth
 	{
 		get {
@@ -183,11 +96,6 @@ abstract class Command : CommandOptions
 		return owner;
 	}
 
-	public VersionControlServer VersionControlServer
-	{
-		get { return Driver.VersionControlServer; }
-	}
-	
 	public List<string> UnVerifiedFullPaths(string[] args)
 	{
 		List<string> paths = new List<string>();

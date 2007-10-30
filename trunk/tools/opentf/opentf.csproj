@@ -28,7 +28,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mono.GetOptions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Mono.GetOptions">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\class\lib\net_2_0\Mono.GetOptions.dll</HintPath>
     </Reference>
@@ -79,9 +79,9 @@
     <Compile Include="WorkspacesCommand.cs" />
     <Compile Include="ViewCommand.cs" />
     <Compile Include="VersionCommand.cs" />
-    <Compile Include="NoKeyring.cs" />
-    <Compile Include="NoGui.cs" />
-    <Compile Include="NoFileType.cs" />
+    <Compile Include="NoKeyring.cs" Condition="true" />
+    <Compile Include="NoGui.cs" Condition="true" />
+    <Compile Include="NoFileType.cs" Condition="true" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\class\Microsoft.TeamFoundation.Common\Microsoft.TeamFoundation.Common.csproj">
