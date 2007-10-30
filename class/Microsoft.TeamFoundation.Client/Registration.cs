@@ -38,10 +38,10 @@ namespace Microsoft.TeamFoundation.Client
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
 	internal class Registration : System.Web.Services.Protocols.SoapHttpClientProtocol, IRegistration
 	{
-		public Registration(Uri url, ICredentials credentials) 
+		public Registration(TeamFoundationServer teamFoundationServer) 
 			{
-				this.Url = String.Format("{0}/{1}", url, "services/v1.0/registration.asmx");
-				this.Credentials = credentials;
+				this.Url = String.Format("{0}/{1}", teamFoundationServer.Uri, "services/v1.0/registration.asmx");
+				this.Credentials = teamFoundationServer.Credentials;
 			}
 
     [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Registration/03/GetRegistrationEntries", RequestNamespace="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Registration/03", ResponseNamespace="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/Registration/03", ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped, Use=System.Web.Services.Description.SoapBindingUse.Literal)]

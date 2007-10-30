@@ -37,7 +37,6 @@ using System.Security.Cryptography.X509Certificates;
 using Mono.GetOptions;
 using Microsoft.TeamFoundation;
 using Microsoft.TeamFoundation.Client;
-using Microsoft.TeamFoundation.VersionControl.Client;
 using Microsoft.TeamFoundation.Server;
 
 [assembly: AssemblyTitle ("wit.exe")]
@@ -53,7 +52,6 @@ using Microsoft.TeamFoundation.Server;
 public partial class Driver : ICertificatePolicy 
 {
 	private TeamFoundationServer _tfs;
-	private VersionControlServer _versionControl;
 	private DriverOptions Options = new DriverOptions();
 	private string[] Arguments;
 
@@ -103,16 +101,7 @@ public partial class Driver : ICertificatePolicy
 						return String.Format("http://{0}:8080/", Options.Server);
 				}
 
-			WorkspaceInfo info = Workstation.Current.GetLocalWorkspaceInfo(Environment.CurrentDirectory);
-			if (info == null)
-				{
-					Console.WriteLine("Unable to determine the team foundation server");
-					Console.WriteLine("	 hint: try adding /server:<ip|name>");
-					Environment.Exit(1);
-				}
-
-			serverUrl = info.ServerUri.ToString();
-			return serverUrl;
+			return String.Empty;
 		}
 	}
 
@@ -166,25 +155,21 @@ public partial class Driver : ICertificatePolicy
 		return new NetworkCredential(username, password, domain);
 	}
 
-	public VersionControlServer VersionControlServer
+	public TeamFoundationServer TeamFoundationServer
 	{
 		get 
 			{ 
-				if (null != _versionControl) return _versionControl;
+				if (null != _tfs) return _tfs;
 				NetworkCredential credentials = GetNetworkCredentials();
 	
 				_tfs = new TeamFoundationServer(ServerUrl, credentials);
-				_versionControl = (VersionControlServer) _tfs.GetService(typeof(VersionControlServer));
-
-				_versionControl.Conflict += ConflictEventHandler;
-				_versionControl.NonFatalError += ExceptionEventHandler;
 
 				// save credentials if passed
 				bool saveSetting = Settings.Current.GetAsBool("Credentials.Save");
 				if (saveSetting && !String.IsNullOrEmpty(Options.Login))
 					TfsKeyring.SetCredentials(ServerUrl, domain, username, password);
 		
-				return _versionControl;
+				return _tfs;
 			}
 	}
 
@@ -193,19 +178,7 @@ public partial class Driver : ICertificatePolicy
 			Arguments = args;
 			Options.ProcessArgs(args);
 		}
-
-	static void ConflictEventHandler(Object sender, ConflictEventArgs e)
-	{
-		Console.Error.WriteLine(e.Message);
-	}
-
-	static void ExceptionEventHandler(Object sender, ExceptionEventArgs e)
-	{
-		// sometimes e.Failure is null, not sure why yet
-		if (e.Failure != null)
-			Console.Error.WriteLine(e.Failure.Message);
-	}
-
+	
 	private bool IsOption(string arg)
 	{
 		if (String.IsNullOrEmpty(arg)) return false;

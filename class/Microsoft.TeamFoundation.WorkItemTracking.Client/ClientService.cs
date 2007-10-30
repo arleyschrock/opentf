@@ -29,6 +29,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Data;
 using System.Net;
 using System.Reflection;
 using System.Text;
@@ -40,58 +41,32 @@ using System.Web.Services.Discovery;
 using System.Web.Services.Protocols;
 using Microsoft.TeamFoundation;
 
-namespace Microsoft.TeamFoundation.WorkItemTracking.Client.ClientService
+namespace Microsoft.TeamFoundation.WorkItemTracking.Client
 {
+	[System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/TeamFoundation/2005/06/WorkItemTracking/ClientServices/03")]
+	[System.Xml.Serialization.XmlRootAttribute(Namespace="http://schemas.microsoft.com/TeamFoundation/2005/06/WorkItemTracking/ClientServices/03", IsNullable=true)]
+	public class RequestHeader : System.Web.Services.Protocols.SoapHeader {
+		/// <remarks/>
+		public string Id = "uuid:15b75849-cb6b-42c0-af40-c6734135130a";
+		
+		/// <remarks/>
+		[System.Xml.Serialization.XmlAnyAttribute()]
+			public System.Xml.XmlAttribute[] AnyAttribute;
+	}
+
 	[System.Web.Services.WebServiceBinding(Name="ClientServiceSoap", Namespace="http://schemas.microsoft.com/TeamFoundation/2005/06/WorkItemTracking/ClientServices/03")]
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
 	//	[System.Xml.Serialization.XmlIncludeAttribute(typeof(SecurityChange))]
 	internal class ClientService : System.Web.Services.Protocols.SoapHttpClientProtocol {
 		
+		public RequestHeader RequestHeaderValue = new RequestHeader();
+
 		public ClientService(Uri url, ICredentials credentials) 
 			{
 				this.Url = String.Format("{0}/{1}", url, "WorkItemTracking/v1.0/ClientService.asmx");
 				this.Credentials = credentials;
-
-				CheckAuthentication();
 			}
-
-		public void CheckAuthentication() 
-		{
-			Message msg = new Message(GetWebRequest (new Uri(Url)), "CheckAuthentication");
-			HttpWebResponse response = Invoke(msg);
-			response.Close();
-		}
-
-		protected HttpWebResponse Invoke (Message message)
-		{
-			message.End();
-			HttpWebResponse response = GetWebResponse(message.Request) as HttpWebResponse;
-
-			if (response == null)
-				{
-					throw new TeamFoundationServerException("No response from server");
-				}
-
-			if (response.StatusCode == HttpStatusCode.Unauthorized)
-				{
-					string msg = String.Format("TF30063: You are not authorized to access {0} ({1}).\n--> Did you supply the correct username, password, and domain?", 
-																		 (new Uri(this.Url)).Host, message.MethodName);
-
-					//StreamReader readStream = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
-					//					Console.Error.WriteLine (readStream.ReadToEnd ());
-					//readStream.Close();
-
-					throw new TeamFoundationServerException(msg); 
-				}
-
-			if (response.StatusCode == HttpStatusCode.InternalServerError)
-				{
-					//					throw new VersionControlException(GetExceptionMessage(response));
-				}
-
-			return response;
-		}
 
 		public string GetExceptionMessage(HttpWebResponse response)
 		{
@@ -110,5 +85,34 @@ namespace Microsoft.TeamFoundation.WorkItemTracking.Client.ClientService
 			response.Close();
 			return msg;
 		}
+
+		public System.Data.DataSet GetStoredQuery(string queryId) {
+			object[] results = this.Invoke("GetStoredQuery", new object[] {
+					queryId});
+			return ((System.Data.DataSet)(results[0]));
+		}
+		
+		[System.Web.Services.Protocols.SoapHeaderAttribute("RequestHeaderValue", Required=false)]
+			[System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/TeamFoundation/2005/06/WorkItemTracking/ClientServices/03/GetStoredQueries", RequestNamespace="http://schemas.microsoft.com/TeamFoundation/2005/06/WorkItemTracking/ClientServices/03", ResponseNamespace="http://schemas.microsoft.com/TeamFoundation/2005/06/WorkItemTracking/ClientServices/03", ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped, Use=System.Web.Services.Description.SoapBindingUse.Literal)]
+			[return: System.Xml.Serialization.XmlElementAttribute("queriesPayload")]
+			public System.Data.DataSet GetStoredQueries(long rowVersion, int projectId) {
+			object[] results = this.Invoke("GetStoredQueries", new object[] {
+					rowVersion,
+					projectId});
+			return ((System.Data.DataSet)(results[0]));
+		}
+
+		[System.Web.Services.Protocols.SoapHeaderAttribute("RequestHeaderValue", Required=false)]
+		[System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/TeamFoundation/2005/06/WorkItemTracking/ClientServices/03/GetMetadataEx2", RequestNamespace="http://schemas.microsoft.com/TeamFoundation/2005/06/WorkItemTracking/ClientServices/03", ResponseNamespace="http://schemas.microsoft.com/TeamFoundation/2005/06/WorkItemTracking/ClientServices/03", ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped, Use=System.Web.Services.Description.SoapBindingUse.Literal)]
+		[return: System.Xml.Serialization.XmlElementAttribute("metadata")]
+		public System.Data.DataSet GetMetadataEx2([System.Xml.Serialization.XmlArrayItem(IsNullable=false)] MetadataTableHaveEntry[] metadataHave, bool useMaster, out string dbStamp, out int locale, out int comparisonStyle, out int mode) 
+			{
+				object[] results = this.Invoke("GetMetadataEx2", new object[] { metadataHave, useMaster});
+				mode = ((int)(results[4]));
+				comparisonStyle = ((int)(results[3]));
+				locale = ((int)(results[2]));
+				dbStamp = ((string)(results[1]));
+				return ((System.Data.DataSet)(results[0]));
+			}
 	}
 }

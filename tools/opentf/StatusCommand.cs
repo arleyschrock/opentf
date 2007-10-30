@@ -59,10 +59,12 @@ class StatusCommand : Command
 		List<KeyValuePair<string, string>> changes = new List<KeyValuePair<string, string>>();
 		foreach (PendingChange change in pendingChanges)
 			{
-				string ctype = change.ChangeType.ToString();
+				string ctype = "Edit";
+				if (change.IsLock) ctype += ",Lock";
 				if (change.IsAdd) ctype = "Add";
 				else if (change.IsDelete) ctype = "Delete";
 				else if (change.IsRename) ctype = "Rename";
+
 				changes.Add(new KeyValuePair<string, string>(ctype, change.LocalItem));
 			}
 

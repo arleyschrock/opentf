@@ -40,8 +40,8 @@ class CommandOptions : Options {
 	[Option("Workspace name", "W", "workspace")]
 		public string OptionWorkspace;
 
-	// the rest of these options are command specific and should be
-	// moved out of here
+	[Option("Suppress prompts", "", "noprompt")]
+		public bool OptionNoPrompt = false;
 
 	[KillOption]
 	public override WhatToDoNext DoAbout() { return WhatToDoNext.GoAhead;	}

@@ -3,13 +3,13 @@
 
 !include "MUI.nsh"
 
-!define OURNAME "OpenTF v0.5.2"
+!define OURNAME "OpenTF v0.5.3"
 
 ; The name of the installer
 Name "${OURNAME}"
 
 ; The file to write
-OutFile "opentf-0.5.2.exe"
+OutFile "opentf-0.5.3.exe"
 
 ; The default installation directory
 InstallDir $PROGRAMFILES\OpenTF
@@ -42,6 +42,7 @@ Section "" ;No components page, name is not important
   File class\lib\net_2_0\Microsoft.TeamFoundation.VersionControl.Client.dll
   File class\lib\net_2_0\Microsoft.TeamFoundation.VersionControl.Common.dll
   File tools\opentf\bin\opentf.exe
+  File /oname=ChangeLog.txt ChangeLog
 
   WriteUninstaller "$INSTDIR\Uninstall.exe"  
 
@@ -60,6 +61,8 @@ Section "Uninstall"
   Delete "$INSTDIR\opentf.exe"
   Delete "$INSTDIR\Uninstall.exe"
   Delete "$INSTDIR\Mono.GetOptions.dll"
+	Delete "$INSTDIR\ChangeLog.txt"
+
   RMDir "$INSTDIR"
 
  DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\OpenTF"

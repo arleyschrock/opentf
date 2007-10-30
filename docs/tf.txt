@@ -269,6 +269,11 @@ The TF client stores configuration settings in ~/.tf/TfClient.config.
 	the "/server:" option, and second the workspace cache, then it will
   use the Server.Default setting if non-null.
 
+*Workspace.Default*::
+  If the TF client cannot determine the active workspace, first from 
+	the "/workspace:" option, and second the workspace cache, then it will
+  use the Workspace.Default setting if non-null.
+
 WORKSPACE CACHE
 ---------------
 The TF client keeps a cache of workspaces and folder mappings in 

@@ -66,6 +66,7 @@ public class Settings : SortedList<string, string>
 		Add("History.StopAfter", "256");
 		Add("Online.Recursive", "false");
 		Add("Server.Default", "");
+		Add("Workspace.Default", "");
 
 		initialized = true;
 
@@ -110,6 +111,9 @@ public class Settings : SortedList<string, string>
 				add.SetAttributeNode("value", "").Value = this[key];
 				appSettings.AppendChild(add);
 			}
+
+		if (!Directory.Exists(TeamFoundationServer.ClientSettingsDirectory))
+				Directory.CreateDirectory(TeamFoundationServer.ClientSettingsDirectory);
 
 		string configFilePath = Path.Combine(TeamFoundationServer.ClientSettingsDirectory, ConfigFile);
 		using (XmlTextWriter writer = new XmlTextWriter(configFilePath, null))

@@ -118,22 +118,20 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 		internal static void WriteHeader(DiffItemUtil aItem, DiffItemUtil bItem,
 																		 DiffOptions diffOpts)
 		{
-			// gnu patch doesn't want to see backslashes in filenames
-			string aname = aItem.Name.Replace('\\', '/');
-			string bname = bItem.Name.Replace('\\', '/');
-
 			StreamWriter stream = diffOpts.StreamWriter;
-			stream.Write("diff --tfs " + aname + " ");
+			stream.Write("diff --tfs " + aItem.Name + " ");
 			if (!String.IsNullOrEmpty(diffOpts.SourceLabel))
 				stream.Write(diffOpts.SourceLabel + " ");
 
-			stream.Write(bname);
+			stream.Write(bItem.Name);
 			if (!String.IsNullOrEmpty(diffOpts.TargetLabel))
 				stream.Write("@" + diffOpts.TargetLabel);
 
 			stream.WriteLine();
-			stream.WriteLine("--- " + aname);
-			stream.WriteLine("+++ " + bname);
+			
+			// the trailing tabs below help diffutils grok filenames with spaces
+			stream.WriteLine("--- " + aItem.Name + "\t");
+			stream.WriteLine("+++ " + bItem.Name + "\t");
 		}
 
 		public static void DiffFiles (VersionControlServer versionControl,
@@ -143,11 +141,16 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 		{
 			DiffItemUtil aItem = new DiffItemUtil('a', fileNameForHeader, source.GetFile());
 			DiffItemUtil bItem = new DiffItemUtil('b', fileNameForHeader, target.GetFile());
+			StreamWriter stream = diffOpts.StreamWriter;
 
-			if (aItem.Length == 0) aItem.Name = "/dev/null";
+			// short circuit for binary file comparisions
+			if (source.GetEncoding() == RepositoryConstants.EncodingBinary && target.GetEncoding() == RepositoryConstants.EncodingBinary)
+				{
+					stream.WriteLine("Binary files {0} and {1} differ", aItem.Name, bItem.Name);
+					return;
+				}
 
 			WriteHeader(aItem, bItem, diffOpts);
-			StreamWriter stream = diffOpts.StreamWriter;
 
 			// short circuit new files
 			if (aItem.Length == 0)

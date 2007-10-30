@@ -1,5 +1,29 @@
 2007-09-07  Joel Reed  <joelwreed@comcast.com>
 
+	* v0.5.3 release notes
+
+	# CRUISECONTROL: add support for date range queries to the history
+	command, e.g. -version:"D2006-10-01T01:01:01Z~D2006-12-13T20:00:00Z"
+	# CRUISECONTROL: add -noprompt option
+	# CRUISECONTROL: add support for username@domain -login syntax
+	# BUGFIX: insert trailing tabs after filenames (a/b) in diffs to
+	help diffutils grok filenames with spaces
+	# BUGFIX: make sure tf ls-files <paths> is not passed a filename
+	# BUGFIX: set proper checkin time (by passing 0, not DateTime.Now - doh!)
+	# BUGFIX: fix tf ls-files /others breakage on windows for subdirectories
+	# BUGFIX: update local workspace cache when "tf workspaces" command called.
+	# BUGFIX: fix issue #8 "tf config expects ~/.tf/ to already exist"
+	# BUGFIX: teach tf that diffing binary files should print short 
+	"Binary files $1 and $2 differ" message
+	# BUGFIX: teach status command how to deal with locked files
+	# API: Microsoft.TeamFoundation.Common: Artifact, ArtifactId, ILinking
+	LinkFilter, LinkingUtilities, ServiceInterfaces
+	# NEW: add Workspace.Default setting: If the TF client cannot determine the 
+	active workspace, first from the "/workspace:" option, and second the 
+	workspace cache, then it will use the Workspace.Default setting if non-null.
+	
+2007-09-07  Joel Reed  <joelwreed@comcast.com>
+
 	* v0.5.2 release notes
 	# NEW: add VS2005 project files and solution for building opentf 
 	on Windows

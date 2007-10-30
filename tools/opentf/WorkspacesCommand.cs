@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Microsoft.TeamFoundation.Client;
+using Microsoft.TeamFoundation.VersionControl.Common;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using Mono.GetOptions;
 
@@ -172,5 +173,7 @@ class WorkspacesCommand : Command
 		bool detailed = OptionFormat.Equals("detailed", StringComparison.InvariantCultureIgnoreCase);
 		if (detailed) DetailedOutput(workspaces);
 		else BriefOutput(workspaces);
+
+		Workstation.Current.UpdateWorkspaceInfoCache(VersionControlServer, RepositoryConstants.AuthenticatedUser);
 	}
 }

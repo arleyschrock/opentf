@@ -40,6 +40,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.TeamFoundation.Ve
 		{C0953653-D640-4338-BDAE-91DA9C3583F8} = {C0953653-D640-4338-BDAE-91DA9C3583F8}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.TeamFoundation.WorkItemTracking.Common", "class\Microsoft.TeamFoundation.WorkItemTracking.Common\Microsoft.TeamFoundation.WorkItemTracking.Common.csproj", "{D0953653-D631-4338-BDAE-91DA9C3583F8}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{C0953653-D631-4338-BDAE-91DA9C3583F8} = {C0953653-D631-4338-BDAE-91DA9C3583F8}
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.TeamFoundation.WorkItemTracking.Client", "class\Microsoft.TeamFoundation.WorkItemTracking.Client\Microsoft.TeamFoundation.WorkItemTracking.Client.csproj", "{D0953653-D640-4338-BDAE-91DA9C3583F8}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
@@ -56,6 +65,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "opentf", "tools\opentf\open
 	EndProjectSection
 	ProjectSection(ProjectDependencies) = postProject
 		{F2580B79-E8A5-4079-B789-FBF435312272} = {F2580B79-E8A5-4079-B789-FBF435312272}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wit", "tools\wit\wit.csproj", "{C8B9A7CC-E063-4F11-B166-1EE3BA4225CC}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{D0953653-D631-4338-BDAE-91DA9C3583F8} = {D0953653-D631-4338-BDAE-91DA9C3583F8}
+		{D0953653-D640-4338-BDAE-91DA9C3583F8} = {D0953653-D640-4338-BDAE-91DA9C3583F8}
 	EndProjectSection
 EndProject
 Global
@@ -84,6 +103,10 @@ Global
 		{A0953653-D640-4338-BDAE-91DA9C3583F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0953653-D640-4338-BDAE-91DA9C3583F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0953653-D640-4338-BDAE-91DA9C3583F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0953653-D631-4338-BDAE-91DA9C3583F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0953653-D631-4338-BDAE-91DA9C3583F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0953653-D631-4338-BDAE-91DA9C3583F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0953653-D631-4338-BDAE-91DA9C3583F8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D0953653-D640-4338-BDAE-91DA9C3583F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D0953653-D640-4338-BDAE-91DA9C3583F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0953653-D640-4338-BDAE-91DA9C3583F8}.Release|Any CPU.ActiveCfg = Release|Any CPU

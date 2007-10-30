@@ -15,12 +15,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion ("1.0.0")]
 [assembly: SatelliteContractVersion ("1.0.0")]
 
-[assembly: AssemblyTitle("Microsoft.TeamFoundation.dll")]
-[assembly: AssemblyDescription("Microsoft.TeamFoundation.dll")]
+[assembly: AssemblyTitle("Microsoft.TeamFoundation.WorkItemTracking.Client.dll")]
+[assembly: AssemblyDescription("Microsoft.TeamFoundation.WorkItemTracking.Client.dll")]
 [assembly: AssemblyConfiguration("Development version")]
-[assembly: AssemblyCompany("MONO development team")]
-[assembly: AssemblyProduct("MONO CLI")]
-[assembly: AssemblyCopyright("(c) 2006 Various Authors")]
+[assembly: AssemblyCopyright("(c) 2007 Joel W. Reed")]
 [assembly: AssemblyTrademark("")]
 #if TARGET_JVM
 [assembly: CLSCompliant(false)]
@@ -29,6 +27,6 @@ using System.Runtime.InteropServices;
 #endif
 
 [assembly: ComVisible(false)]
-[assembly: AssemblyDefaultAlias("Microsoft.TeamFoundation.dll")]
+[assembly: AssemblyDefaultAlias("Microsoft.TeamFoundation.WorkItemTracking.Client.dll")]
 [assembly: AssemblyInformationalVersion("0.0.0.1")]
 [assembly: NeutralResourcesLanguage("en-US")]

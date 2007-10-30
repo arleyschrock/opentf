@@ -153,10 +153,30 @@ class HistoryCommand : Command
 		int stopAfter = Settings.Current.GetAsInt("History.StopAfter");
 		if (OptionStopAfter != -1) stopAfter = OptionStopAfter;
 
-		IEnumerable changeSets = VersionControlServer.QueryHistory(path, VersionFromString(OptionVersion),
-																															 0, rtype, OptionUser, 
-																															 null, null, stopAfter, 
-																															 includeChanges, false, false);
+		VersionSpec version = VersionSpec.Latest;
+		VersionSpec toVersion = null;
+		VersionSpec fromVersion = null;
+
+		if (!String.IsNullOrEmpty(OptionVersion))
+			{
+				int tilda = OptionVersion.IndexOf("~");
+				if (tilda == -1)
+					version = VersionSpec.ParseSingleSpec(OptionVersion, Driver.Username);
+				else
+					{
+						string from = OptionVersion.Substring(0, tilda);
+						if (!String.IsNullOrEmpty(from)) 
+							fromVersion = VersionSpec.ParseSingleSpec(from, Driver.Username);
+
+						string to = OptionVersion.Substring(tilda + 1);
+						if (!String.IsNullOrEmpty(to)) 
+							toVersion = VersionSpec.ParseSingleSpec(to, Driver.Username);
+					}
+			}
+
+		IEnumerable changeSets = VersionControlServer.QueryHistory(path, version, 0, rtype, OptionUser, 
+																															 fromVersion, toVersion, 
+																															 stopAfter, includeChanges, false, false);
 
 		if (OptionFormat.Equals("byowner", StringComparison.InvariantCultureIgnoreCase))
 			{

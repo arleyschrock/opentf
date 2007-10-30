@@ -1,4 +1,4 @@
-AC_INIT(opentf, [0.5.2])
+AC_INIT(opentf, [0.5.3])
 
 PKG_PROG_PKG_CONFIG
 

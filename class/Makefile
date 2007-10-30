@@ -8,6 +8,7 @@ SUBDIRS = \
 	Microsoft.TeamFoundation.Client \
 	Microsoft.TeamFoundation.VersionControl.Common \
 	Microsoft.TeamFoundation.VersionControl.Client \
+	Microsoft.TeamFoundation.WorkItemTracking.Common \
 	Microsoft.TeamFoundation.WorkItemTracking.Client
 
 DISTFILES = \

@@ -9,7 +9,7 @@
 		<xsl:apply-templates select="x:Project/x:ItemGroup/x:Compile"/>
 	</xsl:template>
 
-	<xsl:template match="x:Compile">
+	<xsl:template match="x:Compile[not(@Condition)]">
 		<xsl:value-of select="@Include" /><xsl:text> </xsl:text>
 	</xsl:template>
 

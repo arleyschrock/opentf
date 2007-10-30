@@ -167,7 +167,10 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 
 			// write info subtree
 			msg.Body.WriteStartElement("info");
-			msg.Body.WriteAttributeString("date", DateTime.Now.ToString("s"));
+
+			DateTime dt = new DateTime(0);
+			msg.Body.WriteAttributeString("date", dt.ToString("s"));
+
 			msg.Body.WriteAttributeString("cset", "0");
 			msg.Body.WriteAttributeString("owner", workspace.OwnerName);
 			msg.Body.WriteElementString("Comment", comment);
@@ -863,7 +866,6 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 			return workspaces.ToArray();
 		}
 
-		//		<?xml version=_T("1.0") encoding=_T("utf-8")?><soap:Envelope xmlns:xsi=_T("http://www.w3.org/2001/XMLSchema-instance") xmlns=_T("http://schemas.microsoft.com/TeamFoundation/2005/06/VersionControl/ClientServices/03") xmlns:soap=_T("http://www.w3.org/2003/05/soap-envelope")><soap:Body><UpdateWorkspace><oldWorkspaceName>neo</oldWorkspaceName><ownerName>DDI\JREED</ownerName><newWorkspace computer=_T("neo") name=_T("neo") owner=_T("DDI\JREED")><Comment /><LastAccessDate>0001-01-01T00:00:00</LastAccessDate><Folders><WorkingFolder local=_T("C:\MSOCache") item=_T("$/LSG-1.0") /></Folders></newWorkspace></UpdateWorkspace></soap:Body></soap:Envelope
 		public Workspace UpdateWorkspace(string oldWorkspaceName, string ownerName, 
 																		 Workspace newWorkspace) 
 		{
