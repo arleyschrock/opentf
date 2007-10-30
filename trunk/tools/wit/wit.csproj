@@ -1,0 +1,93 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C8B9A7CC-E063-4F11-B166-1EE3BA4225CC}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>wit</RootNamespace>
+    <AssemblyName>wit</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Mono.GetOptions">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\class\lib\net_2_0\Mono.GetOptions.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ChangesetCommand.cs" />
+    <Compile Include="Command.cs" />
+    <Compile Include="CommandAttribute.cs" />
+    <Compile Include="CommandOptions.cs" />
+    <Compile Include="CommandRegistry.cs" />
+    <Compile Include="Driver.cs" />
+    <Compile Include="DriverOptions.cs" />
+    <Compile Include="HelpCommand.cs" />
+    <Compile Include="NoGui.cs" />
+    <Compile Include="NoKeyring.cs" />
+    <Compile Include="ProjectsCommand.cs" />
+    <Compile Include="QueriesCommand.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="VersionCommand.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\class\Microsoft.TeamFoundation.Common\Microsoft.TeamFoundation.Common.csproj">
+      <Project>{E0953653-D640-4338-BDAE-91DA9C3583F8}</Project>
+      <Name>Microsoft.TeamFoundation.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\class\Microsoft.TeamFoundation.Client\Microsoft.TeamFoundation.Client.csproj">
+      <Project>{B0953653-D640-4338-BDAE-91DA9C3583F8}</Project>
+      <Name>Microsoft.TeamFoundation.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\class\Microsoft.TeamFoundation\Microsoft.TeamFoundation.csproj">
+      <Project>{B0953653-D640-4338-BDAE-91DA9C3583F8}</Project>
+      <Name>Microsoft.TeamFoundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\class\Microsoft.TeamFoundation.VersionControl.Common\Microsoft.TeamFoundation.VersionControl.Common.csproj">
+      <Project>{A0953653-D640-4338-BDAE-91DA9C3583F8}</Project>
+      <Name>Microsoft.TeamFoundation.VersionControl.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\class\Microsoft.TeamFoundation.VersionControl.Client\Microsoft.TeamFoundation.VersionControl.Client.csproj">
+      <Project>{F0953653-D640-4338-BDAE-91DA9C3583F8}</Project>
+      <Name>Microsoft.TeamFoundation.VersionControl.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\class\Microsoft.TeamFoundation.WorkItemTracking.Client\Microsoft.TeamFoundation.WorkItemTracking.Client.csproj">
+      <Project>{D0953653-D640-4338-BDAE-91DA9C3583F8}</Project>
+      <Name>Microsoft.TeamFoundation.WorkItemTracking.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\class\Microsoft.TeamFoundation.WorkItemTracking.Common\Microsoft.TeamFoundation.WorkItemTracking.Common.csproj">
+      <Project>{D0953653-D631-4338-BDAE-91DA9C3583F8}</Project>
+      <Name>Microsoft.TeamFoundation.WorkItemTracking.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
