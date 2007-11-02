@@ -8,7 +8,7 @@ A quick overview of the areas where the tf4mono TF client may be more useful and
  # Not as many GUI popup dialogs.
  # No current support for branch merges.
  # No current support for graphical conflict resolution.
- # Missing *branch*, *lock*, *merge*, *merges*, *resolve*, *shelve*, *unshelve*, and *[http://msdn2.microsoft.com/en-us/library/y7505w2x(VS.80).aspx undelete]* commands.
+ # Missing *branch*, *merge*, *merges*, *resolve*, *shelve*, *unshelve*, and *[http://msdn2.microsoft.com/en-us/library/y7505w2x(VS.80).aspx undelete]* commands.
  # Implemented commands may not support all options available in standard TF client.
 
 = Improvements =
