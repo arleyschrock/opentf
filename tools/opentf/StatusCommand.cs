@@ -56,6 +56,11 @@ class StatusCommand : Command
 
 	protected void BriefOutput(PendingChange[] pendingChanges)
 	{
+		BriefOutput(pendingChanges, String.Empty);
+	}
+
+	protected void BriefOutput(PendingChange[] pendingChanges, string indent)
+	{
 		List<KeyValuePair<string, string>> changes = new List<KeyValuePair<string, string>>();
 		foreach (PendingChange change in pendingChanges)
 			{
@@ -72,7 +77,7 @@ class StatusCommand : Command
 
 		foreach (KeyValuePair<string, string> pair in changes)
 			{
-				string line = String.Format("{0}\t{1}", pair.Key, pair.Value);
+				string line = String.Format("{0}{1}\t{2}", indent, pair.Key, pair.Value);
 				Console.WriteLine(line);
 			}
 	}

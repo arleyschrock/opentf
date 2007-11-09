@@ -62,12 +62,23 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 				this.Credentials = credentials;
 			}
 
-		public void UploadFile(string workspaceName, string ownerName, PendingChange change)
+		public void CheckInFile(string workspaceName, string ownerName, PendingChange change)
+		{
+			UploadFile(workspaceName, ownerName, change, "Checkin");
+		}
+
+		public void ShelveFile(string workspaceName, string ownerName, PendingChange change)
+		{
+			UploadFile(workspaceName, ownerName, change, "Shelve");
+		}
+
+		private void UploadFile(string workspaceName, string ownerName, PendingChange change,
+														string commandName)
 		{
 			FileInfo fi = new FileInfo(change.LocalItem);
 			long len = fi.Length;
 
-			UploadFile upload = new UploadFile(uploadUrl, Credentials);
+			UploadFile upload = new UploadFile(uploadUrl, Credentials, commandName);
 			upload.AddValue(RepositoryConstants.ServerItemField, change.ServerItem);
 			upload.AddValue(RepositoryConstants.WorkspaceNameField, workspaceName);
 			upload.AddValue(RepositoryConstants.WorkspaceOwnerField, ownerName);
@@ -237,6 +248,12 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 			return newWorkspace;
 		}
 
+		[System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/TeamFoundation/2005/06/VersionControl/ClientServices/03/DeleteShelveset", RequestNamespace="http://schemas.microsoft.com/TeamFoundation/2005/06/VersionControl/ClientServices/03", ResponseNamespace="http://schemas.microsoft.com/TeamFoundation/2005/06/VersionControl/ClientServices/03", ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped, Use=System.Web.Services.Description.SoapBindingUse.Literal)]
+			public void DeleteShelveset(string shelvesetName, string ownerName) 
+			{
+				this.Invoke("DeleteShelveset", new object[] { shelvesetName, ownerName});
+			}
+
 		[System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/TeamFoundation/2005/06/VersionControl/ClientServices/03/DeleteWorkspace", RequestNamespace="http://schemas.microsoft.com/TeamFoundation/2005/06/VersionControl/ClientServices/03", ResponseNamespace="http://schemas.microsoft.com/TeamFoundation/2005/06/VersionControl/ClientServices/03", ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped, Use=System.Web.Services.Description.SoapBindingUse.Literal)]
 			public void DeleteWorkspace(string workspaceName, string ownerName) 
 			{
@@ -291,6 +308,30 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 				}
 
 			return labelResults.ToArray();
+		}
+
+		public void Shelve(Workspace workspace, Shelveset shelveset,
+											 string[] serverItems, ShelvingOptions options)
+		{
+			Message msg = new Message(GetWebRequest (new Uri(Url)), "Shelve");
+
+			msg.Body.WriteElementString("workspaceName", workspace.Name);
+			msg.Body.WriteElementString("workspaceOwner", workspace.OwnerName);
+
+			msg.Body.WriteStartElement("serverItems");
+			foreach (string serverItem in serverItems)
+				msg.Body.WriteElementString("string", serverItem);
+			msg.Body.WriteEndElement();
+
+			shelveset.ToXml(msg.Body, "shelveset");
+
+			bool replace = (options & ShelvingOptions.Replace) == ShelvingOptions.Replace;
+			msg.Body.WriteElementString("replace", replace.ToString().ToLower());
+
+			using (HttpWebResponse response = Invoke(msg))
+				{
+					msg.ResponseReader(response);
+				}
 		}
 
 		public LabelResult[] UnlabelItem(Workspace workspace, string labelName,

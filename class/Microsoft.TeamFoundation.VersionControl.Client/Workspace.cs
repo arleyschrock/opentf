@@ -88,7 +88,7 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 					if ((change.ItemType == ItemType.File) &&
 							(change.IsAdd || change.IsEdit ))
 						{
-							Repository.UploadFile(Name, OwnerName, change);
+							Repository.CheckInFile(Name, OwnerName, change);
 							SetFileAttributes(change.LocalItem);
 						}
 
@@ -536,6 +536,26 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 
 			GetOperation[] operations = Repository.PendChanges(this, changes.ToArray());
 			return operations.Length;
+		}
+
+		public void Shelve (Shelveset shelveset, PendingChange[] changes,
+												ShelvingOptions options)
+		{
+			List<string> serverItems = new List<string>();
+
+			foreach (PendingChange change in changes)
+				{
+					// upload new or changed files only
+					if ((change.ItemType == ItemType.File) &&
+							(change.IsAdd || change.IsEdit ))
+						{
+							Repository.ShelveFile(Name, OwnerName, change);
+						}
+
+					serverItems.Add(change.ServerItem);
+				}
+
+			Repository.Shelve(this, shelveset, serverItems.ToArray(), options);
 		}
 
 		internal static Workspace FromXml(Repository repository, XmlReader reader)

@@ -93,6 +93,7 @@
     <Compile Include="RequestType.cs" />
     <Compile Include="SecurityChange.cs" />
     <Compile Include="Shelveset.cs" />
+    <Compile Include="ShelvingOptions.cs" />
     <Compile Include="TeamProjectFolderOptions.cs" />
     <Compile Include="UpdateLocalVersionQueue.cs" />
     <Compile Include="VersionControlException.cs" />

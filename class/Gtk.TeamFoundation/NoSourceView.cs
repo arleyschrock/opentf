@@ -1,10 +1,10 @@
 //
-// TeamFoundationPad.cs
+// NoSourceView.cs
 //
 // Authors:
 //	Joel Reed (joelwreed@gmail.com)
 //
-// Copyright (C) 2007 Joel Reed
+
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,40 +27,37 @@
 //
 
 using System;
-using System.Resources;
+using System.Text;
+using Gtk;
+using Pango;
 
-using MonoDevelop.Core;
-using MonoDevelop.Core.Properties;
-using MonoDevelop.Ide.Gui.Pads;
-using MonoDevelop.Components.Commands;
-
-namespace MonoDevelop.VersionControl.TeamFoundation
+namespace Gtk.TeamFoundation
 {
-	public class TeamFoundationPad : TreeViewPad
+	public class MyTextViewFactory
 	{
-		public TeamFoundationPad () : base ()
+		static public MyTextView CreateNewTextView()
 		{
-			//			MonoQueryService service = (MonoQueryService) ServiceManager.GetService (typeof (MonoQueryService));
-			//service.Providers.Changed += new EventHandler (OnProvidersChanged);
+			return new MyTextView();
 		}
-		
-		public override void Initialize (NodeBuilder[] builders, TreePadOption[] options)
+	}
+
+	public class MyTextView : Gtk.TextView
+	{
+		public MyTextView()
+			{
+				CursorVisible = false;
+				Editable = false;
+				ModifyFont(Pango.FontDescription.FromString("Vera Sans Mono 16"));
+			}
+
+		public void Clear()
 		{
-			base.Initialize (builders, options);
-			OnProvidersChanged (this, null);
+			Buffer.Text = String.Empty;
 		}
-		
-		//		[CommandHandler (MonoQueryCommands.RefreshProviderList)]
-		public void Refresh ()
+
+		public void Update(string path, string contents)
 		{
-			OnProvidersChanged (this, null);
-		}
-		
-		protected virtual void OnProvidersChanged (object sender, EventArgs args)
-		{
-			//MonoQueryService service = (MonoQueryService) ServiceManager.GetService (typeof (MonoQueryService));
-			Clear ();
-			//LoadTree (service.Providers);
+			Buffer.Text = contents;
 		}
 	}
 }

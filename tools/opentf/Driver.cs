@@ -249,6 +249,9 @@ public partial class Driver : ICertificatePolicy
 
 		for (int i=0; i < Arguments.Length; i++)
 			{
+				// a little padding between chained command output
+				if (i > 0) Console.WriteLine();
+
 				// unknown options are not sub commands
 				string scmd = Arguments[i].ToLower();
 				if (IsOption(scmd))

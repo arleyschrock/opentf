@@ -115,7 +115,7 @@ class ShelvesetsCommand : Command
 
 	public override void Run()
 	{
-		string name = "";
+		string name = String.Empty;
 		string owner = OwnerFromString(OptionOwner);
 
 		if (Arguments.Length > 0)
@@ -133,7 +133,8 @@ class ShelvesetsCommand : Command
 
 		if (shelvesets.Length == 0)
 			{
-				Console.WriteLine("No shelveset matching {0} for owner {1} found in Team Foundation Server.",
+				if (String.IsNullOrEmpty(name)) name = "*";
+				Console.WriteLine("No shelvesets matching {0};{1}",
 													name, owner);
 				Environment.Exit((int)ExitCode.Failure);
 			}

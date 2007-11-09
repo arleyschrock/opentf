@@ -160,8 +160,10 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 				}
 
 			Hashtable hashtable = new Hashtable(aItem.Length + bItem.Length);
+			bool ignoreWhiteSpace = (diffOpts.Flags & DiffOptionFlags.IgnoreWhiteSpace) ==  DiffOptionFlags.IgnoreWhiteSpace;
+
 			DiffItem[] items = DiffUtil.DiffText(hashtable, aItem.Lines, bItem.Lines, 
-																					 false, false, false);
+																					 ignoreWhiteSpace, ignoreWhiteSpace, false);
 
 			WriteUnified(stream, aItem.Lines, bItem.Lines, items);
 		}

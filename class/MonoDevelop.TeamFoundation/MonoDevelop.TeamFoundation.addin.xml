@@ -1,0 +1,31 @@
+<Addin id					 = "TeamFoundation"
+			 namespace	 = "MonoDevelop"
+			 name				 = "MonoDevelop Team Foundation Addin"
+			 author			 = "Joel Reed"
+			 copyright	 = "GPL"
+			 url				 = "http://code.google.com/p/opentf"
+			 description = "A MonoDevelop addin for using the Team Foundation version control system"
+			 category		 = "IDE extensions"
+			 version		 = "0.16.0">
+	
+	<Runtime>
+		<Import assembly="MonoDevelop.TeamFoundation.dll"/>
+	</Runtime>
+
+	<Dependencies>
+		<Addin id="Core" version="0.16.0"/>
+		<Addin id="Core.Gui" version="0.16.0"/>
+		<Addin id="Projects" version="0.16.0"/>
+		<Addin id="Ide" version="0.16.0"/>
+	</Dependencies>
+
+	<Extension path = "/MonoDevelop/Ide/Pads">
+		<Pad id = "MonoDevelop.TeamFoundation.TeamFoundationPad" class = "MonoDevelop.TeamFoundation.TeamFoundationPad" defaultPlacement = "Left" _label = "Team Foundation Browser">
+		</Pad>
+	</Extension>
+
+	<Extension path = "/MonoDevelop/Ide/WorkbenchContexts/Edit">
+		<ContextPad id = "MonoDevelop.TeamFoundation.TeamFoundationPad"/>
+	</Extension>
+
+</Addin>

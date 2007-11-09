@@ -48,7 +48,7 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 		private string boundary;
 		private StreamWriter stream;
 
-		public UploadFile(string url, ICredentials credentials)
+		public UploadFile(string url, ICredentials credentials, string commandName)
 		{
 			request = (HttpWebRequest) WebRequest.Create(url);
 			request.Method = "POST";
@@ -60,7 +60,7 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 			request.Headers.Add ("X-TFS-Version", "1.0.0.0");
 			request.Headers.Add ("accept-language", "en-US");
 			request.Headers.Add ("X-VersionControl-Instance", 
-													 "ac4d8821-8927-4f07-9acf-adbf71119886, CommandCheckin");
+													 String.Format("ac4d8821-8927-4f07-9acf-adbf71119886, Command{0}", commandName));
 
 			boundary = String.Format("--{0}\r\n", sboundary);
 			stream = new StreamWriter(request.GetRequestStream());

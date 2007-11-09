@@ -22,6 +22,9 @@ class DifferenceCommand : Command
 	[Option("Show out of date files (newer version on server)", "", "old")]
 		public bool OptionOld = false;
 
+	[Option("Ignore white space differences", "", "ignorespace")]
+		public bool OptionIgnoreWhiteSpace = false;
+
 	[Option("Owner name", "O", "owner")]
 		public string OptionOwner;
 
@@ -35,7 +38,10 @@ class DifferenceCommand : Command
 	{
 		DiffOptions options = new DiffOptions();
 		options.UseThirdPartyTool = false;
+
 		options.Flags = DiffOptionFlags.EnablePreambleHandling;
+		if (OptionIgnoreWhiteSpace) options.Flags |= DiffOptionFlags.IgnoreWhiteSpace;
+
 		options.OutputType = DiffOutputType.Unified;
 		options.TargetEncoding = Console.OutputEncoding;
 		options.SourceEncoding = Console.OutputEncoding;

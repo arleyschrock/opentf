@@ -67,7 +67,7 @@ class WorkspaceCommand : Command
 
 		Console.WriteLine("Creating workspace: " + name + " for " + ownerName);
 		WorkingFolder[] folders = new WorkingFolder[1];
-		folders[0] = new WorkingFolder("$/", Environment.CurrentDirectory);
+		folders[0] = new WorkingFolder(VersionControlPath.RootFolder, Environment.CurrentDirectory);
 		Console.WriteLine("Mapping \"$/\" to " + Environment.CurrentDirectory);
 
 		VersionControlServer.CreateWorkspace(name, ownerName, OptionComment,

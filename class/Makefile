@@ -9,7 +9,8 @@ SUBDIRS = \
 	Microsoft.TeamFoundation.VersionControl.Common \
 	Microsoft.TeamFoundation.VersionControl.Client \
 	Microsoft.TeamFoundation.WorkItemTracking.Common \
-	Microsoft.TeamFoundation.WorkItemTracking.Client
+	Microsoft.TeamFoundation.WorkItemTracking.Client \
+	Gtk.TeamFoundation
 
 DISTFILES = \
 	LICENSE
