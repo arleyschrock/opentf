@@ -28,6 +28,7 @@
 
 using System;
 using System.Net;
+using System.Web.Services.Protocols;
 using Microsoft.TeamFoundation.Server;
 
 namespace Microsoft.TeamFoundation.Client
@@ -46,8 +47,19 @@ namespace Microsoft.TeamFoundation.Client
 		[System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/TeamFoundation/2005/06/Services/ServerStatus/03/CheckAuthentication", RequestNamespace="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/ServerStatus/03", ResponseNamespace="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/ServerStatus/03", ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped, Use=System.Web.Services.Description.SoapBindingUse.Literal)]
 			public string CheckAuthentication() 
 			{
-				object[] results = this.Invoke("CheckAuthentication", new object[0]);
-				return ((string)(results[0]));
+				try
+				{
+					object[] results = this.Invoke("CheckAuthentication", new object[0]);
+					return ((string)(results[0]));
+				}
+				catch (SoapException ex)
+				{
+					//	string msg = String.Format("TF30063: You are not authorized to access {0} ({1}).\n--> Did you supply the correct username, password, and domain?", 
+					//(new Uri(this.Url)).Host, "CheckAuthentication");
+					Console.WriteLine(ex.ToString());
+				}
+
+				return String.Empty;
 			}
 	}
 }

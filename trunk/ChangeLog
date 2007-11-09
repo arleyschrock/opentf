@@ -1,4 +1,4 @@
-2007-09-07  Joel Reed  <joelwreed@comcast.com>
+2007-10-07  Joel Reed  <joelwreed@comcast.com>
 
 	* v0.5.3 release notes
 
@@ -6,6 +6,12 @@
 	command, e.g. -version:"D2006-10-01T01:01:01Z~D2006-12-13T20:00:00Z"
 	# CRUISECONTROL: add -noprompt option
 	# CRUISECONTROL: add support for username@domain -login syntax
+	# NEW: implement "tf shelve <name> <path>" to create new shelvesets
+	# NEW: implement "tf shelve /delete <name>" for deleting shelvesets
+	# NEW: implement "tf diff /ignorespace" option
+	# NEW: add Workspace.Default setting: If the TF client cannot determine the 
+	active workspace, first from the "/workspace:" option, and second the 
+	workspace cache, then it will use the Workspace.Default setting if non-null.
 	# BUGFIX: insert trailing tabs after filenames (a/b) in diffs to
 	help diffutils grok filenames with spaces
 	# BUGFIX: make sure tf ls-files <paths> is not passed a filename
@@ -18,9 +24,7 @@
 	# BUGFIX: teach status command how to deal with locked files
 	# API: Microsoft.TeamFoundation.Common: Artifact, ArtifactId, ILinking
 	LinkFilter, LinkingUtilities, ServiceInterfaces
-	# NEW: add Workspace.Default setting: If the TF client cannot determine the 
-	active workspace, first from the "/workspace:" option, and second the 
-	workspace cache, then it will use the Workspace.Default setting if non-null.
+	# API: Microsoft.TeamFoundation.VersionControl.Client: ShelvingOptions
 	
 2007-09-07  Joel Reed  <joelwreed@comcast.com>
 

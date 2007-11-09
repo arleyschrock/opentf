@@ -117,6 +117,7 @@ endif
 
 $(sourcefile): $(the_csproj)
 	xsltproc -o $@ $(topdir)/build/sources.xsl $< 
+	echo $(EXTRA_SOURCES) >> $@
 
 all-local: $(the_lib)
 

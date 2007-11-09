@@ -28,7 +28,6 @@ public class RepositoryView : Gtk.TreeView
 	private void MyRowExpandedHandler (object o, RowExpandedArgs args)
 	{
 		string path = itemStore.GetValue(args.Iter, 1).ToString() + "/*";
-		//Console.WriteLine(path);
 
 		int indx = 0;
 		Microsoft.TeamFoundation.VersionControl.Client.Item[] items = ItemsForPath(path);
@@ -71,7 +70,7 @@ public class RepositoryView : Gtk.TreeView
 			itemStore = new Gtk.TreeStore (typeof (string), typeof (string));
 			Gtk.TreeIter root = itemStore.AppendValues(VersionControlPath.RootFolder, VersionControlPath.RootFolder);
 
-			Microsoft.TeamFoundation.VersionControl.Client.Item[] items = ItemsForPath("$/");
+			Microsoft.TeamFoundation.VersionControl.Client.Item[] items = ItemsForPath(VersionControlPath.RootFolder);
 			foreach (Microsoft.TeamFoundation.VersionControl.Client.Item item in items)
 			{
 				if (item.ServerItem == VersionControlPath.RootFolder) continue;

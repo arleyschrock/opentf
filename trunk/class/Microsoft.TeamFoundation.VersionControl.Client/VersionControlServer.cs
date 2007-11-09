@@ -101,6 +101,16 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 			Workstation.Current.RemoveCachedWorkspaceInfo(Uri, workspaceName);
 		}
 
+		public void DeleteShelveset(Shelveset shelveset) 
+		{
+			DeleteShelveset(shelveset.Name, shelveset.OwnerName);
+		}
+
+		public void DeleteShelveset(string shelvesetName, string shelvesetOwner) 
+		{
+			repository.DeleteShelveset(shelvesetName, shelvesetOwner);
+		}
+
 		public BranchHistoryTreeItem[][] GetBranchHistory (ItemSpec[] itemSpecs,
 																											 VersionSpec version)
 		{

@@ -65,6 +65,7 @@
     <Compile Include="OnlineCommand.cs" />
     <Compile Include="PermissionCommand.cs" />
     <Compile Include="PropertiesCommand.cs" />
+    <Compile Include="ShelveCommand.cs" />
     <Compile Include="ShelvesetsCommand.cs" />
     <Compile Include="ShowCommand.cs">
       <SubType>Component</SubType>

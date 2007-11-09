@@ -49,22 +49,27 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 	public sealed class Shelveset
 	{
 		private string name;
-		private string comment;
+		private string comment = String.Empty;
 		private string ownerName;
-		private DateTime creationDate;
+		private DateTime creationDate = new DateTime(0);
 		private VersionControlServer versionControlServer;
+
+		public Shelveset (VersionControlServer versionControlServer,
+											string name, string ownerName)
+		{
+			this.versionControlServer = versionControlServer;
+			this.name = name;
+			this.ownerName = ownerName;
+		}
 
 		internal static Shelveset FromXml(Repository repository, XmlReader reader)
 		{
 			string elementName = reader.Name;
+			string ownerName = reader.GetAttribute("owner");
+			string name = reader.GetAttribute("name");
 
-			Shelveset shelveset = new Shelveset();
-			shelveset.versionControlServer = repository.VersionControlServer;
-
+			Shelveset shelveset = new Shelveset(repository.VersionControlServer, name, ownerName);
 			shelveset.creationDate = Convert.ToDateTime(reader.GetAttribute("date"));
-			shelveset.ownerName = reader.GetAttribute("owner");
-			shelveset.name = reader.GetAttribute("name");
-			shelveset.comment = "";
 
 			while (reader.Read())
 				{
@@ -88,8 +93,9 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 		internal void ToXml(XmlWriter writer, string element)
 		{
 			writer.WriteStartElement(element);
-			writer.WriteAttributeString("date", CreationDate.ToString());
-			writer.WriteElementString("owner", OwnerName);
+			writer.WriteAttributeString("date", CreationDate.ToString("s"));
+			writer.WriteAttributeString("name", Name);
+			writer.WriteAttributeString("owner", OwnerName);
 			writer.WriteEndElement();
 		}
 
