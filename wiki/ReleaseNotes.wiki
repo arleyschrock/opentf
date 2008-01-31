@@ -6,13 +6,13 @@
 A development release with the following changes:
 
 ==New Features==
- # CRUISECONTROL: add support for date range queries to the history command, e.g. -version:"D2006-10-01T01:01:01Z~D2006-12-13T20:00:00Z"
- # CRUISECONTROL: add -noprompt option
- # CRUISECONTROL: add support for username@domain -login syntax
- # TFSBOT: add new IRC commit notification daemon.
- # add alpha-quality MonoDevelop addin, with debian package
- # implement "tf shelve <name> <path>" to create new shelvesets
- # implement "tf shelve /delete <name>" for deleting shelvesets
+  # CRUISECONTROL: add support for date range queries to the history command, e.g. version:"D2006-10-01T01:01:01Z~D2006-12-13T20:00:00Z"
+  # CRUISECONTROL: add -noprompt option
+  # CRUISECONTROL: add support for username@domain -login syntax
+  # TFSBOT: add new IRC commit notification daemon.
+  # add alpha-quality MonoDevelop addin, with debian package
+  # implement "tf shelve <name> <path>" to create new shelvesets
+  # implement "tf shelve /delete <name>" for deleting shelvesets
  # implement "tf merges <src> <dest>" for listing merge points
  # implement "tf diff /ignorespace" option
  # implement "tf rollback <changeset>" for undoing a changeset. NOTE: only useful if no one else has changed the file since then.
