@@ -31,8 +31,7 @@ A development release with the following changes:
  # BUGFIX: fix tf ls-files /others breakage on windows for subdirectories
  # BUGFIX: update local workspace cache when "tf workspaces" command called.
  # BUGFIX: fix issue #8 "tf config expects ~/.tf/ to already exist"
- # BUGFIX: teach tf that diffing binary files should print
-short "Binary files $1 and $2 differ" message
+ # BUGFIX: teach tf that diffing binary files should print short "Binary files $1 and $2 differ" message
  # BUGFIX: teach status command how to deal with locked files
  # BUGFIX: teach tf branches command about server paths
  # BUGFIX: don't clobber workspace info cache when there are >1 TFS server
