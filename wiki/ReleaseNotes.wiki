@@ -13,12 +13,12 @@ A development release with the following changes:
   # add alpha-quality MonoDevelop addin, with debian package
   # implement "tf shelve <name> <path>" to create new shelvesets
   # implement "tf shelve /delete <name>" for deleting shelvesets
- # implement "tf merges <src> <dest>" for listing merge points
- # implement "tf diff /ignorespace" option
- # implement "tf rollback <changeset>" for undoing a changeset. NOTE: only useful if no one else has changed the file since then.
- # add Get.ChangesetMtimes setting: By enabling this option, the TF will set the modification time of any file subsequently fetched to the date of the last changeset in which the file was modified. Warning: this mode of operation can significantly slow down "tf get". 
- # add Get.DefaultToCwd setting: By enabling this option, the TF client will look for updates starting with the current working folder instead of pulling updates from all registered working folders.
- # add Workspace.Default setting: If the TF client cannot determine the active workspace, first from the "/workspace:" option, and second the workspace cache, then it will use the Workspace.Default setting if non-null.
+  # implement "tf merges <src> <dest>" for listing merge points
+  # implement "tf diff /ignorespace" option
+  # implement "tf rollback <changeset>" for undoing a changeset. NOTE: only useful if no one else has changed the file since then.
+  # add Get.ChangesetMtimes setting: By enabling this option, the TF will set the modification time of any file subsequently fetched to the date of the last changeset in which the file was modified. Warning: this mode of operation can significantly slow down "tf get". 
+  # add Get.DefaultToCwd setting: By enabling this option, the TF client will look for updates starting with the current working folder instead of pulling updates from all registered working folders.
+  # add Workspace.Default setting: If the TF client cannot determine the active workspace, first from the "/workspace:" option, and second the workspace cache, then it will use the Workspace.Default setting if non-null.
 
 ==Bugfixes==
  # BUGFIX: tf history with stopAfter > 256 shouldn't emit duplicate entries (thanks to dion.olsthoorn for the report & fix)
