@@ -9,3 +9,16 @@
 }}}
 
 = Configuration =
+
+{{{
+<?xml version="1.0" encoding="utf-8"?>                                                    
+<configuration><appSettings>
+  <add key="irc.server" value="" />
+  <add key="irc.channel" value="" />
+  <add key="irc.nick" value="tfsbot" />
+  <add key="tfs.url" value="" />
+  <add key="tfs.domain" value="" />
+  <add key="tfs.username" value="" />
+  <add key="tfs.password" value="" />
+</appSettings></configuration>
+}}}
