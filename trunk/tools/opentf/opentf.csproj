@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -9,6 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>opentf</RootNamespace>
     <AssemblyName>opentf</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,8 +48,6 @@
     <Compile Include="CommandOptions.cs" />
     <Compile Include="CommandAttribute.cs" />
     <Compile Include="CommandRegistry.cs" />
-    <Compile Include="DiffItemNull.cs" />
-    <Compile Include="Settings.cs" />
     <Compile Include="AddCommand.cs" />
     <Compile Include="BranchesCommand.cs" />
     <Compile Include="ChangesetCommand.cs" />
@@ -62,9 +65,12 @@
     <Compile Include="LabelsCommand.cs" />
     <Compile Include="LockCommand.cs" />
     <Compile Include="LsFilesCommand.cs" />
+    <Compile Include="MergesCommand.cs" />
+    <Compile Include="NoGui.cs" Condition="true"/>
     <Compile Include="OnlineCommand.cs" />
     <Compile Include="PermissionCommand.cs" />
     <Compile Include="PropertiesCommand.cs" />
+    <Compile Include="RollbackCommand.cs" />
     <Compile Include="ShelveCommand.cs" />
     <Compile Include="ShelvesetsCommand.cs" />
     <Compile Include="ShowCommand.cs">
@@ -80,9 +86,6 @@
     <Compile Include="WorkspacesCommand.cs" />
     <Compile Include="ViewCommand.cs" />
     <Compile Include="VersionCommand.cs" />
-    <Compile Include="NoKeyring.cs" Condition="true" />
-    <Compile Include="NoGui.cs" Condition="true" />
-    <Compile Include="NoFileType.cs" Condition="true" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\class\Microsoft.TeamFoundation.Common\Microsoft.TeamFoundation.Common.csproj">
@@ -104,6 +107,14 @@
     <ProjectReference Include="..\..\class\Microsoft.TeamFoundation.VersionControl.Client\Microsoft.TeamFoundation.VersionControl.Client.csproj">
       <Project>{F0953653-D640-4338-BDAE-91DA9C3583F8}</Project>
       <Name>Microsoft.TeamFoundation.VersionControl.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\class\OpenTF.Common\OpenTF.Common.csproj">
+      <Project>{B0953653-A461-4338-BDAE-91DA9C35BBAA}</Project>
+      <Name>OpenTF.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\class\Gtk.TeamFoundation\Gtk.TeamFoundation.csproj" Condition="false">
+      <Project>{B0953653-A461-4338-BDAE-91DA9C3583AA}</Project>
+      <Name>Gtk.TeamFoundation</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

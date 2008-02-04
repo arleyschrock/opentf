@@ -33,11 +33,13 @@ using System.Collections.Specialized;
 using System.Net;
 using System.IO;
 using System.Text;
+using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using Mono.GetOptions;
 using Microsoft.TeamFoundation;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.Server;
+using OpenTF.Common;
 
 [assembly: AssemblyTitle ("wit.exe")]
 [assembly: AssemblyVersion ("0.1")]
@@ -55,9 +57,7 @@ public partial class Driver : ICertificatePolicy
 	private DriverOptions Options = new DriverOptions();
 	private string[] Arguments;
 
-	private string domain;
-	private string username;
-	private string password;
+	private TFCredential credentials = null;
 	private string serverUrl;
 	private List<string> outputBuffer = null;
 
@@ -76,7 +76,7 @@ public partial class Driver : ICertificatePolicy
 	{
 		get { 
 			GetUserCredentials();
-			return domain; 
+			return credentials.Domain; 
 		}
 	}
 
@@ -84,7 +84,7 @@ public partial class Driver : ICertificatePolicy
 	{
 		get { 
 			GetUserCredentials();
-			return username; 
+			return credentials.UserName; 
 		}
 	}
 
@@ -111,7 +111,7 @@ public partial class Driver : ICertificatePolicy
 			return Options.Login;
 		
 		// check the keyring
-		string login = TfsKeyring.GetCredentials(ServerUrl);
+		string login = Keyring.GetCredentials(ServerUrl);
 		if (!String.IsNullOrEmpty(login)) return login;
 
 		// finally prompt
@@ -120,39 +120,23 @@ public partial class Driver : ICertificatePolicy
 
 	private void GetUserCredentials()
 	{
-		if (! String.IsNullOrEmpty(username)) return;
-
+		if (credentials != null) return;
 		string login = GetLogin();
-		string userinfo = "";
-
-		int comma = login.IndexOf(",");
-		if (comma != -1)
-			{
-				userinfo = login.Substring(0, comma);
-				password = login.Substring(comma+1);
-			}
-		else userinfo = login;
-
-		int slash = userinfo.IndexOf('\\');
-		if (-1 == slash) username = userinfo;
-		else
-			{
-				domain = userinfo.Substring(0, slash);
-				username = userinfo.Substring(slash+1);
-			}
+		credentials = new TFCredential(login);
 	}
 
 	public NetworkCredential GetNetworkCredentials()
 	{
 		GetUserCredentials();
 		
-		if (!(String.IsNullOrEmpty(username)) && String.IsNullOrEmpty(password))
+		if (!(String.IsNullOrEmpty(credentials.UserName)) && 
+				String.IsNullOrEmpty(credentials.Password))
 			{
 				Console.Write("Password: ");
-				password = Console.ReadLine();
+				credentials.Password = Console.ReadLine();
 			}
 
-		return new NetworkCredential(username, password, domain);
+		return credentials;
 	}
 
 	public TeamFoundationServer TeamFoundationServer
@@ -167,7 +151,8 @@ public partial class Driver : ICertificatePolicy
 				// save credentials if passed
 				bool saveSetting = Settings.Current.GetAsBool("Credentials.Save");
 				if (saveSetting && !String.IsNullOrEmpty(Options.Login))
-					TfsKeyring.SetCredentials(ServerUrl, domain, username, password);
+					Keyring.SetCredentials(ServerUrl, credentials.Domain, 
+																 credentials.UserName, credentials.Password);
 		
 				return _tfs;
 			}

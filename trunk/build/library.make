@@ -9,6 +9,7 @@
 # munge in the library name to keep the files from clashing.
 
 sourcefile = $(LIBRARY).sources
+refsfile = $(LIBRARY).references
 
 # If the directory contains the per profile include file, generate list file.
 PROFILE_sources = $(PROFILE)_$(LIBRARY).sources
@@ -42,7 +43,7 @@ the_lib = $(topdir)/class/lib/$(PROFILE)/$(LIBRARY_NAME)
 the_pdb = $(the_lib:.dll=.pdb)
 the_mdb = $(the_lib).mdb
 the_csproj = $(LIBRARY_NAME:.dll=.csproj)
-library_CLEAN_FILES += $(makefrag) $(the_lib) $(the_pdb) $(the_mdb) $(sourcefile)
+library_CLEAN_FILES += $(makefrag) $(the_lib) $(the_pdb) $(the_mdb) $(sourcefile) $(refsfile)
 
 ifdef LIBRARY_NEEDS_POSTPROCESSING
 build_lib = fixup/$(PROFILE)/$(LIBRARY_NAME)
@@ -118,6 +119,9 @@ endif
 $(sourcefile): $(the_csproj)
 	xsltproc -o $@ $(topdir)/build/sources.xsl $< 
 	echo $(EXTRA_SOURCES) >> $@
+
+$(refsfile): $(the_csproj)
+	xsltproc -o $@ $(topdir)/build/references.xsl $< 
 
 all-local: $(the_lib)
 
@@ -258,17 +262,10 @@ endif
 
 # The library
 
-$(build_lib): $(response) $(BUILT_SOURCES)
-ifdef LIBRARY_USE_INTERMEDIATE_FILE
-	$(LIBRARY_COMPILE) $(LIBRARY_FLAGS) $(LIB_MCS_FLAGS) -target:library -out:$(LIBRARY_NAME) $(BUILT_SOURCES_cmdline) @$(response)
-	$(SN) $(SNFLAGS) $(LIBRARY_NAME) $(LIBRARY_SNK)
-	mv $(LIBRARY_NAME) $@
-	test ! -f $(LIBRARY_NAME).mdb || mv $(LIBRARY_NAME).mdb $@.mdb
-else
+$(build_lib): $(response) $(BUILT_SOURCES) $(refsfile)
 #	$(XBUILD) "/property:DelaySign=true;KeyOriginatorFile=../msfinal.pub;OutputPath=$(topdir)/class/lib/$(PROFILE)/" $(the_csproj) 
-	$(LIBRARY_COMPILE) -delaysign+ -keyfile:../msfinal.pub $(LIBRARY_FLAGS) $(LIB_MCS_FLAGS) -target:library -out:$@ $(BUILT_SOURCES_cmdline) @$(response)
+	$(LIBRARY_COMPILE) -delaysign+ -keyfile:../msfinal.pub $(LIBRARY_FLAGS) $(LIB_MCS_FLAGS) -target:library -out:$@ $(BUILT_SOURCES_cmdline) @$(refsfile) @$(response)
 	$(SN) $(SNFLAGS) $@ $(LIBRARY_SNK)
-endif
 
 $(makefrag): $(sourcefile)
 	@echo Creating $@ ...
@@ -288,7 +285,7 @@ endif
 ifdef HAVE_CS_TESTS
 
 $(test_lib): $(test_dep) $(test_response) 
-	$(TEST_COMPILE) -target:library -out:$@ $(test_flags) @$(test_response)
+	$(TEST_COMPILE) -target:library -out:$@ $(test_flags) @$(refsfile) @$(test_response)
 
 $(test_response): $(test_sourcefile)
 	@echo Creating $@ ...

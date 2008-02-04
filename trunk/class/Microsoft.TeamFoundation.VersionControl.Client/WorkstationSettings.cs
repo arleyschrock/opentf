@@ -42,6 +42,8 @@ internal class WorkstationSettings : SortedList<string, bool>
 	internal WorkstationSettings()
 	{
 		this["File.ReadWrite"] = false;
+		this["Get.ChangesetMtimes"] = false;
+
 		string configFilePath = Path.Combine(TeamFoundationServer.ClientSettingsDirectory, ConfigFile); 
 		if (!File.Exists(configFilePath)) return;
 

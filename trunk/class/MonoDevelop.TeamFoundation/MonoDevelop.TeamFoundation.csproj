@@ -27,7 +27,8 @@
     <Reference Include="System.Web.Services" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TeamFoundationPad.cs" />
+    <Compile Include="TeamFoundationView.cs" />
+    <Compile Include="TeamFoundationCommands.cs" />
     <Compile Include="TeamFoundationSettings.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +58,10 @@
     <ProjectReference Include="..\..\class\Gtk.TeamFoundation\Gtk.TeamFoundation.csproj">
       <Project>{B0953653-A461-4338-BDAE-91DA9C3583AA}</Project>
       <Name>Gtk.TeamFoundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\class\OpenTF.Common\OpenTF.Common.csproj">
+      <Project>{B0953653-A461-4338-BDAE-91DA9C35BBAA}</Project>
+      <Name>OpenTF.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

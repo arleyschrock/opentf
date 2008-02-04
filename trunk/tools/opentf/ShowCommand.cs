@@ -45,7 +45,7 @@ using Mono.GetOptions;
 [System.Web.Services.WebServiceBinding(Name="AdminSoap", Namespace="http://schemas.microsoft.com/TeamFoundation/2005/06/VersionControl/Admin/03")]
 public class AdminStats : System.Web.Services.Protocols.SoapHttpClientProtocol {
     
-	public AdminStats(string url, NetworkCredential credentials) 
+	public AdminStats(string url, ICredentials credentials) 
 	{
 		this.Url = url + "/VersionControl/v1.0/administration.asmx";
 		this.Credentials = credentials;
@@ -99,7 +99,8 @@ class ShowCommand : Command
 
 	public void ShowStats()
 	{
-		AdminStats stats = new AdminStats(Driver.ServerUrl, Driver.GetNetworkCredentials());
+		string url = Driver.GetServerUrl();
+		AdminStats stats = new AdminStats(url, Driver.GetCredentials(new Uri(url), null));
 		AdminRepositoryInfo info = stats.QueryRepositoryInformation();
 
 		Console.WriteLine("Files:           " + info.FileCount);
@@ -197,7 +198,10 @@ class ShowCommand : Command
 
 	private void ShowCache()
 	{
-		Console.WriteLine("Cached Workspaces:");
+		Console.WriteLine("Cached Workspaces");
+
+		string cpath = Path.Combine(TeamFoundationServer.ClientSettingsDirectory, "VersionControl.config"); 
+		Console.WriteLine("File: " + cpath);
 		Console.WriteLine();
 
 		WorkspaceInfo[] infos = Workstation.Current.GetAllLocalWorkspaceInfo();

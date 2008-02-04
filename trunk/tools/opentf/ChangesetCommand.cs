@@ -38,7 +38,7 @@ using Mono.GetOptions;
 				 "[ <changeset id> | /latest ]")]
 class ChangesetCommand : DifferenceCommand
 {
-	[Option("Show changeset details for the latest changeset on the server", "", "latest")]
+	[Option("Show latest changeset on the server.", "", "latest")]
 		public bool OptionLatest;
 
 	public ChangesetCommand(Driver driver, string[] args): base(driver, args)

@@ -28,15 +28,31 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IVersionControlServerFactory.cs" />
+    <Compile Include="AuthenticationDialog.cs" />
     <Compile Include="ChangesetDetailView.cs" />
     <Compile Include="ChangesetDiffView.cs" />
     <Compile Include="ChangesetView.cs" />
-    <Compile Include="DiffItemNull.cs" />
+    <Compile Include="DialogBase.cs" />
+    <Compile Include="DirectoryMenu.cs" />
     <Compile Include="DirectoryView.cs" />
     <Compile Include="ExploreView.cs" />
     <Compile Include="FileView.cs" />
+    <Compile Include="GettingDialog.cs" />
+    <Compile Include="Images.cs" />
+    <Compile Include="MenuBase.cs" />
+    <Compile Include="RepositoryDialog.cs" />
     <Compile Include="RepositoryView.cs" />
+    <Compile Include="RepositoryMenu.cs" />
+    <Compile Include="ScrolledWindowBase.cs" />
+    <Compile Include="ShowChangesetDialog.cs" />
+    <Compile Include="ShowChangesetEventHandler.cs" />
+    <Compile Include="ShowChangesetEventArgs.cs" />
+    <Compile Include="ShowFileDialog.cs" />
+    <Compile Include="ShowFileEventHandler.cs" />
+    <Compile Include="ShowFileEventArgs.cs" />
     <Compile Include="SortableColumns.cs" />
+    <Compile Include="TreeViewBase.cs" />
+    <Compile Include="WorkingFolderDialog.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />
@@ -61,6 +77,10 @@
     <ProjectReference Include="..\..\class\Microsoft.TeamFoundation.VersionControl.Client\Microsoft.TeamFoundation.VersionControl.Client.csproj">
       <Project>{F0953653-D640-4338-BDAE-91DA9C3583F8}</Project>
       <Name>Microsoft.TeamFoundation.VersionControl.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\class\OpenTF.Common\OpenTF.Common.csproj">
+      <Project>{B0953653-A461-4338-BDAE-91DA9C35BBAA}</Project>
+      <Name>OpenTF.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -72,14 +72,8 @@ dist.rpm:
 
 # ok, now this is ugly
 dist.win:
-	./configure --disable-magic --disable-keyring --disable-gtk
-	make clean all
+	MSBuild.exe opentf.sln /p:Configuration=Release /p:Platform="Any CPU"
 	makensis tfs.nsi
-	cp opentf.exe ../opentf-base-$(PACKAGE_VERSION).exe
-	./configure --disable-magic --disable-keyring --enable-highlight
-	(cd tools/tf &&	make clean all)
-	makensis tfs.nsi
-	cp opentf.exe ../opentf-full-$(PACKAGE_VERSION).exe
 
 distclean: clean
 

@@ -48,6 +48,12 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 			this.versionSpec = versionSpec;
 		}
 
+		public GetRequest (ItemSpec itemSpec, int changesetId)
+		{
+			this.itemSpec = itemSpec;
+			this.versionSpec = new ChangesetVersionSpec(changesetId);
+		}
+
 		internal GetRequest(VersionSpec versionSpec)
 		{
 			this.versionSpec = versionSpec;

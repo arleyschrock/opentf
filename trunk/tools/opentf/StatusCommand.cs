@@ -62,6 +62,7 @@ class StatusCommand : Command
 	protected void BriefOutput(PendingChange[] pendingChanges, string indent)
 	{
 		List<KeyValuePair<string, string>> changes = new List<KeyValuePair<string, string>>();
+		int maxLen = 0;
 		foreach (PendingChange change in pendingChanges)
 			{
 				string ctype = "Edit";
@@ -70,6 +71,7 @@ class StatusCommand : Command
 				else if (change.IsDelete) ctype = "Delete";
 				else if (change.IsRename) ctype = "Rename";
 
+				if (ctype.Length > maxLen) maxLen = ctype.Length;
 				changes.Add(new KeyValuePair<string, string>(ctype, change.LocalItem));
 			}
 
@@ -77,7 +79,7 @@ class StatusCommand : Command
 
 		foreach (KeyValuePair<string, string> pair in changes)
 			{
-				string line = String.Format("{0}{1}\t{2}", indent, pair.Key, pair.Value);
+				string line = String.Format("{0}{1} {2}", indent, pair.Key.PadRight(maxLen), pair.Value);
 				Console.WriteLine(line);
 			}
 	}

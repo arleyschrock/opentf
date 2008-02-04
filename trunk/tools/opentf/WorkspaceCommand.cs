@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Microsoft.TeamFoundation.Client;
+using Microsoft.TeamFoundation.VersionControl.Common;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using Mono.GetOptions;
 
@@ -86,6 +87,13 @@ class WorkspaceCommand : Command
 			{
 				name = arg.Substring(0, semicolon);
 				ownerName = arg.Substring(semicolon+1);
+			}
+
+		if (String.IsNullOrEmpty(ownerName))
+			{
+				Console.WriteLine("Error: cannot determine the workspace owner.");
+				Console.WriteLine("Please use /owner or specify the workspace with the \"<name>;<owner>\" syntax.");
+				Environment.Exit((int)ExitCode.Failure);
 			}
 
 		Console.WriteLine("Deleting workspace: " + arg);

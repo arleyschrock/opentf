@@ -35,6 +35,7 @@ using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using Microsoft.TeamFoundation.VersionControl.Common;
 using Mono.GetOptions;
+using OpenTF.Common;
 
 class OwnerStat : IComparable<OwnerStat>
 {
@@ -70,6 +71,9 @@ class HistoryCommand : Command
 
 	[Option("Username for filtering history results", "", "user")]
 		public string OptionUser;
+
+	[Option("Format of date/time output.", "", "datetime")]
+		public String OptionDateTimeFormat = "d";
 
 	public HistoryCommand(Driver driver, string[] args): base(driver, args)
 	{
@@ -190,7 +194,7 @@ class HistoryCommand : Command
 				string id = Convert.ToString(changeSet.ChangesetId);
 				if (id.Length > maxId) maxId = id.Length;
 
-				string date = changeSet.CreationDate.ToString("d");
+				string date = changeSet.CreationDate.ToString(OptionDateTimeFormat);
 				if (date.Length > maxDate) maxDate = date.Length;
 
 				string name = StripDomainPrefix(changeSet.Owner);
@@ -235,7 +239,7 @@ class HistoryCommand : Command
 				line = String.Format("{0} {1} {2} {3}", 
 														 Convert.ToString(changeSet.ChangesetId).PadRight(maxId), 
 														 owner.PadRight(maxOwner),
-														 changeSet.CreationDate.ToString("d").PadRight(maxDate), 
+														 changeSet.CreationDate.ToString(OptionDateTimeFormat).PadRight(maxDate), 
 														 comment);
 
 				Console.WriteLine(line);

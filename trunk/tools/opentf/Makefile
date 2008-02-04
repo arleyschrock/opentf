@@ -2,34 +2,11 @@ thisdir = tools/opentf
 SUBDIRS = 
 include ../../build/rules.make
 
-LOCAL_MCS_FLAGS = -r:Mono.Posix.dll
-EXPLORE_SOURCES = ExploreCommand.cs ExploreView.cs RepositoryView.cs ChangesetView.cs FileView.cs DirectoryView.cs ChangesetDetailView.cs ChangesetDiffView.cs
-
 ifeq ($(HAVE_GTK),yes)
-EXTRA_SOURCES += $(EXPLORE_SOURCES) Gui.cs
-LOCAL_MCS_FLAGS += -pkg:gtk-sharp-2.0 -d:HAVE_GTK 
-ifeq ($(HAVE_SYNTAX_HIGHLIGHTING),no)
-EXTRA_SOURCES += NoSourceView.cs
-else
-EXTRA_SOURCES += SourceView.cs
-LOCAL_MCS_FLAGS += -pkg:gtksourceview-sharp-2.0 -pkg:gnome-vfs-sharp-2.0 -d:HAVE_SYNTAX_HIGHLIGHTING
-endif
+EXTRA_SOURCES += ExploreCommand.cs Gui.cs
+LOCAL_MCS_FLAGS += -pkg:gtk-sharp-2.0 -r:Gtk.TeamFoundation.dll -d:HAVE_GTK 
 else
 EXTRA_SOURCES += NoGui.cs
-endif
-
-ifeq ($(HAVE_MAGIC),no)
-EXTRA_SOURCES += NoFileType.cs
-else
-EXTRA_SOURCES += FileType.cs
-LOCAL_MCS_FLAGS += -d:HAVE_MAGIC
-endif
-
-ifeq ($(HAVE_GNOME_KEYRING),no)
-EXTRA_SOURCES += NoKeyring.cs
-else
-EXTRA_SOURCES += Keyring.cs
-LOCAL_MCS_FLAGS += -pkg:gnome-keyring-sharp -d:HAVE_GNOME_KEYRING
 endif
 
 PROGRAM = opentf.exe

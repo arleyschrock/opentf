@@ -10,6 +10,11 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${cli:Depends}, libopentf-cil, libmagic1
 Description: A command line client for Team Foundation Servers.
 
+Package: monodevelop-opentf
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${cli:Depends}, libopentf-cil, libmagic1
+Description: A monodevelop plugin for Team Foundation Servers.
+
 Package: libopentf-cil 
 Architecture: any
 Section: devel

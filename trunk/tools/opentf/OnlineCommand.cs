@@ -36,6 +36,7 @@ using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.VersionControl.Common;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using Mono.GetOptions;
+using OpenTF.Common;
 
 [Command("online", "Finds all writable files and marks them as pending changes on the server.", "<path>...")]
 class OnlineCommand : Command
@@ -76,20 +77,31 @@ class OnlineCommand : Command
 						Console.WriteLine("Added: " + path);
 						addedFiles.Add(path);
 					}
-			}
-		else if (!isReadOnly && OptionModified)
-			{
-				string itemHash = Convert.ToBase64String(itemList[path]);
 
-				using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+				return;
+			}
+
+		// if a path is in the itemList but has a null hash skip any further processing
+		// the file is an add awaiting its first checkin
+		if (itemList[path] == null)
+			{
+				Console.WriteLine("Previously added: " + path);
+				return;
+			}
+
+		if (!OptionModified) return;
+		if (isReadOnly) return;
+
+		string itemHash = Convert.ToBase64String(itemList[path]);
+
+		using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+			{
+				md5.ComputeHash(fileStream);
+				string localHash = Convert.ToBase64String(md5.Hash);
+				if (itemHash != localHash)
 					{
-						md5.ComputeHash(fileStream);
-						string localHash = Convert.ToBase64String(md5.Hash);
-						if (itemHash != localHash)
-							{
-								editedFiles.Add(path);
-								Console.WriteLine("Modified: " + path);
-							}
+						editedFiles.Add(path);
+						Console.WriteLine("Modified: " + path);
 					}
 			}
 	}
@@ -98,7 +110,7 @@ class OnlineCommand : Command
 	{
 		List<ItemSpec> itemSpecs = new List<ItemSpec>();
 		foreach (string file in files.Keys)
-				itemSpecs.Add(new ItemSpec(file, RecursionType.None));
+			itemSpecs.Add(new ItemSpec(file, RecursionType.None));
 
 		// pull item list based on WorkspaceVersion. otherwise might get
 		// new items on server that haven't been pulled yet in the list returned
@@ -204,7 +216,7 @@ class OnlineCommand : Command
 				Console.WriteLine("Deleted: " + key);
 				deletedFiles.Add(key);
 			}
- 	}
+	}
 
 	private void Online(string[] args)
 	{

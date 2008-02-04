@@ -1,3 +1,31 @@
+//
+// ChangesetView.cs
+//
+// Authors:
+//	Joel Reed (joelwreed@gmail.com)
+//
+
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+
 using System;
 using System.IO;
 using System.Collections;
@@ -11,26 +39,18 @@ using Microsoft.TeamFoundation.VersionControl.Client;
 
 namespace Gtk.TeamFoundation
 {
-	public interface IChangesetViewChild
+	public class ChangesetView : TreeViewBase, IExploreViewChild
 	{
-		void UpdateCid(VersionControlServer vcs, int cid);
-	}
-
-	public class ChangesetView : Gtk.VPaned, IExploreViewChild
-	{
-		private Gtk.ListStore changesetListStore;
-		private Gtk.TreeView changesetList;
-		private ChangesetDetailView changesetDetailView;
-		private ChangesetDiffView changesetDiffView;
-		private Notebook viewChildren;
+		private Gtk.ListStore store;
 		private int stopAfter;
 		private int currentCid = 0;
 		private SortableColumns sortableColumns;
 		private VersionControlServer currentVcs;
+		private ExploreView exploreView;
 
 		private TreeViewColumn AppendColumn(string name, int indx)
 		{
-			TreeViewColumn column = changesetList.AppendColumn (name, new Gtk.CellRendererText (), "text", indx);
+			TreeViewColumn column = AppendColumn (name, new Gtk.CellRendererText (), "text", indx);
 
 			column.Clickable = true;
 			column.Resizable = true;
@@ -42,9 +62,10 @@ namespace Gtk.TeamFoundation
 
 		public void InitializeChangesetList()
 		{
-			changesetListStore = new Gtk.ListStore (typeof(int), typeof(string), typeof(string), typeof(string));
-			changesetList = new Gtk.TreeView(changesetListStore);
-			sortableColumns = new SortableColumns(changesetList, changesetListStore);
+			store = new Gtk.ListStore (typeof(int), typeof(string), typeof(string), typeof(string));
+			Model = store;
+
+			sortableColumns = new SortableColumns(this, store);
 
 			TreeViewColumn id = AppendColumn("Id", 0);
 			id.SortIndicator = true;
@@ -54,57 +75,33 @@ namespace Gtk.TeamFoundation
 			AppendColumn("Date", 2);
 			AppendColumn("Comment", 3);
 
-			changesetList.Selection.Mode = SelectionMode.Multiple;
-			changesetList.Selection.Changed += OnSelectionChanged;
-			changesetList.KeyReleaseEvent += MyKeyReleaseEventHandler;
+			Selection.Mode = SelectionMode.Multiple;
+			Selection.Changed += OnSelectionChanged;
+			KeyReleaseEvent += MyKeyReleaseEventHandler;
+			ButtonPressEvent += MyButtonPressEventHandler;
 
 #if HAVE_ATLEAST_GTK_210
-			changesetList.EnableGridLines = TreeViewGridLines.Vertical;
+			EnableGridLines = TreeViewGridLines.Vertical;
 #endif
 		}
 
-		public ChangesetView(int stopAfter)
+		public ChangesetView(ExploreView exploreView, int stopAfter)
 			{
+				this.exploreView = exploreView;
 				this.stopAfter = stopAfter;
 
 				InitializeChangesetList();
-
-				ScrolledWindow scrolledWindow1 = new ScrolledWindow();
-				scrolledWindow1.Add(changesetList);
-
-				Add1(scrolledWindow1);
-
-				viewChildren = new Notebook ();
-				viewChildren.TabPos = PositionType.Bottom;
-				Add2(viewChildren);
-
-				changesetDetailView = new ChangesetDetailView();
-				viewChildren.AppendPage(changesetDetailView, new Label ("Details"));
-
-				changesetDiffView = new ChangesetDiffView();
-				viewChildren.AppendPage(changesetDiffView, new Label ("Unified Diff"));
-
-				int x, y, width, height, depth;
-				RootWindow.GetGeometry(out x, out y, out width, out height, out depth);
-				Position = Convert.ToInt32((height - 40) * 0.4);
-
-				viewChildren.SwitchPage += OnSwitchPage;
 			}
 
-		public void OnSwitchPage(object o, SwitchPageArgs args)
-		{
-			if (currentCid == 0) return;
-			IChangesetViewChild child = viewChildren.GetNthPage((int)args.PageNum) as IChangesetViewChild;
-			UpdateChildCid(child);
-		}
-
-		protected void UpdateChildCid(IChangesetViewChild child)
-		{
-			if (child == null) return;
-			GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
-			child.UpdateCid(currentVcs, currentCid);
-			GdkWindow.Cursor = null;
-		}
+		[GLib.ConnectBefore]
+			protected void MyButtonPressEventHandler (object o, ButtonPressEventArgs args)
+			{
+				if (args.Event.Type == Gdk.EventType.TwoButtonPress) 
+					{
+						ShowChangesetEventArgs scArgs = new ShowChangesetEventArgs(currentVcs, currentCid);
+						exploreView.OnShowChangeset(this, scArgs);
+					}
+			}
 
 		void OnSelectionChanged (object o, EventArgs args)
 		{
@@ -113,12 +110,7 @@ namespace Gtk.TeamFoundation
 
 			TreeSelection treeSelection = o as TreeSelection;
 			int count = treeSelection.CountSelectedRows();
-			if (count == 0 || count > 1)
-				{
-					changesetDetailView.Clear();
-					changesetDiffView.Clear();
-					return;
-				}
+			if (count == 0 || count > 1) return;
 
 			TreePath[] paths = treeSelection.GetSelectedRows(out model);
 			foreach (TreePath path in paths)
@@ -126,43 +118,42 @@ namespace Gtk.TeamFoundation
 					model.GetIter(out iter, path);
 					currentCid = Convert.ToInt32(model.GetValue (iter, 0));
 				}
-
-			IChangesetViewChild child = viewChildren.CurrentPageWidget as IChangesetViewChild;
-			UpdateChildCid(child);
 		}
 
 		public void UpdatePath(VersionControlServer vcs, string path)
 		{
 			if (String.IsNullOrEmpty(path)) return;
 			currentVcs = vcs;
-
-			changesetListStore.Clear();
-			changesetDetailView.Clear();
-			changesetDiffView.Clear();
+			store.Clear();
 
 			bool detailed = false;
 			IEnumerable changeSets = vcs.QueryHistory(path, VersionSpec.Latest, 0, RecursionType.Full, null, 
-																																						null, null, stopAfter, detailed, false, false);
+																								null, null, stopAfter, detailed, false, false);
 
 			foreach (Changeset changeSet in changeSets)
 				{
-					changesetListStore.AppendValues(changeSet.ChangesetId, 
-																					changeSet.Owner, 
-																					changeSet.CreationDate.ToString("d"),
-																					changeSet.Comment);
+					store.AppendValues(changeSet.ChangesetId, 
+														 changeSet.Owner, 
+														 changeSet.CreationDate.ToString("d"),
+														 changeSet.Comment);
 				}
 
 			// this would be nice be seems to cause a segfault
-			//changesetList.ColumnsAutosize();
+			//ColumnsAutosize();
 		}
 
 		public void MyKeyReleaseEventHandler (object o, KeyReleaseEventArgs args)
 		{
-			if ((Gdk.Key.c == args.Event.Key) && ((args.Event.State & Gdk.ModifierType.ControlMask) != 0))
-				{
-					TreeIter iter; TreeModel model;
-					TreePath[] paths = changesetList.Selection.GetSelectedRows(out model);
+			TreeIter iter; TreeModel model;
+			TreePath[] paths = Selection.GetSelectedRows(out model);
 
+			if (Gdk.Key.Return == args.Event.Key && paths.Length == 1)
+				{
+					ShowChangesetEventArgs scArgs = new ShowChangesetEventArgs(currentVcs, currentCid);
+					exploreView.OnShowChangeset(this, scArgs);
+				}
+			else if ((Gdk.Key.c == args.Event.Key) && ((args.Event.State & Gdk.ModifierType.ControlMask) != 0))
+				{
 					StringBuilder sb = new StringBuilder();
 					foreach (TreePath path in paths)
 						{

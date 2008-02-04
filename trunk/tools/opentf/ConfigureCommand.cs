@@ -34,6 +34,7 @@ using System.Xml;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.VersionControl.Common;
 using Microsoft.TeamFoundation.VersionControl.Client;
+using OpenTF.Common;
 
 [Command("configure", "Display/Update current configuration.", "<key> <value>", "config")]
 class ConfigureCommand : Command

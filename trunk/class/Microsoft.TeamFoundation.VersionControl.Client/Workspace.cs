@@ -47,10 +47,17 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 		private WorkingFolder[] folders;
 		private VersionControlServer versionControlServer;
 		internal bool readWriteSetting;
+		internal bool mTimeSetting;
+
+		internal Workspace()
+			{
+				readWriteSetting = Workstation.Settings["File.ReadWrite"];
+				mTimeSetting = Workstation.Settings["Get.ChangesetMtimes"];
+			}
 
 		internal Workspace(VersionControlServer versionControlServer, string name, 
 											 string ownerName, string comment, 
-											 WorkingFolder[] folders, string computer)
+											 WorkingFolder[] folders, string computer) : this()
 			{
 				this.versionControlServer = versionControlServer;
 				this.name = name;
@@ -58,12 +65,10 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 				this.comment = comment;
 				this.folders = folders;
 				this.computer = computer;
-
-				readWriteSetting = Workstation.Settings["File.ReadWrite"];
 			}
 
 		internal Workspace(VersionControlServer versionControlServer, 
-											 WorkspaceInfo info)
+											 WorkspaceInfo info) : this()
 			{
 				this.versionControlServer = versionControlServer;
 				this.name = info.Name;
@@ -71,8 +76,6 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 				this.comment = info.Comment;
 				this.folders = new WorkingFolder[0];
 				this.computer = info.Computer;
-
-				readWriteSetting = Workstation.Settings["File.ReadWrite"];
 			}
 
 		public int CheckIn(PendingChange[] changes, string comment)
@@ -224,6 +227,7 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 			bool force = ((GetOptions.Overwrite & options) == GetOptions.Overwrite);
 			bool noGet = false; // not implemented below: ((GetOptions.Preview & options) == GetOptions.Preview);
 
+			SortedList<int, DateTime> changesetDates = new SortedList<int, DateTime>();
 			GetOperation[] getOperations = Repository.Get(Name, OwnerName, requests, force, noGet);
 			if (null != filterCallback) filterCallback(this, getOperations, userData);
 
@@ -274,11 +278,29 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 								directory = Path.GetDirectoryName(uPath);
 
 							if (!Directory.Exists(directory))
-									Directory.CreateDirectory(directory);
+								Directory.CreateDirectory(directory);
 
 							if (getOperation.ItemType == ItemType.File)
 								{
 									DownloadFile.WriteTo(uPath, Repository, getOperation.ArtifactUri);
+
+									// ChangesetMtimes functionality : none standard!
+									if (mTimeSetting)
+										{
+											int cid = getOperation.VersionServer;
+											DateTime modDate;
+
+											if (!changesetDates.TryGetValue(cid, out modDate))
+												{
+													Changeset changeset = VersionControlServer.GetChangeset(cid);
+													modDate = changeset.CreationDate;
+													changesetDates.Add(cid, modDate);
+												}
+
+											File.SetLastWriteTime(uPath, modDate);
+										}
+
+									// do this after setting the last write time!
 									SetFileAttributes(uPath);
 								}
 						}
@@ -292,20 +314,20 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 		}
 
 		public ExtendedItem[][] GetExtendedItems (ItemSpec[] itemSpecs,
-																						DeletedState deletedState,
-																						ItemType itemType)
+																							DeletedState deletedState,
+																							ItemType itemType)
 		{
 			return Repository.QueryItemsExtended(Name, OwnerName,
 																					 itemSpecs, deletedState, itemType);
 		}
 
 		public string GetServerItemForLocalItem(string localItem)
-			{
-				string item = TryGetServerItemForLocalItem(localItem);
-				if (item == null)
-					throw new ItemNotMappedException(localItem);
-				return item;
-			}
+		{
+			string item = TryGetServerItemForLocalItem(localItem);
+			if (item == null)
+				throw new ItemNotMappedException(localItem);
+			return item;
+		}
 
 		public string GetLocalItemForServerItem(string serverItem)
 		{
@@ -319,7 +341,8 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 		{
 			foreach (WorkingFolder workingFolder in Folders)
 				{
-					if (workingFolder.LocalItem == localPath) return true;
+					if (localPath.StartsWith(workingFolder.LocalItem))
+						return true;
 				}
 
 			return false;
@@ -329,7 +352,8 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 		{
 			foreach (WorkingFolder workingFolder in Folders)
 				{
-					if (workingFolder.ServerItem == serverPath) return true;
+					if (serverPath.StartsWith(workingFolder.ServerItem, StringComparison.OrdinalIgnoreCase))
+						return true;
 				}
 
 			return false;
@@ -438,12 +462,12 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 
 		public int PendEdit(string path)
 		{
-// 			Annotation[] annotations = Repository.QueryAnnotation("ExclusiveCheckout",
-// 																														path, 0);
-// 			foreach (Annotation annotation in annotations)
-// 				{
-// 					Console.WriteLine(annotation.ToString());
-// 				}
+			//			Annotation[] annotations = Repository.QueryAnnotation("ExclusiveCheckout",
+			//																														path, 0);
+			//			foreach (Annotation annotation in annotations)
+			//				{
+			//					Console.WriteLine(annotation.ToString());
+			//				}
 
 			return PendEdit(path, RecursionType.None);
 		}
@@ -488,15 +512,15 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 			changes.Add(new ChangeRequest(oldPath, newServerPath, RequestType.Rename, itemType));
 
 			GetOperation[] getOperations = Repository.PendChanges(this, changes.ToArray());
+			
+			if (itemType == ItemType.File)
+				File.Move(oldPath, newPath);
+			else
+				Directory.Move(oldPath, newPath);
 
 			UpdateLocalVersionQueue updates = new UpdateLocalVersionQueue(this);
 			foreach (GetOperation getOperation in getOperations)
 				{
-					if (itemType == ItemType.File)
-						File.Move(oldPath, getOperation.TargetLocalItem);
-					else
-						Directory.Move(oldPath, getOperation.TargetLocalItem);
-
 					updates.QueueUpdate(getOperation.ItemId, getOperation.TargetLocalItem, getOperation.VersionServer);
 				}
 
@@ -568,7 +592,7 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 
 			string comment = "";
 			DateTime lastAccessDate = DateTime.Now;
- 			List<WorkingFolder> folders = new List<WorkingFolder>();
+			List<WorkingFolder> folders = new List<WorkingFolder>();
 
 			while (reader.Read())
 				{
@@ -655,65 +679,65 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 		}
 
 		public string TryGetServerItemForLocalItem(string localItem)
-			{
-				string serverItem = null;
-				int longest = 0;
+		{
+			string serverItem = null;
+			int longest = 0;
 
-				// find the longest matching serveritem 
-				foreach (WorkingFolder folder in folders)
-					{
-						//Console.WriteLine("item: {0} =? folder: {1}", localItem, folder.LocalItem);
-						if (!localItem.StartsWith(folder.LocalItem, StringComparison.InvariantCultureIgnoreCase)) continue;
+			// find the longest matching serveritem 
+			foreach (WorkingFolder folder in folders)
+				{
+					//Console.WriteLine("item: {0} =? folder: {1}", localItem, folder.LocalItem);
+					if (!localItem.StartsWith(folder.LocalItem, StringComparison.InvariantCultureIgnoreCase)) continue;
 
-						int clen = folder.LocalItem.Length;
-						if (clen > longest)
-							{
-								serverItem = String.Format("{0}{1}", folder.ServerItem, localItem.Substring(clen));
-								longest = clen;
-							}
-					}
+					int clen = folder.LocalItem.Length;
+					if (clen > longest)
+						{
+							serverItem = String.Format("{0}{1}", folder.ServerItem, localItem.Substring(clen));
+							longest = clen;
+						}
+				}
 
-				return serverItem;
-			}
+			return serverItem;
+		}
 
 		public string TryGetLocalItemForServerItem(string serverItem)
-			{
-				string localItem = null;
-				int longest = 0;
+		{
+			string localItem = null;
+			int longest = 0;
 
-				foreach (WorkingFolder folder in folders)
-					{
-						if (!serverItem.StartsWith(folder.ServerItem, StringComparison.InvariantCultureIgnoreCase)) continue;
+			foreach (WorkingFolder folder in folders)
+				{
+					if (!serverItem.StartsWith(folder.ServerItem, StringComparison.InvariantCultureIgnoreCase)) continue;
 
-						int clen = folder.ServerItem.Length;
-						if (clen > longest)
-							{
-								localItem = String.Format("{0}{1}", folder.LocalItem, serverItem.Substring(clen));
-								longest = clen;
-							}
-					}
+					int clen = folder.ServerItem.Length;
+					if (clen > longest)
+						{
+							localItem = String.Format("{0}{1}", folder.LocalItem, serverItem.Substring(clen));
+							longest = clen;
+						}
+				}
 				
-				return localItem;
-			}
+			return localItem;
+		}
 
 		public WorkingFolder TryGetWorkingFolderForServerItem(string serverItem)
-			{
-				int maxPath = 0;
-				WorkingFolder workingFolder = null;
+		{
+			int maxPath = 0;
+			WorkingFolder workingFolder = null;
 
-				foreach (WorkingFolder folder in folders)
-					{
-						if (!serverItem.StartsWith(folder.ServerItem, StringComparison.InvariantCultureIgnoreCase)) continue;
+			foreach (WorkingFolder folder in folders)
+				{
+					if (!serverItem.StartsWith(folder.ServerItem, StringComparison.InvariantCultureIgnoreCase)) continue;
 
-						if (folder.LocalItem.Length > maxPath)
-								{
-									workingFolder = folder;
-									maxPath = folder.LocalItem.Length;
-								}
-					}
+					if (folder.LocalItem.Length > maxPath)
+						{
+							workingFolder = folder;
+							maxPath = folder.LocalItem.Length;
+						}
+				}
 				
-				return workingFolder;
-			}
+			return workingFolder;
+		}
 
 		public int Undo(string path)
 		{
@@ -751,7 +775,11 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 							if (getOperation.ItemType == ItemType.File)
 								directory = Path.GetDirectoryName(uPath);
 
-							if (!Directory.Exists(directory))
+							// directory is null if file is deleted on server, you haven't that
+							// version yet, you've marked it deleted locally, then you try to 
+							// undo because it won't you let you checkin the delete because
+							// its already deleted on the server
+							if (!Directory.Exists(directory) && !String.IsNullOrEmpty(directory))
 								Directory.CreateDirectory(directory);
 
 							if (getOperation.ItemType == ItemType.File)
@@ -765,19 +793,17 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 			return getOperations.Length;
 		}
 
-		public void Update (string newName, string newComment, WorkingFolder[] newMappings)
+		public void Update(string newName, string newComment, WorkingFolder[] newMappings)
 		{
 			Workspace w1 = new Workspace(VersionControlServer, newName, OwnerName,
 																	 newComment, newMappings, Computer);
- 			Workspace w2 = Repository.UpdateWorkspace(Name, OwnerName, w1);
+			Workspace w2 = Repository.UpdateWorkspace(Name, OwnerName, w1);
 
-			Workstation.Current.UpdateCachedWorkspaceInfo(VersionControlServer.Uri, 
-																										w2, newMappings);
-
+			Workstation.Current.UpdateWorkspaceInfoCache(VersionControlServer, OwnerName);
 			folders = w2.Folders;
 		}
 
-		public void RefreshMappings ()
+		public void RefreshMappings()
 		{
 			Workspace w = Repository.QueryWorkspace(Name, OwnerName);
 			this.folders = w.folders;

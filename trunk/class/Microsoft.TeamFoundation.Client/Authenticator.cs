@@ -33,7 +33,7 @@ using Microsoft.TeamFoundation.Server;
 
 namespace Microsoft.TeamFoundation.Client
 {
-	[System.Web.Services.WebServiceBinding(Name="ServerStatusSoap", Namespace="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/ServerStatus/03")]
+	[System.Web.Services.WebServiceBindingAttribute(Name="ServerStatusSoap", Namespace="http://schemas.microsoft.com/TeamFoundation/2005/06/Services/ServerStatus/03")]
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
 	[System.ComponentModel.DesignerCategoryAttribute("code")]
 	internal class Authenticator : System.Web.Services.Protocols.SoapHttpClientProtocol 

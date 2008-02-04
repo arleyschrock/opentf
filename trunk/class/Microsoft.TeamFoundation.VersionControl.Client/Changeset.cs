@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Xml;
 
@@ -35,6 +36,7 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 {
 	public sealed class Changeset
 	{
+		private static readonly string[] DateTimeFormats = { "yyyy-MM-ddTHH:mm:ss.fZ", "yyyy-MM-ddTHH:mm:ss.ffZ", "yyyy-MM-ddTHH:mm:ss.fffZ", "yyyy-MM-ddTHH:mm:ss.ffffZ", "yyyy-MM-ddTHH:mm:ss.fffffZ", "yyyy-MM-ddTHH:mm:ss.ffffffZ", "yyyy-MM-ddTHH:mm:ssZ" };
 		private Uri artifactUri;
 		private Change[] changes;
 		private int changesetId;
@@ -52,8 +54,9 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 			changeset.versionControlServer = repository.VersionControlServer;
 
 			changeset.committer = reader.GetAttribute("cmtr");
-			changeset.creationDate = Convert.ToDateTime(reader.GetAttribute("date"));
 			changeset.changesetId = Convert.ToInt32(reader.GetAttribute("cset"));
+			string date = reader.GetAttribute("date");
+			changeset.creationDate = DateTime.ParseExact(date, DateTimeFormats, null, DateTimeStyles.None);
 			changeset.owner = reader.GetAttribute("owner");
 
  			List<Change> changes = new List<Change>();

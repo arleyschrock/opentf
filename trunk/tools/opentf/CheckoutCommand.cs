@@ -33,6 +33,7 @@ using System.Text;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using Mono.GetOptions;
+using OpenTF.Common;
 
 [Command("checkout", "Checkout a file for editing.", "<path>...", "edit")]
 class CheckoutCommand : Command
@@ -55,6 +56,7 @@ class CheckoutCommand : Command
 		if (Settings.Current.GetAsBool("Checkout.Latest"))
 			workspace.Get(paths.ToArray(), VersionSpec.Latest, rtype, GetOptions.None);
 		
-		workspace.PendEdit(paths.ToArray(), rtype);
+		int checkouts = workspace.PendEdit(paths.ToArray(), rtype);
+		Console.Write("{0} file(s) checked out.", checkouts);
 	}
 }

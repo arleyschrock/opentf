@@ -86,6 +86,11 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 			get { return status; }
 			internal set { status = value; }
 		}
+
+		public int Version
+		{
+			get { return operation.VersionServer; }
+		}
 	}
 }
 

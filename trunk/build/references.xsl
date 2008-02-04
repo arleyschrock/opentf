@@ -11,6 +11,8 @@
 	</xsl:template>
 
 	<xsl:template match="x:Reference">-r:<xsl:value-of select="@Include" />.dll<xsl:text> </xsl:text></xsl:template>
-	<xsl:template match="x:ProjectReference">-r:<xsl:value-of select="x:Name" />.dll<xsl:text> </xsl:text></xsl:template>
+	<xsl:template match="x:ProjectReference[not(@Condition)]">-r:../../class/lib/net_2_0/<xsl:value-of select="x:Name" />.dll<xsl:text> </xsl:text></xsl:template>
+
+	<xsl:template match="*" />
 
 </xsl:stylesheet>

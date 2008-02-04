@@ -50,7 +50,7 @@ class UndoCommand : Command
 		Workspace workspace = GetWorkspaceFromCache();
 		List<string> paths = new List<string>();
 
-		if (Arguments.Length < 2)
+		if (Arguments.Length < 1)
 			{
 				PendingChange[] pendingChanges = workspace.GetPendingChanges();
 				foreach (PendingChange pendingChange in pendingChanges)

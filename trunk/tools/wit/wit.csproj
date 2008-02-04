@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -9,6 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>wit</RootNamespace>
     <AssemblyName>wit</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,10 +51,8 @@
     <Compile Include="DriverOptions.cs" />
     <Compile Include="HelpCommand.cs" />
     <Compile Include="NoGui.cs" />
-    <Compile Include="NoKeyring.cs" />
     <Compile Include="ProjectsCommand.cs" />
     <Compile Include="QueriesCommand.cs" />
-    <Compile Include="Settings.cs" />
     <Compile Include="VersionCommand.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -80,6 +83,10 @@
     <ProjectReference Include="..\..\class\Microsoft.TeamFoundation.WorkItemTracking.Common\Microsoft.TeamFoundation.WorkItemTracking.Common.csproj">
       <Project>{D0953653-D631-4338-BDAE-91DA9C3583F8}</Project>
       <Name>Microsoft.TeamFoundation.WorkItemTracking.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\class\OpenTF.Common\OpenTF.Common.csproj">
+      <Project>{B0953653-A461-4338-BDAE-91DA9C35BBAA}</Project>
+      <Name>OpenTF.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

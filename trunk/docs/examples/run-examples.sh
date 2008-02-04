@@ -1,19 +1,20 @@
 #!/bin/bash
 SERVER=$1
-LOGIN=$2
+LOGIN="$2,$5"
 WORKSPACE=$3
 SERVER_PATH=$4
+USER=$2
 
 function usage {
-  echo "usage: run-examples.sh <server> <login> <workspace> <server-path>"
+  echo "usage: run-examples.sh <server> <user@domain> <workspace> <server-path> <password>"
   exit
 }
 
 function run_examples {
 		for i in ./ex*.sh; do
-				echo $i $SERVER $LOGIN $WORKSPACE $SERVER_PATH
+				echo $i $SERVER $LOGIN $WORKSPACE $SERVER_PATH $USER
 				echo
-		    $i $SERVER $LOGIN $WORKSPACE $SERVER_PATH
+		    $i $SERVER $LOGIN $WORKSPACE $SERVER_PATH $USER
 				echo
 		done
 }

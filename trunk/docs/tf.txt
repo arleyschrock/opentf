@@ -112,6 +112,10 @@ COMMANDS
   server you've not yet fetched. To show those files as well, use "/old /all".
   This behavior may change in future releases, based on user feedback.
 
+*merges [<source>] <destination>*::
+	Lists merge points in the history of the destination item. The destination 
+ 	item can either be expressed as a server item or a local item.
+
 *online <path> [ /added | /modified | /deleted | /preview ]*::
   Finds all writable files and marks them as pending changes on the server.
 	It also finds all unknown files and marks them as pending adds, missing
@@ -131,6 +135,17 @@ COMMANDS
 
 *rename <oldname> <newname>*::
 	Rename a file or files in the repository.
+
+*rollback <changeset>*::
+	Undo a changeset. Retrieves previous versions of all files modified
+	in the selected changeset, then marks them as pending changes. NOTE: 
+	this command is only useful if no one else has changed the file since 
+	<changeset> was checked in. If a file has been modified by subsequent
+	checkins and you rollback, all subsequent modifications will be lost!
+
+*shelve <name> [ <path> | /delete ]*::
+	Create or delete a shelveset. A shelveset is a way to store local changes
+  on the server without checking them in.
 
 *shelvesets [ <name> | <name;owner> ] [ /owner:<owner> ]*::
   Show shelvesets on the server. Use /owner:"*" and no name argument to view all 
@@ -237,6 +252,21 @@ The TF client stores configuration settings in ~/.tf/TfClient.config.
   The TF client defaults to setting all non-checked out files to readonly. Set
   this setting to "true" to make them read-write.
 
+*Get.DefaultToCwd*::
+	The TF client will default to updating all registered working folders if no
+	folder arguments are given when running the subcommand "get". By enabling
+	this option, the TF client will instead look for updates starting with
+	the current working folder and subfolders (as needed). If you have lots of
+	registered working folders but only actively track a few of these folders,
+	the default behavior can become quite tedious.
+
+*Get.ChangesetMtimes*::
+  The TF client does not default to preserving file modification times. By 
+	enabling this option, TF will set the modification time of any file 
+	subsequently fetched to the date of the last changeset in which the file 
+	was modified. Warning: this mode of operation can significantly slow down
+  "tf get".
+
 *Get.Recursive*::
 	The TF client will automatically do recursive gets when set
 	to "true". IMHO, this is far more useful than the default	behavior.
@@ -258,6 +288,10 @@ The TF client stores configuration settings in ~/.tf/TfClient.config.
 *History.StopAfter*::
   The TF client defaults to showing the last 255 checkins in history output.
   Set this option to an integer to change the default.
+
+*Merges.Recursive*::
+	The TF client will automatically do recursive merge queries when set
+	to "true". IMHO, this is far more useful than the default	behavior.
 
 *Online.Recursive*::
 	The TF client will automatically do a recursive online command when set
