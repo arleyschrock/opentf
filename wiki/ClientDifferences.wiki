@@ -30,6 +30,7 @@ A quick overview of the areas where the tf4mono TF client may be more useful and
  # Can show what files you've changed locally but haven't checked out with *tf diff /modified*.
  # Can show what files are out of date with latest server version with *tf diff /old*.
  # Can show pending changes as a diff with *tf diff*.
+ # /ignorespace option for ignoring whitespace changes.
 
 == Configuration ==
  # *Supports read-write working folders*.
