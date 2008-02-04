@@ -1,0 +1,16 @@
+prefix=/usr
+exec_prefix=${prefix}
+mono_libdir=${exec_prefix}/lib
+RUNTIME=mono
+PACKAGE_VERSION=0.6.0
+MONO_VERSION=1.2.4
+MONODEVELOP_LIBPATH=/usr/lib/monodevelop
+MCS_FLAGS=-debug+
+HAVE_GTK=yes
+HAVE_SYNTAX_HIGHLIGHTING=no
+HAVE_ATLEAST_GTK_210=1
+HAVE_MAGIC=yes
+HAVE_MONODEVELOP=yes
+HAVE_GNOME_KEYRING=no
+HAVE_DOC_TOOLS=yes
+HAVE_MSLIBS=no

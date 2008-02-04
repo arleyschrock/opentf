@@ -1,0 +1,2 @@
+debian/tmp/usr/lib/monodevelop/AddIns/MonoDevelop.TeamFoundation.addin.xml /usr/lib/monodevelop/AddIns/
+debian/tmp/usr/lib/monodevelop/AddIns/MonoDevelop.TeamFoundation.dll /usr/lib/monodevelop/AddIns/
