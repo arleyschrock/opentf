@@ -12,7 +12,7 @@ The OpenTF IRC change notification bot joins the server/channel of your choosing
 
 = Configuration =
 
-To configure tfsbot.exe, modify the configuration settings in tfsbot.exe.config.
+To configure tfsbot.exe, modify the configuration settings in tfsbot.exe.config:
 
 {{{
 <?xml version="1.0" encoding="utf-8"?>                                                    
