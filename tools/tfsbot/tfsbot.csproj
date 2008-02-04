@@ -1,0 +1,98 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{93ED36D6-0FDC-40AC-BAAB-EB75CF761ECF}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>tfsbot</RootNamespace>
+    <AssemblyName>tfsbot</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="SmartIrc4net/AssemblyInfo.cs" />
+    <Compile Include="SmartIrc4net/Consts.cs" />
+    <Compile Include="SmartIrc4net/EventArgs.cs" />
+    <Compile Include="SmartIrc4net/Exceptions.cs" />
+    <Compile Include="SmartIrc4net/IrcClient/Channel.cs" />
+    <Compile Include="SmartIrc4net/IrcClient/ChannelUser.cs" />
+    <Compile Include="SmartIrc4net/IrcClient/Delegates.cs" />
+    <Compile Include="SmartIrc4net/IrcClient/EventArgs.cs" />
+    <Compile Include="SmartIrc4net/IrcClient/IrcClient.cs" />
+    <Compile Include="SmartIrc4net/IrcClient/IrcMessageData.cs" />
+    <Compile Include="SmartIrc4net/IrcClient/IrcUser.cs" />
+    <Compile Include="SmartIrc4net/IrcClient/NonRfcChannel.cs" />
+    <Compile Include="SmartIrc4net/IrcClient/NonRfcChannelUser.cs" />
+    <Compile Include="SmartIrc4net/IrcCommands/IrcCommands.cs" />
+    <Compile Include="SmartIrc4net/IrcCommands/Rfc2812.cs" />
+    <Compile Include="SmartIrc4net/IrcConnection/Delegates.cs" />
+    <Compile Include="SmartIrc4net/IrcConnection/EventArgs.cs" />
+    <Compile Include="SmartIrc4net/IrcConnection/IrcConnection.cs" />
+    <Compile Include="SmartIrc4net/IrcConnection/IrcProperties.cs" />
+    <Compile Include="SmartIrc4net/IrcConnection/IrcTcpClient.cs" />
+    <Compile Include="SmartIrc4net/Logger.cs" />
+    <Compile Include="AppSettings.cs" />
+    <Compile Include="tfsbot.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\class\Microsoft.TeamFoundation.Common\Microsoft.TeamFoundation.Common.csproj">
+      <Project>{E0953653-D640-4338-BDAE-91DA9C3583F8}</Project>
+      <Name>Microsoft.TeamFoundation.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\class\Microsoft.TeamFoundation.Client\Microsoft.TeamFoundation.Client.csproj">
+      <Project>{B0953653-D640-4338-BDAE-91DA9C3583F8}</Project>
+      <Name>Microsoft.TeamFoundation.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\class\Microsoft.TeamFoundation\Microsoft.TeamFoundation.csproj">
+      <Project>{B0953653-D640-4338-BDAE-91DA9C3583F8}</Project>
+      <Name>Microsoft.TeamFoundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\class\Microsoft.TeamFoundation.VersionControl.Common\Microsoft.TeamFoundation.VersionControl.Common.csproj">
+      <Project>{A0953653-D640-4338-BDAE-91DA9C3583F8}</Project>
+      <Name>Microsoft.TeamFoundation.VersionControl.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\class\Microsoft.TeamFoundation.VersionControl.Client\Microsoft.TeamFoundation.VersionControl.Client.csproj">
+      <Project>{F0953653-D640-4338-BDAE-91DA9C3583F8}</Project>
+      <Name>Microsoft.TeamFoundation.VersionControl.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\class\OpenTF.Common\OpenTF.Common.csproj">
+      <Project>{B0953653-A461-4338-BDAE-91DA9C35BBAA}</Project>
+      <Name>OpenTF.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+		 Other similar extension points exist, see Microsoft.Common.targets.
+		 <Target Name="BeforeBuild">
+		 </Target>
+		 <Target Name="AfterBuild">
+		 </Target>
+-->
+</Project>
