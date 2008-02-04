@@ -8,13 +8,14 @@ A quick overview of the areas where the tf4mono TF client may be more useful and
  # Not as many GUI popup dialogs.
  # No current support for branch merges.
  # No current support for graphical conflict resolution.
- # Missing *branch*, *merge*, *merges*, *resolve*, *shelve*, *unshelve*, and *[http://msdn2.microsoft.com/en-us/library/y7505w2x(VS.80).aspx undelete]* commands.
+ # Missing *branch*, *merge*, *resolve*, *unshelve*, and *[http://msdn2.microsoft.com/en-us/library/y7505w2x(VS.80).aspx undelete]* commands.
  # Implemented commands may not support all options available in standard TF client.
 
 = Improvements =
 
 == General ==
  # Get Latest on Checkout option (will be in Orcas release of TF)
+ # "Preserve file modification times" option
  # Multiple commands can be chained together in a single TF execution separated by the "%" character. For example, *tf online % checkin /comment:"applied patch 501"*. Commands can feed their output to the next command in the chain with %%, for example *tf ls-files /others %% add* to add all unknown files.
  # Builtin general help and per-command help, accessible via *tf help <cmd>*
  # Supports file attributes on unix.
@@ -53,6 +54,7 @@ Client Configuration:
 }}}
 
 == Powertool Commands ==
+ # Integrated tfpt *rollback* command.
  # Integrated tfpt *treeclean* command.
  # Integrated tfpt *online* command. Online command supports _/added, /modified, and /deleted_ options. Standard client only supports "/deleted". Also supports passing a list of files to speed up operation (rather than scanning the entire working folder). Useful in scenarios when you've applied a patch. Than do tf online `lsdiff <name of patch>`;
 
