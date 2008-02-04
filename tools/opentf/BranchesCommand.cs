@@ -50,12 +50,15 @@ class BranchesCommand : Command
 
 	public override void Run()
 	{
-		RecursionType rtype = OptionRecursive ? RecursionType.Full : RecursionType.None;
+ 		RecursionType rtype = OptionRecursive ? RecursionType.Full : RecursionType.None;
 		VersionSpec version = VersionFromString(OptionVersion);
 
 		List<ItemSpec> itemSpecs = new List<ItemSpec>();
-		foreach (string file in Arguments)
-			itemSpecs.Add(new ItemSpec(Path.GetFullPath(file), rtype));
+		foreach (string item in Arguments)
+			{
+				string fpath = (VersionControlPath.IsServerItem(item))? item : Path.GetFullPath(item);
+				itemSpecs.Add(new ItemSpec(fpath, rtype));
+			}
 
 		BranchHistoryTreeItem[][] treeItemsArray = VersionControlServer.GetBranchHistory(itemSpecs.ToArray(), version);
 		foreach (BranchHistoryTreeItem[] treeItems in treeItemsArray)

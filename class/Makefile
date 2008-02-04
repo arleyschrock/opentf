@@ -10,7 +10,15 @@ SUBDIRS = \
 	Microsoft.TeamFoundation.VersionControl.Client \
 	Microsoft.TeamFoundation.WorkItemTracking.Common \
 	Microsoft.TeamFoundation.WorkItemTracking.Client \
-	Gtk.TeamFoundation
+	OpenTF.Common 
+
+ifeq ($(HAVE_GTK),yes)
+SUBDIRS += Gtk.TeamFoundation
+endif
+
+ifeq ($(HAVE_MONODEVELOP),yes)
+SUBDIRS += MonoDevelop.TeamFoundation
+endif
 
 DISTFILES = \
 	LICENSE

@@ -29,6 +29,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Xml;
 
@@ -48,6 +49,7 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 
 	public sealed class Shelveset
 	{
+		private static readonly string[] DateTimeFormats = { "yyyy-MM-ddTHH:mm:ss.FFFFFFFZ", "yyyy-MM-ddTHH:mm:ssZ" };
 		private string name;
 		private string comment = String.Empty;
 		private string ownerName;
@@ -69,7 +71,7 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 			string name = reader.GetAttribute("name");
 
 			Shelveset shelveset = new Shelveset(repository.VersionControlServer, name, ownerName);
-			shelveset.creationDate = Convert.ToDateTime(reader.GetAttribute("date"));
+			shelveset.creationDate =  DateTime.ParseExact(reader.GetAttribute("date"), DateTimeFormats, null, DateTimeStyles.None);
 
 			while (reader.Read())
 				{

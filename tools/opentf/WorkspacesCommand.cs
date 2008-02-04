@@ -137,7 +137,7 @@ class WorkspacesCommand : Command
 				Console.WriteLine("Owner    : " + workspace.OwnerName);
 				Console.WriteLine("Computer : " + workspace.Computer);
 				Console.WriteLine("Comment  : " + workspace.Comment);
-				Console.WriteLine("Server   : " + Driver.ServerUrl);
+				Console.WriteLine("Server   : " + Driver.GetServerUrl());
 
 				Console.WriteLine();
 				Console.WriteLine("Working folders:");

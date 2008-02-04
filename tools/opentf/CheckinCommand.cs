@@ -33,6 +33,7 @@ using System.Text;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using Mono.GetOptions;
+using OpenTF.Common;
 
 [Command("checkin", "Commit pending changes to server.", "<path>...", "commit")]
 class CheckinCommand : StatusCommand

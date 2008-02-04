@@ -794,6 +794,60 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 			return itemSecurities.ToArray();
 		}
 
+		public ChangesetMerge[] QueryMerges(string workspaceName, string workspaceOwner, 
+																				ItemSpec source, VersionSpec versionSource,
+																				ItemSpec target, VersionSpec versionTarget,
+																				VersionSpec versionFrom, VersionSpec versionTo,
+																				int maxChangesets)
+		{
+			Message msg = new Message(GetWebRequest (new Uri(Url)), "QueryMerges");
+
+			if (!String.IsNullOrEmpty(workspaceName)) msg.Body.WriteElementString("workspaceName", workspaceName);
+			if (!String.IsNullOrEmpty(workspaceOwner)) msg.Body.WriteElementString("workspaceOwner", workspaceOwner);
+
+			if (source != null) source.ToXml(msg.Body, "source");
+			if (versionSource != null) versionSource.ToXml(msg.Body, "versionSource");
+
+			target.ToXml(msg.Body, "target");
+			versionTarget.ToXml(msg.Body, "versionTarget");
+
+			if (versionFrom != null) versionFrom.ToXml(msg.Body, "versionFrom");
+			if (versionTo != null) versionTo.ToXml(msg.Body, "versionTo");
+			
+			msg.Body.WriteElementString("maxChangesets", Convert.ToString(maxChangesets));
+																				
+			List<ChangesetMerge> merges = new List<ChangesetMerge>();
+			Dictionary<int, Changeset> changesets = new Dictionary<int, Changeset>();
+			using (HttpWebResponse response = Invoke(msg))
+				{
+					XmlReader results = msg.ResponseReader(response);
+
+					while (results.Read())
+						{
+							if (results.NodeType != XmlNodeType.Element) continue;
+
+							if (results.Name == "ChangesetMerge")
+								{
+									merges.Add(ChangesetMerge.FromXml(this, results));
+								}
+							else if (results.Name == "Changeset")
+								{
+									Changeset changeset = Changeset.FromXml(this, results);
+									changesets.Add(changeset.ChangesetId, changeset);
+								}
+						}
+				}
+
+			foreach (ChangesetMerge merge in merges)
+				{
+					Changeset changeset;
+					if (changesets.TryGetValue(merge.TargetVersion, out changeset))
+							merge.TargetChangeset = changeset;
+				}
+
+			return merges.ToArray();
+		}
+
 		public PendingChange[] QueryPendingSets(string localWorkspaceName, string localWorkspaceOwner,
 																						string queryWorkspaceName, string ownerName,
 																						ItemSpec[] itemSpecs, bool generateDownloadUrls,

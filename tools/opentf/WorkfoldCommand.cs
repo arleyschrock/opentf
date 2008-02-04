@@ -49,7 +49,7 @@ class WorkfoldCommand : Command
 	{
 		Console.WriteLine("=".PadRight(WindowWidth, '='));
 		Console.WriteLine("Workspace: " + workspace.Name);
-		Console.WriteLine("Server   : " + Driver.ServerUrl);
+		Console.WriteLine("Server   : " + Driver.GetServerUrl());
 
 		foreach (WorkingFolder folder in workspace.Folders)
 			{

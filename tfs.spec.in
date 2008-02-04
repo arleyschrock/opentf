@@ -38,7 +38,7 @@ An implementation of the Team Foundation libraries and related client programs f
 
 %build
 %configure \
-  --prefix=%{_prefix} --enable-highlight \
+  --prefix=%{_prefix} --enable-highlight --disable-md \
 make
 
 %install  
@@ -53,11 +53,17 @@ rm -fr $RPM_BUILD_ROOT
 %doc INSTALL NEWS README
 %{_libdir}/mono/gac/Microsoft.TeamFoundation*
 %{_libdir}/mono/2.0/Microsoft.TeamFoundation*
+%{_libdir}/mono/gac/Gtk.TeamFoundation*
+%{_libdir}/mono/2.0/Gtk.TeamFoundation*
+%{_libdir}/mono/gac/OpenTF.Common*
+%{_libdir}/mono/2.0/OpenTF.Common*
 %{_libdir}/opentf/*
 %{_libdir}/pkgconfig/tfs.pc
 %{_mandir}/man1/*
 %{_bindir}/*
 
 %changelog
+* Sat Dec 1 2007 Joel W. Reed <joelwreed at gmail>
+- Add OpenTF.Common and Gtk.TeamFoundation
 * Wed Sep 19 2007 Joel W. Reed <joelwreed at gmail>
 - Initial spec file

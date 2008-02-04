@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using Microsoft.TeamFoundation.VersionControl.Common;
+using OpenTF.Common;
 
 abstract class Command : CommandOptions
 {
@@ -113,6 +114,9 @@ abstract class Command : CommandOptions
 		if (info != null) return info;
 
 		if (String.IsNullOrEmpty(OptionWorkspace))
+				OptionWorkspace = Settings.Current.Get("Workspace.Default");
+
+		if (String.IsNullOrEmpty(OptionWorkspace))
 			{
 				Console.WriteLine("Unable to determine the workspace.");
 				Console.WriteLine("  Path: " + path);
@@ -126,7 +130,8 @@ abstract class Command : CommandOptions
 		if (info == null)
 			{
 				Console.WriteLine("Unable to determine the workspace.");
-				Console.WriteLine("  Workspace Option: " + OptionWorkspace);
+				Console.WriteLine("  Workspace Name:  " + OptionWorkspace);
+				Console.WriteLine("  Workspace Owner: " + ownerName);
 			}
 
 		return info;
@@ -162,6 +167,7 @@ abstract class Command : CommandOptions
 
 		if ((change & ChangeType.Add) == ChangeType.Add) ctype = "add";
 		else if ((change & ChangeType.Delete) == ChangeType.Delete) ctype = "delete";
+		else if ((change & ChangeType.Rename) == ChangeType.Rename) ctype = "rename";
 
 		return ctype;
 	}

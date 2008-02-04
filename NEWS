@@ -1,10 +1,11 @@
-Version 0.5.4 of open source Team Foundation for Mono is now available at
-http://code.google.com/p/opentf/. The project has been renamed from tf4mono 
-to OpenTF.
+Version 0.6 of open source Team Foundation for Mono is now available at
+http://code.google.com/p/opentf/. 
 
-This is a development update with VS2005 project files, a spec file for RPM
-packaging, new commands (lock, version, show [ build | cache | ident | stats | tools ]),
-numerous API and usability enhancements, and many bugfixes.
+This is a development update with a new IRC changeset notification bot,
+support for CruiseControl (an open source continuous build framework),
+a monodevelop plugin for browsing TFS servers, several new commands 
+("shelve", "rollback", and "merges"), numerous API and usability enhancements, 
+and many bugfixes.
 
 A detailed changelog can be found below.
 
@@ -18,51 +19,68 @@ Example invocations of the opentf client can be found here:
 Enhancements include:
 ===================================================================
 
-# add VS2005 project files and solution for building opentf on Windows
-# add spec file for building RPMs on OpenSuse
-# add "lock" command
-# add "show stats" command to show server statistics
-# add "show tools" command to show registered tools
-# add "show build" command to show build configuration
-# add "show ident" command to show server account information
-# rename "tf cache" to "tf show cache"
-# implement "tf changeset /latest" and test case
-# implement "tf history /user:FOO" for filtering history queries by user
-# implement "tf history /version:<vspec>" - but not ranges!
-# add "tf history /format:byowner" and test case
-# add "tf version" command to print program version number
-# add "Server.Default" setting 
-# teach File.Excludes to support directory specifications as well as
-file glob patterns
-# teach tf shelveset the "name;owner" syntax for specifying a shelveset
+# CRUISECONTROL: add support for date range queries to the history
+	command, e.g. -version:"D2006-10-01T01:01:01Z~D2006-12-13T20:00:00Z"
+# CRUISECONTROL: add -noprompt option
+# CRUISECONTROL: add support for username@domain -login syntax
+# TFSBOT: add new IRC commit notification daemon. 
+
+# add alpha-quality MonoDevelop addin, with debian package
+# implement "tf shelve <name> <path>" to create new shelvesets
+# implement "tf shelve /delete <name>" for deleting shelvesets
+# implement "tf merges <src> <dest>" for listing merge points
+# implement "tf diff /ignorespace" option
+# implement "tf rollback <changeset>" for undoing a changeset.
+	NOTE: only useful if no one else has changed the file since then.
+
+# add Get.ChangesetMtimes setting: By enabling this option, 
+	the TF will set the modification time of any file subsequently fetched
+	to the date of the last changeset in which the file was modified. 
+	Warning: this mode of operation can significantly slow down "tf get".
+
+# add Get.DefaultToCwd setting: By enabling this option, the TF 
+	client will look for updates starting with the current working folder 
+	instead of pulling updates from all registered working folders.
+
+# add Workspace.Default setting: If the TF client cannot determine the 
+	active workspace, first from the "/workspace:" option, and second the 
+	workspace cache, then it will use the Workspace.Default setting if non-null.
 
 
 API Enhancements
 ==================================================================
 
-# The following classes were added (partial implementations)
+# Microsoft.TeamFoundation.Common: Artifact, ArtifactId, ILinking
+LinkFilter, LinkingUtilities, ServiceInterfaces
 
-  ICredentialsProvider, ArtifactType, ChangeType, Database, 
-  IGroupSecurityService, IRegistration, Identity, IdentityType, 
-  QueryMembership, OutboundLinkType, RegistrationEntry, SearchFactor 
-  and ServiceInterface classes
-
-# Implement VersionControlServer.GetLatestChangesetId
-# Implement TeamFoundationServer.CheckAuthentication
-# Started work on Microsoft.TeamFoundation.WorkItemTracking.Client assembly
+# Microsoft.TeamFoundation.VersionControl.Client: ShelvingOptions,
+ChangesetMerge
 
 
 Bugfixes include:
 ===================================================================
 
-# BUGFIX: rework exit codes throughout for more consistency
-# BUGFIX: tf shelveset /owner:<owner> should filter results by owner
-# BUGFIX: add column headers to history /format:brief output
-# BUGFIX: tf get /force shouldn't set preview mode!
-# BUGFIX: properly label renames in tf status output
-# BUGFIX: make sure all files in a directory are read-write before
-attempting to delete a directory containing these files
-# BUGFIX: handle QueryHistory requests with maxCount > 256
+# BUGFIX: tf history with stopAfter > 256 shouldn't emit
+	duplicate entries (thanks to dion.olsthoorn for the report & fix)
+# BUGFIX: tf online <path> shouldn't croak if <path> is an add awaiting 
+	its first checkin
+# BUGFIX: tf undo <paths> shouldn't undo all local changes
+# BUGFIX: when parsing changeset and shelveset datetimes don't 
+	drop the time portion
+# BUGFIX: insert trailing tabs after filenames (a/b) in diffs to
+	help diffutils grok filenames with spaces
+# BUGFIX: make sure tf ls-files <paths> is not passed a filename
+# BUGFIX: set proper checkin time (by passing 0, not DateTime.Now - doh!)
+# BUGFIX: fix tf ls-files /others breakage on windows for subdirectories
+# BUGFIX: update local workspace cache when "tf workspaces" command called.
+# BUGFIX: fix issue #8 "tf config expects ~/.tf/ to already exist"
+# BUGFIX: teach tf that diffing binary files should print short 
+	"Binary files $1 and $2 differ" message
+# BUGFIX: teach status command how to deal with locked files
+# BUGFIX: teach tf branches command about server paths
+# BUGFIX: don't clobber workspace info cache when there
+	are >1 TFS server
+# BUGFIX: update build for monodevelop 0.18.1 changes
 
 
 What is Team Foundation / Team System?

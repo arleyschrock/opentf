@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using Microsoft.TeamFoundation.VersionControl.Common;
+using OpenTF.Common;
 
 abstract class Command : CommandOptions
 {

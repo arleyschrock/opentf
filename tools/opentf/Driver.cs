@@ -33,15 +33,17 @@ using System.Collections.Specialized;
 using System.Net;
 using System.IO;
 using System.Text;
+using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using Mono.GetOptions;
 using Microsoft.TeamFoundation;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using Microsoft.TeamFoundation.Server;
+using OpenTF.Common;
 
 [assembly: AssemblyTitle ("tf.exe")]
-[assembly: AssemblyVersion ("0.5.3")]
+[assembly: AssemblyVersion ("0.6.0")]
 [assembly: AssemblyDescription ("Team Foundation Source Control Tool")]
 [assembly: AssemblyCopyright ("(c) Joel W. Reed")]
 
@@ -50,17 +52,14 @@ using Microsoft.TeamFoundation.Server;
 [assembly: Mono.About("Team Foundation Source Control Tool")]
 [assembly: Mono.Author ("Joel W. Reed")]
 
-public partial class Driver : ICertificatePolicy 
+public partial class Driver : ICertificatePolicy, ICredentialsProvider
 {
 	private TeamFoundationServer _tfs;
 	private VersionControlServer _versionControl;
 	private DriverOptions Options = new DriverOptions();
 	private string[] Arguments;
 
-	private string domain;
-	private string username;
-	private string password;
-	private string serverUrl;
+	private CredentialCache credentialCache = new CredentialCache();
 	private List<string> outputBuffer = null;
 
 	public void WriteLine(string x)
@@ -74,19 +73,23 @@ public partial class Driver : ICertificatePolicy
 		Console.WriteLine();
 	}
 
-	public string Domain
+	public string Username
 	{
-		get { 
-			GetUserCredentials();
-			return domain; 
+		get {
+			string serverUrl = GetServerUrl();
+			NetworkCredential creds = credentialCache.GetCredential(new Uri(serverUrl), "NTLM");
+			if (creds == null) return String.Empty;
+			return creds.UserName;
 		}
 	}
 
-	public string Username
+	public string Domain
 	{
-		get { 
-			GetUserCredentials();
-			return username; 
+		get {
+			string serverUrl = GetServerUrl();
+			NetworkCredential creds = credentialCache.GetCredential(new Uri(serverUrl), "NTLM");
+			if (creds == null) return String.Empty;
+			return creds.Domain;
 		}
 	}
 
@@ -98,93 +101,38 @@ public partial class Driver : ICertificatePolicy
 			return String.Format("http://{0}:8080/", server);
 	}
 
-	public string ServerUrl
+	public string GetServerUrl()
 	{
-		get {
-			if (!String.IsNullOrEmpty(serverUrl)) return serverUrl;
+		if (!String.IsNullOrEmpty(Options.Server))
+			return ServerNameToUrl(Options.Server);
 
-			if (!String.IsNullOrEmpty(Options.Server))
-					return ServerNameToUrl(Options.Server);
+		WorkspaceInfo info = Workstation.Current.GetLocalWorkspaceInfo(Environment.CurrentDirectory);
+		if (info == null)
+			{
+				string server = Settings.Current.Get("Server.Default");
+				if (!String.IsNullOrEmpty(server))
+					return ServerNameToUrl(server);
 
-			WorkspaceInfo info = Workstation.Current.GetLocalWorkspaceInfo(Environment.CurrentDirectory);
-			if (info == null)
-				{
-					string server = Settings.Current.Get("Server.Default");
-					if (!String.IsNullOrEmpty(server))
-							return ServerNameToUrl(server);
+				Console.WriteLine("Unable to determine the team foundation server");
+				Console.WriteLine("	 hint: try adding /server:<ip|name>");
+				Environment.Exit((int)ExitCode.Failure);
+			}
 
-					Console.WriteLine("Unable to determine the team foundation server");
-					Console.WriteLine("	 hint: try adding /server:<ip|name>");
-					Environment.Exit((int)ExitCode.Failure);
-				}
-
-			serverUrl = info.ServerUri.ToString();
-			return serverUrl;
-		}
+		return info.ServerUri.ToString();
 	}
 
-	private string GetLogin()
+	private string GetLogin(string url)
 	{
 		if (!String.IsNullOrEmpty(Options.Login))
 			return Options.Login;
 		
 		// check the keyring
-		string login = TfsKeyring.GetCredentials(ServerUrl);
+		string login = Keyring.GetCredentials(url);
 		if (!String.IsNullOrEmpty(login)) return login;
 
 		// finally prompt if permitted
 		if (Options.NoPrompt) return String.Empty;
-		return PromptForLogin(ServerUrl);
-	}
-
-	private void GetUserCredentials()
-	{
-		if (! String.IsNullOrEmpty(username)) return;
-
-		string login = GetLogin();
-		string userinfo = "";
-
-		int comma = login.IndexOf(",");
-		if (comma != -1)
-			{
-				userinfo = login.Substring(0, comma);
-				password = login.Substring(comma+1);
-			}
-		else userinfo = login;
-
-		// try to find domain portion if given
-		int slash = userinfo.IndexOf('\\');
-		if (-1 != slash)
-			{
-				domain = userinfo.Substring(0, slash);
-				username = userinfo.Substring(slash+1);	
-				return;
-			}
-
-		int atsign = userinfo.IndexOf('@');
-		if (-1 != atsign)
-			{
-				username = userinfo.Substring(0, atsign);	
-				domain = userinfo.Substring(atsign+1);
-				return;
-			}
-
-		// no domain name
-		username = userinfo;
-	}
-
-	public NetworkCredential GetNetworkCredentials()
-	{
-		GetUserCredentials();
-		
-		if (!(String.IsNullOrEmpty(username)) && String.IsNullOrEmpty(password)
-				&& !Options.NoPrompt)
-			{
-				Console.Write("Password: ");
-				password = Console.ReadLine();
-			}
-
-		return new NetworkCredential(username, password, domain);
+		return PromptForLogin(url);
 	}
 
 	public TeamFoundationServer TeamFoundationServer
@@ -193,11 +141,45 @@ public partial class Driver : ICertificatePolicy
 			{
 				if (null != _tfs) return _tfs;
 
-				NetworkCredential credentials = GetNetworkCredentials();
-				_tfs = new TeamFoundationServer(ServerUrl, credentials);
+				string url = GetServerUrl();
+				ICredentials credentials = GetCredentials(new Uri(url), null);
+				_tfs = new TeamFoundationServer(url, credentials);
  
 				return _tfs; 
 			}
+	}
+
+	// ICredentialsProvider method
+	public ICredentials GetCredentials(Uri uri, ICredentials failedCredentials)
+	{
+		NetworkCredential creds = credentialCache.GetCredential(uri, "NTLM");
+		if (creds != null) return creds;
+
+		string url = uri.ToString();
+		string login = GetLogin(url);
+
+		if (String.IsNullOrEmpty(login)) return null;
+		creds = new TFCredential(login);
+		
+		if (!(String.IsNullOrEmpty(creds.UserName)) && 
+				String.IsNullOrEmpty(creds.Password) && !Options.NoPrompt)
+			{
+				Console.Write("Password: ");
+				creds.Password = Console.ReadLine();
+			}
+
+		// save credentials if passed
+		bool saveSetting = Settings.Current.GetAsBool("Credentials.Save");
+		if (saveSetting && !String.IsNullOrEmpty(Options.Login))
+			Keyring.SetCredentials(url, creds.Domain, creds.UserName, creds.Password);
+		
+		credentialCache.Add(uri, "NTLM", creds);
+		return creds;
+	}
+
+	// ICredentialsProvider method
+	public void NotifyCredentialsAuthenticated (Uri uri)
+	{
 	}
 
 	public VersionControlServer VersionControlServer
@@ -210,11 +192,6 @@ public partial class Driver : ICertificatePolicy
 				_versionControl.Conflict += ConflictEventHandler;
 				_versionControl.NonFatalError += ExceptionEventHandler;
 
-				// save credentials if passed
-				bool saveSetting = Settings.Current.GetAsBool("Credentials.Save");
-				if (saveSetting && !String.IsNullOrEmpty(Options.Login))
-					TfsKeyring.SetCredentials(ServerUrl, domain, username, password);
-		
 				return _versionControl;
 			}
 	}
@@ -318,8 +295,9 @@ public partial class Driver : ICertificatePolicy
 	}
 
 	// ignoring certificate errors
-	public bool CheckValidationResult (ServicePoint sp, 
-																		 X509Certificate certificate, WebRequest request, int error)
+	public bool CheckValidationResult (ServicePoint sp,
+																		 X509Certificate certificate, WebRequest request,
+																		 int error)
 	{
 		return true;
 	}
@@ -347,7 +325,6 @@ public partial class Driver : ICertificatePolicy
 		catch (TeamFoundationServerException e)
 			{
 				Console.Error.WriteLine(e.Message);
-				//Console.WriteLine(driver.Domain + "\\" + driver.Username);
 			}
 	}
 }

@@ -158,37 +158,6 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 			SaveWorkspaceInfoCache(servers.OwnerDocument);
 		}
 
-		internal void UpdateCachedWorkspaceInfo(Uri serverUri, Workspace workspace,
-																						WorkingFolder[] newMappings)
-		{
-			InternalServerInfo[] serverInfos = ReadCachedWorkspaceInfo();
-			XmlElement servers = InitWorkspaceInfoCache();
-
-			foreach (InternalServerInfo sInfo in serverInfos)
-				{
-					if (sInfo.Uri == serverUri)
-						{
-							foreach (WorkspaceInfo info in sInfo.Workspaces)
-								{
-									if (info.Name == workspace.Name && info.OwnerName == workspace.OwnerName)
-										{
-											List<string> mappedPaths = new List<string>();
-											foreach (WorkingFolder folder in newMappings)
-												{
-													mappedPaths.Add(folder.LocalItem);
-												}
-											info.MappedPaths = mappedPaths.ToArray();
-										}
-								}
-						}
-
-					XmlElement serverInfoElement = sInfo.ToXml(servers.OwnerDocument);
-					servers.AppendChild(serverInfoElement);
-				}
-
-			SaveWorkspaceInfoCache(servers.OwnerDocument);
-		}
-
 		public void RemoveCachedWorkspaceInfo(Uri serverUri, string workspaceName)
 		{
 			InternalServerInfo[] serverInfos = ReadCachedWorkspaceInfo();
@@ -220,8 +189,32 @@ namespace Microsoft.TeamFoundation.VersionControl.Client
 		public void UpdateWorkspaceInfoCache(VersionControlServer versionControl,
 																				 string ownerName)
 		{
+			InternalServerInfo[] serverInfos = ReadCachedWorkspaceInfo();
 			XmlElement servers = InitWorkspaceInfoCache();
-			versionControl.UpdateWorkspaceInfoCache(servers, ownerName, Name);
+
+			Workspace[] workspaces = versionControl.QueryWorkspaces(null, ownerName, Name);
+			InternalServerInfo newServerInfo = new InternalServerInfo(versionControl.Uri.ToString(), versionControl.ServerGuid, workspaces);
+
+			bool found = false;
+			foreach (InternalServerInfo sInfo in serverInfos)
+				{
+					InternalServerInfo finalInfo = sInfo;
+					if (sInfo.Uri == versionControl.Uri)
+						{
+							finalInfo = newServerInfo;
+							found = true;
+						}
+
+					XmlElement serverInfoElement = finalInfo.ToXml(servers.OwnerDocument);
+					servers.AppendChild(serverInfoElement);
+				}
+
+			if (!found)
+				{
+					XmlElement serverInfoElement = newServerInfo.ToXml(servers.OwnerDocument);
+					servers.AppendChild(serverInfoElement);
+				}
+
 			SaveWorkspaceInfoCache(servers.OwnerDocument);
 		}
 

@@ -8,6 +8,7 @@ using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.VersionControl.Common;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using Mono.GetOptions;
+using OpenTF.Common;
 
 [Command("difference", "Show pending changes, latest on server, a changeset, or local changes not pended as a unified diff.", 
 				 "<path>...", "diff")]
@@ -157,9 +158,9 @@ class DifferenceCommand : Command
 			}
 	}
 
-	void ShowPendingChanges(Workspace workspace, string path)
+	void ShowPendingChanges(Workspace workspace, string[] paths)
 	{
-		PendingChange[] pendingChanges = workspace.GetPendingChanges(path, RecursionType.Full, true);
+		PendingChange[] pendingChanges = workspace.GetPendingChanges(paths, RecursionType.Full, true);
 		if (pendingChanges.Length == 0)
 			{
 				Console.WriteLine("No pending changes.");
@@ -205,7 +206,7 @@ class DifferenceCommand : Command
 			}
 	}
 
-	public override void Run()
+	public void ProcessOldAndModified(Workspace workspace)
 	{
 		string path = Environment.CurrentDirectory;
 		if (Arguments.Length > 0)
@@ -213,29 +214,46 @@ class DifferenceCommand : Command
 				path = Path.GetFullPath(Arguments[0]);
 			}
 
+		if (OptionOld) ShowOldFiles(workspace, path);
+		else ShowModifiedFiles(workspace, path);
+	}
+
+	public override void Run()
+	{
 		Workspace workspace = GetWorkspaceFromCache();
-
-		if (OptionOld)
+		if (OptionOld || OptionModified) 
 			{
-				ShowOldFiles(workspace, path);
+				ProcessOldAndModified(workspace);
 				Environment.Exit((int)ExitCode.Success);
 			}
 
-		if (OptionModified)
+		if (Arguments.Length > 0)
 			{
-				ShowModifiedFiles(workspace, path);
-				Environment.Exit((int)ExitCode.Success);
+				string arg = Arguments[0];
+				if (! (File.Exists(arg) || Directory.Exists(arg)))
+					{
+						VersionSpec versionSpec = null;
+						try
+							{
+								versionSpec = VersionSpec.ParseSingleSpec(Arguments[0], OwnerFromString(OptionOwner));
+							}
+						catch (System.FormatException exception)
+							{
+								Console.WriteLine("Invalid version specification: " + Arguments[0]);
+								Environment.Exit((int)ExitCode.Failure);
+							}
+								
+						if (versionSpec is ChangesetVersionSpec)
+							DiffHelper.ShowChangeset(VersionControlServer,  
+																			 versionSpec as ChangesetVersionSpec,
+																			 OptionBrief, GetDiffOptions());
+						Environment.Exit((int)ExitCode.Success);
+					}
 			}
 
-		if (File.Exists(path) || Directory.Exists(path))
-			ShowPendingChanges(workspace, path);
-		else
-			{
-				VersionSpec versionSpec = VersionSpec.ParseSingleSpec(Arguments[0], OwnerFromString(OptionOwner));
-				if (versionSpec is ChangesetVersionSpec)
-					DiffHelper.ShowChangeset(VersionControlServer,  
-																	 versionSpec as ChangesetVersionSpec,
-																	 OptionBrief, GetDiffOptions());
-			}
+		List<string> paths;
+		paths = VerifiedFullPaths(Arguments);
+		if (paths.Count == 0) paths.Add(Environment.CurrentDirectory);
+		ShowPendingChanges(workspace, paths.ToArray());
 	}
 }

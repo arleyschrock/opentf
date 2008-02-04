@@ -1,6 +1,6 @@
-opentf (0.5.3) feisty; urgency=low
+opentf (0.6.0) gutsy; urgency=low
 
-  * package 0.5.3 release
+  * package 0.6.0 release
 
  -- Joel W. Reed <joelwreed@gmail.com>  Fri, 12 Oct 2007 23:15:01 -0400
 

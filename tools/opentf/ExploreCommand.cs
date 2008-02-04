@@ -35,8 +35,9 @@ using Microsoft.TeamFoundation.VersionControl.Common;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using Mono.GetOptions;
 using Gtk;
+using Gtk.TeamFoundation;
 
-[Command("explore", "Explore the repository visually.")]
+[Command("explore", "Explore the repository visually.", "", "gui")]
 class ExploreCommand : Command
 {
 	[Option("Version", "V", "version")]
@@ -45,14 +46,72 @@ class ExploreCommand : Command
 	[Option("Limit the number of changesets shown (default=100)", "", "stopafter")]
 		public int OptionStopAfter = 100;
 
+	private ExploreView exploreView;
+	
 	public ExploreCommand(Driver driver, string[] args): base(driver, args)
-	{
-	}
+		{
+		}
 
 	public override void Run()
 	{
-		Application.Init ();
-		new ExploreView (Driver, OptionStopAfter);
-		Application.Run ();
+		Application.Init();
+
+		Gtk.Window frame = new Gtk.Window("OpenTF Explorer");
+
+		exploreView = new ExploreView(Driver, OptionStopAfter);
+		exploreView.ShowChangeset += MyShowChangesetEventHandler;
+		exploreView.ShowFile += MyShowFileEventHandler;
+
+		frame.Add(exploreView);
+		frame.DeleteEvent += new DeleteEventHandler(DeleteEvent);
+		frame.KeyReleaseEvent += MyKeyReleaseHandler;
+
+		int x, y, width, height, depth;
+		frame.RootWindow.GetGeometry (out x, out y, out width, out height, out depth);
+		frame.SetDefaultSize(Convert.ToInt32(width*.9), Convert.ToInt32(height*.9));
+
+		frame.ShowAll();
+		Application.Run();
 	}
+
+	void MyShowChangesetEventHandler(object sender, ShowChangesetEventArgs args)
+	{
+		ShowChangesetDialog dialog = new ShowChangesetDialog(args.VersionControlServer, args.ChangesetId);
+
+		int x, y, width, height, depth;
+		Gtk.Widget widget = sender as Gtk.Widget;
+		widget.RootWindow.GetGeometry (out x, out y, out width, out height, out depth);
+		dialog.SetDefaultSize(Convert.ToInt32(width*.9), Convert.ToInt32(height*.9));
+
+		dialog.ShowAll();
+		dialog.Run();
+		dialog.Destroy();
+	}
+
+	void MyShowFileEventHandler(object sender, ShowFileEventArgs args)
+	{
+		ShowFileDialog dialog = new ShowFileDialog(args.VersionControlServer, args.ServerItem);
+
+		int x, y, width, height, depth;
+		Gtk.Widget widget = sender as Gtk.Widget;
+		widget.RootWindow.GetGeometry(out x, out y, out width, out height, out depth);
+		dialog.SetDefaultSize(Convert.ToInt32(width*.9), Convert.ToInt32(height*.9));
+
+		dialog.ShowAll();
+		dialog.Run();
+		dialog.Destroy();
+	}
+
+	static void DeleteEvent(object obj, DeleteEventArgs args)
+	{
+		Application.Quit();
+	}
+
+	void MyKeyReleaseHandler(object o, KeyReleaseEventArgs args)
+	{
+		if ((Gdk.Key.q == args.Event.Key) && ((args.Event.State & Gdk.ModifierType.ControlMask) != 0))
+			Application.Quit();
+	}
+
+
 }

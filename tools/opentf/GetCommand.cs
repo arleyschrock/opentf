@@ -33,6 +33,7 @@ using System.Text;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using Mono.GetOptions;
+using OpenTF.Common;
 
 [Command("get", "Update local repository copy with latest versions from the server.", "<path>...")]
 class GetCommand : Command
@@ -52,14 +53,14 @@ class GetCommand : Command
 	[Option("Overwrite files that are writable", "", "overwrite")]
 		public bool OptionOverwrite = false;
 
-	List<string> fileList = new List<string>();
+	SortedList<string, int> fileList = new SortedList<string, int>();
 	Workspace workspace;
 
 	public GetCommand(Driver driver, string[] args): base(driver, args)
-	{
-		workspace = GetWorkspaceFromCache();
-		VersionControlServer.Getting += MyGettingEventHandler;
-	}
+		{
+			workspace = GetWorkspaceFromCache();
+			VersionControlServer.Getting += MyGettingEventHandler;
+		}
 
 	public void MyGettingEventHandler(Object sender, GettingEventArgs e)
 	{
@@ -77,7 +78,7 @@ class GetCommand : Command
 			Console.WriteLine("updating " + CanonicalPath(e.TargetLocalItem));
 
 		if (e.ItemType == ItemType.Folder) return;
-		fileList.Add(e.TargetLocalItem);
+		fileList.Add(e.TargetLocalItem, e.Version);
 	}	
 
 	public GetOptions GetOptionFlags()
@@ -112,11 +113,35 @@ class GetCommand : Command
 		return workspace.Get(requests.ToArray(), GetOptionFlags());
 	}
 
+	public void SetPermissions(SortedList<string, int> fileList)
+	{
+		Console.Write("Setting permissions ...");
+
+		int i = 0;
+		foreach (string file in fileList.Keys)
+			{
+				if (0 == (i % 100)) Console.Write("."); 
+				i++;
+
+				if (! FileTypeDatabase.ShouldBeExecutable(file)) continue;
+				FileType.MakeExecutable(file);
+			}
+
+		Console.WriteLine();
+		Console.WriteLine("Done!");
+	}
+
 	public override void Run()
 	{
+		List<string> paths = new List<string>();
+		foreach (string p in Arguments) paths.Add(p);
+
+		if (paths.Count == 0 && Settings.Current.GetAsBool("Get.DefaultToCwd"))
+			paths.Add(Environment.CurrentDirectory);
+
 		GetStatus status;
-		if (Arguments.Length > 0)
-			status = UpdatePathFromServer(Arguments);
+		if (paths.Count > 0)
+			status = UpdatePathFromServer(paths.ToArray());
 		else 
 			status = workspace.Get(VersionFromString(OptionVersion), GetOptionFlags());
 
@@ -126,6 +151,6 @@ class GetCommand : Command
 				Environment.Exit((int)ExitCode.PartialSuccess);
 			}
 
-		FileTypeDatabase.SetPermissions(fileList);
+		SetPermissions(fileList);
 	}
 }
