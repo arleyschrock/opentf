@@ -1,7 +1,7 @@
 #summary Notes on features added in each release
 #labels Featured
 
-=Version 0.6=
+=Version 0.6 - Feb 4, 2008=
 
 A development release with the following changes:
 
@@ -39,7 +39,7 @@ A development release with the following changes:
  # API: Microsoft.TeamFoundation.Common: Artifact, ArtifactId, ILinking, LinkFilter, LinkingUtilities, ServiceInterfaces
  # API: Microsoft.TeamFoundation.VersionControl.Client: ShelvingOptions, ChangesetMerge
 
-=Version 0.5.2=
+=Version 0.5.2 - Oct 11, 2007=
 
 A development release with the following changes:
 
