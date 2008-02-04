@@ -1,0 +1,5 @@
+As of now, I did:
+
+cp /usr/local/src/mono/monodevelop-0.16/Extras/VersionControl/MonoDevelop.VersionControl/repository.png icons/
+
+I'm not sure what the recommended approach is here a.t.m.
